@@ -1,4 +1,4 @@
-Template Project Skripsi
+KIRI FrontEnd Server Side
 ========================
 
 Silahkan menggunakan (fork) template skripsi ini sebagai dasar dari skripsi
