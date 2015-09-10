@@ -16,7 +16,7 @@
 \makeatletter
 \renewcommand{\@maketitle} {\begin{center} {\LARGE \textbf{ \textsc{\@title}} \par} \bigskip {\large \textbf{\textsc{\@author}} }\end{center} }
 \renewcommand{\thispagestyle}[1]{}
-\markright{\textbf{\textsc{AIF401 \textemdash Rencana Kerja Skripsi \textemdash Sem. Ganjil 2015/2016}}}
+\markright{\textbf{\textsc{AIF401/AIF402 \textemdash Rencana Kerja Skripsi \textemdash Sem. Ganjil 2015/2016}}}
 
 \onehalfspacing
  
@@ -30,15 +30,22 @@
 \newcommand{\@npm}{2012730046}
 \newcommand{\@judultopik}{Porting PHP menjadi Play Framework (Studi Kasus : KIRI \textit{Front-End})} % Judul/topik anda
 \newcommand{\jumpemb}{1} % Jumlah pembimbing, 1 atau 2
-\newcommand{\tanggal}{26/08/2015}
+\newcommand{\tanggal}{26/08/2015} %%%%%%%%%%%%%%%%%%%%%%%%
 \maketitle
 
 \pagenumbering{arabic}
 
 \section{Deskripsi}
-KIRI (http://kiri.travel) merupakan aplikasi yang membantu pengguna bepergian baik dalam kota maupun luar kota. Jika dalam kota, KIRI akan menentukan angkutan kota yang tersedia di kota tersebut, jika luar kota, maka KIRI menentukan travel yang tersedia ke kota yang akan dituju. KIRI Travel tersedia dalam berbagai kota, yaitu Bandung, Depok, Jakarta, Surabaya, dan Malang. KIRI menyediakan berbagai rute alternatif yang dapat dipilih oleh pengguna. KIRI juga dapat membimbing pengguna langkah demi langkah untuk mencapai lokasi tujuan. 
 
-Dalam pengembangan website, kita sering menjumpai bahasa yang dipakai adalah bahasa PHP. PHP tersebut kurang cocok dengan proyek besar. Masalah yang sering dijumpai seperti tidak ada deklarasi variabel, tidak ada tipe variabel. Play Framework merupakan framework untuk membuat website dengan bahasa pemrograman Java. Play Framework menerapkan konsep MVC, yaitu Model, View, dan Controller. Dalam penelitian ini, Play Framework dipakai karena Play Framework terstruktur dan umum. Dengan melakukan penelitian ini, mahasiswa dilatih untuk memahami dan menganalisa kode KIRI menjadi Play Framework.
+\begin{center}
+\includegraphics[scale = 0.3]{kiri.png}
+\end{center}
+
+KIRI (http://kiri.travel) merupakan aplikasi website yang membantu pengguna bepergian baik dalam kota maupun luar kota. Jika dalam kota, KIRI akan menentukan angkutan kota yang tersedia di kota tersebut, jika luar kota, maka KIRI menentukan travel yang tersedia ke kota yang akan dituju serta angkutan kota menuju tempat tujuan. Saat ini, KIRI tersedia dalam berbagai kota, yaitu Bandung, Depok, Jakarta, Surabaya, dan Malang. KIRI menyediakan berbagai rute alternatif yang dapat dipilih oleh pengguna. KIRI juga dapat membimbing pengguna langkah demi langkah untuk mencapai lokasi tujuan. 
+
+Dalam pengembangan website, kita sering menjumpai bahasa yang dipakai adalah bahasa PHP. PHP tersebut kurang cocok dengan proyek besar. Masalah yang sering dijumpai seperti tidak ada deklarasi variabel, tidak ada tipe variabel. Dalam pengembangan website terdapat berbagai macam framework. Framework adalah kerangka yang membantu pengguna untuk menyelesaikan website. 
+
+Dari berbagai framework yang dapat digunakan, dipilih Play Framework. Play Framework merupakan framework untuk membuat website dengan bahasa pemrograman Java. Play Framework menerapkan konsep MVC, yaitu Model, View, dan Controller. Dalam penelitian ini, Play Framework dipakai karena Play Framework terstruktur dan umum. 
 
 \section{Rumusan Masalah}
 \begin{itemize}
@@ -59,47 +66,45 @@ Perangkat lunak akhir yang akan dibuat memiliki fitur minimal sebagai berikut:
 	\item Perangkat lunak dapat berfungsi seperti website KIRI yang sudah ada sebagai \textit{Front-End Server Side}.
 \end{itemize}
 
-\section{Rencana Kerja}
-
-Rencana kerja untuk menyelesaikan skripsi ini:
-\begin{itemize}
-	\item Pada saat mengambil kuliah AIF401 Skripsi 1
+\section{Detail Pengerjaan Skripsi}
+Bagian-bagian pekerjaan skripsi ini adalah sebagai berikut :
 	\begin{enumerate}
+		\item Memahami dan membedakan \textit{Front-End Server Side} dengan \textit{Front-End Client Side}
 		\item Memahami dan melakukan analisa kode KIRI yang sudah ada.
 		\item Melakukan studi literatur tentang metode yang berkaitan dengan kode PHP dan Java (Play Framework).
 		\item Mempelajari cara kerja Play Framework untuk membuat website yang terstrtuktur.
-		\item Membuat dokumentasi skripsi sampai dengan Bab 3.
-	\end{enumerate}
-	\item Pada saat mengambil kuliah AIF401 Skripsi 2
-	\begin{enumerate}
 		\item Merancang dan mengimplementasikan kode KIRI yang sudah ada menjadi Play Framework.
 		\item Melakukan pengujian dan eksperimen.
-		\item Menyelesaikan dokumentasi skripsi sampai dengan Bab 6.
+		\item Membuat dokumen skripsi.
 	\end{enumerate}
-\end{itemize}
 
-\section{Isi {\it Progress Report} Skripsi 1}
-Isi dari {\it Progress Report} Skripsi 1 yang akan diselesaikan dan dilaporkan ke pembimbing paling lambat 2 minggu sebelum tenggat waktu yang ditetapkan koordinator adalah :
-\begin{enumerate}
-	\item Memahami  dan melakukan analisis kode KIRI.
-	\item Mengerti dan menyelesaikan dokumentasi Dasar Teori dan Analisis.
-\end{enumerate}
-Estimasi persentase penyelesaian skripsi sampai dengan {\it Progress Report} Skripsi 1 adalah : 40\%
+\section{Rencana Kerja}
+\begin{center}
+  \begin{tabular}{ | c | c | c | c | l |}
+    \hline
+    1*  & 2*(\%) & 3*(\%) & 4*(\%) &5*\\ \hline \hline
+    1   & 5  & 5  &  &  \\ \hline
+    2   & 5 & 5  &   & \\ \hline
+    3   & 10  & 7  & 3 & {\footnotesize sebagian kecil teknik {\it flow tiles} di S2}  \\ \hline
+    4   & 15  & 10  &  5 & {\footnotesize teknik lanjut OOP di C++ di S2} \\ \hline
+    5   & 20  & 5  & 15 & {\footnotesize perancangan awal SFM, pathway dan waypoint di S1} \\ \hline
+    6   & 5 &   & 5  & \\ \hline
+    7   & 20  & 5  & 15 &  {\footnotesize implementasi denah dan rancangan awal SFM di S1}\\ \hline
+    Total  & 100  & 40  & 60 &  \\ \hline
+                          \end{tabular}
+\end{center}
 
-\section{Pernyataan Khusus}
-Berlatar belakang perihal kejujuran serta keterbasan jumlah dosen, saya menyatakan akan mematuhi aturan-aturan khusus berikut:
-\begin{enumerate}
-	\item Skripsi adalah hasil karya saya sendiri. Peran teman / orang lain adalah untuk membantu pemahaman, tetapi tidak dalam konten Skripsi.
-	\item Saya menetapkan batasan yang jelas antara konten saya, dengan buatan orang lain (termasuk kode yang diambil dari {\it open source project})
-	\item Pengambilan kedua hanya akan dilakukan hanya jika sudah memenuhi minimal 90\% dari target.
-\end{enumerate}
-Saya bersedia mematuhi peraturan di atas, dan bersedia menerima sanksi pembatalan pengambilan Skripsi dengan dosen pembimbing terkait jika terbukti melanggar. Peraturan ini berlaku pada Skripsi 1 dan 2.
+Keterangan (*)\\
+1 : Bagian pengerjaan Skripsi (nomor disesuaikan dengan detail pengerjaan di bagian 5)\\
+2 : Persentase total \\
+3 : Persentase yang akan diselesaikan di Skripsi 1 \\
+4 : Persentase yang akan diselesaikan di Skripsi 2 \\
+5 : Penjelasan singkat apa yang dilakukan di S1 (Skripsi 1) atau S2 (skripsi 2)
 
-\vspace{1.5cm}
-
+\vspace{1cm}
 \centering Bandung, \tanggal\\
 \vspace{2cm} \nama \\ 
-\vspace{5cm}
+\vspace{1cm}
 
 Menyetujui, \\
 \ifdefstring{\jumpemb}{2}{
@@ -118,6 +123,6 @@ Menyetujui, \\
 % \centering Bandung, \makebox[0.5cm]{\hrulefill}/\makebox[0.5cm]{\hrulefill}/2013\\
 \vspace{2cm} Nama: \makebox[3cm]{\hrulefill}\\ Pembimbing Tunggal
 }
-
+`
 \end{document}
 
