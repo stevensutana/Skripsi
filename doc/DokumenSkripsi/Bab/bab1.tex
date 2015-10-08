@@ -4,38 +4,53 @@
 \section{Latar Belakang}
 \label{sec:latarbelakang}
 
-KIRI (http://kiri.travel) merupakan aplikasi website yang membantu pengguna bepergian baik dalam kota maupun luar kota. Jika dalam kota, KIRI akan menentukan angkutan kota yang tersedia di kota tersebut, jika luar kota, maka KIRI menentukan travel yang tersedia ke kota yang akan dituju serta angkutan kota menuju tempat tujuan. Saat ini, KIRI tersedia dalam berbagai kota, yaitu Bandung, Depok, Jakarta, Surabaya, dan Malang. KIRI menyediakan berbagai rute alternatif yang dapat dipilih oleh pengguna. KIRI juga dapat membimbing pengguna langkah demi langkah untuk mencapai lokasi tujuan. 
+Pemanasan global, padatnya lalu lintas, dan tingginya harga bahan bakar merupakan masalah umum yang sering dijumpai pada kehidupan sehari-hari. Masalah ini dapat dipecahkan dengan menggunakan kendaraan umum yang ada di Indonesia. Tetapi masih banyak orang yang enggan untuk menggunakan kendaraan umum karena susahnya penggunaan kendaraan umum. Penggunaan kendaraan umum dapat dipermudah dengan adanya KIRI. Peran KIRI sangat sederhana, yaitu memberitahu dimana lokasi sekarang dan kemana lokasi tujuan, dan KIRI akan memberitahu bagaimana cara sampai ke lokasi tujuan dengan menggunakan angkot\cite{statickiri}. 
 
-Dalam pengembangan website, kita sering menjumpai bahasa yang dipakai adalah bahasa PHP. PHP tersebut kurang cocok dengan proyek besar. Masalah yang sering dijumpai seperti tidak ada deklarasi variabel, tidak ada tipe variabel. Dalam pengembangan website terdapat berbagai macam framework. Framework adalah kerangka yang membantu pengguna untuk menyelesaikan website. 
+Kode \textit{website} KIRI menggunakan bahasa PHP. Bahasa PHP merupakan bahasa \textit{scripting} yang sangat cocok untuk pengembangan \textit{website}. Tetapi, bahasa PHP tidak cocok untuk proyek besar. Masalah yang sering dijumpai pada bahasa PHP adalah tidak ada tipe variabel\cite{phpnet}. 
 
-Dari berbagai framework yang dapat digunakan, dipilih Play Framework. Play Framework merupakan framework untuk membuat website dengan bahasa pemrograman Java. Play Framework menerapkan konsep MVC, yaitu Model, View, dan Controller. Dalam penelitian ini, Play Framework dipakai karena Play Framework terstruktur dan umum. 
+Play \textit{Framework} adalah \textit{framework} untuk aplikasi \textit{web} dengan menggunakan bahasa Java dan Scala. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. \play menerapkan konsep MVC, yaitu Model, View, dan Controller\cite{playforjava}. 
+
+\textit{Porting} adalah proses adaptasi perangkat lunak yang awalnya tidak ditujukan untuk dieksekusi pada lingkungan tertentu. Istilah \textit{porting} digunakan ketika mengacu pada perubahan yang dibuat ketika tidak kompatibel dengan lingkungan\cite{porting}.
+
+Pengembangan yang akan dilakukan adalah melakukan \textit{porting} kode KIRI (PHP) menjadi \play agar struktur kode KIRI menjadi rapih dan bahasa yang digunakan adalah bahasa Java. Dengan demikian, penulis bermaksud membuat proyek tugas akhir dengan judul '\textbf{Porting PHP menjadi \play (Studi Kasus : KIRI \textit{Front-End})}'
+
+%
+%ambil dari referensi kiri.travel,jgn sendiri
+%KIRI (http://kiri.travel) merupakan aplikasi website yang membantu pengguna bepergian baik dalam kota maupun luar kota. Jika dalam kota, KIRI akan menentukan angkutan kota yang tersedia di kota tersebut, jika luar kota, maka KIRI menentukan travel yang tersedia ke kota yang akan dituju serta angkutan kota menuju tempat tujuan. Saat ini, KIRI tersedia dalam berbagai kota, yaitu Bandung, Depok, Jakarta, Surabaya, dan Malang. KIRI menyediakan berbagai rute alternatif yang dapat dipilih oleh pengguna. KIRI juga dapat membimbing pengguna langkah demi langkah untuk mencapai lokasi tujuan. 
+%
+%php bahasa populer<<< ga ada hubungan dengan alasan skripsi ini
+%Dalam pengembangan website, kita sering menjumpai bahasa yang dipakai adalah bahasa PHP. PHP tersebut kurang cocok dengan proyek besar. Masalah yang sering dijumpai seperti tidak ada deklarasi variabel, tidak ada tipe variabel. Dalam pengembangan website terdapat berbagai macam framework. Framework adalah kerangka yang membantu pengguna untuk menyelesaikan website. 
+%
+%langsung ke play framework & referensi.
+%Dari berbagai framework yang dapat digunakan, dipilih Play Framework. Play Framework merupakan framework untuk membuat website dengan bahasa pemrograman Java. Play Framework menerapkan konsep MVC, yaitu Model, View, dan Controller. Dalam penelitian ini, Play Framework dipakai karena Play Framework terstruktur dan umum. 
 
 \section{Rumusan Masalah}
 \label{rumusanMasalah}
 \begin{itemize}
-	\item Bagaimana memahami dan menganalisa kode KIRI yang sudah ada?
-	\item Bagaimana melakukan porting kode KIRI (PHP) menjadi Play Framework (Java) ?
+	\item Bagaimana memahami dan menganalisis kode KIRI yang sudah ada?
+	\item Bagaimana melakukan porting kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java) ?
 \end{itemize}
 
 \section{Tujuan}
 \label{sec:tujuan}
 \begin{itemize}
-	\item Memahami dan menganalisa kode KIRI.
-	\item Menjadikan kode KIRI menjadi Play Framework.
+	\item Memahami dan menganalisis kode KIRI.
+	\item Menjadikan kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java).
 \end{itemize}
 
 \section{Batasan Masalah}
 \label{sec:batasanMasalah}
 \begin{enumerate}
-	\item Lorem ipsum
+	\item Play Framework yang digunakan adalah versi 2.4.3.
+	\item Kode KIRI yang sudah ada diambil dari Github pascalalfadian\cite{githubkiri}.
 \end{enumerate}
 
 \section{Metode Penelitian}
 \label{sec:metodePenelitian}
 Berikut adalah metode penelitian yang digunakan dalam pembuatan skripsi ini:
 	\begin{enumerate}
-		\item Memahami dan melakukan analisa kode KIRI yang sudah ada.
 		\item Melakukan studi literatur tentang metode yang berkaitan dengan kode PHP dan Java (Play Framework).
+		\item Memahami dan melakukan analisis kode KIRI yang sudah ada.
 		\item Merancang dan mengimplementasikan kode KIRI yang sudah ada menjadi Play Framework.
 		\item Melakukan pengujian dan eksperimen.
 		\item Membuat dokumen skripsi.
