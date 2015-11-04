@@ -1,7 +1,123 @@
-@(message: String)
+<!DOCTYPE html>
 
-@main("KIRI") {
+<html lang="en">
+    <head>
+        <title>KIRI</title>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.ico")">
 
-    @play20.welcome(message, style = "Java")
+        <link rel="stylesheet" href="http://openlayers.org/en/v3.10.1/css/ol.css" type="text/css">
+        <link rel="stylesheet" href="@routes.Assets.versioned("foundation/css/foundation.min.css")" type="text/css">
+        <link rel="stylesheet" href="@routes.Assets.versioned("css/styleIndex.css")" type="text/css">
 
-}
+        <script src="@routes.Assets.versioned("foundation/js/vendor/modernizr.js")"></script>
+
+        <script src="@routes.Assets.versioned("openlayers/ol.js")"></script>
+        <script src="http://openlayers.org/en/v3.10.1/build/ol.js" type="text/javascript"></script>
+
+    </head>
+    <body>
+
+        <div class="row">
+
+            <div id="controlpanel" class="large-3 large-push-9 columns">
+                <div class="row center">
+                    <img src="@routes.Assets.versioned("images/kiri200.png")" alt="KIRI logo" />
+                </div>
+
+                <div class="row">
+                    <div class="small-5 columns">
+                        <select class="fullwidth" id="regionselect">
+                            <option value="bdg">Bandung</option>
+                            <option value="jkt">Jakarta</option>
+                            <option value="sby">Surabaya</option>
+                            <option value="mlg">Malang</option>
+                        </select>
+
+                    </div>
+                    <div class="small-7 columns">
+                        <select class="fullwidth" id="localeselect">
+                            <option value="en">English</option>
+                            <option value="id">Bahasa Indonesia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="startInput" class="inline">From:</label>
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="text" id="startInput" value=""
+                        placeholder="e.g. Stasiun">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <select id="startSelect" class="hidden"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="finishInput" class="inline">To:</label>
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="text" id="finishInput" value=""
+                        placeholder="e.g. Monas, Jakarta">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <select id="finishSelect" class="hidden"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-6 columns">
+                        <a href="@routes.Application.findRoute()" class="small button expand" id="findbutton"><strong>Find!</strong></a>
+                    </div>
+                    <div class="small-3 columns">
+                        <a href="#" class="small button secondary expand" id="swapbutton">
+                            <img src="@routes.Assets.versioned("images/swap.png")" alt="swap"/>
+                        </a>
+                    </div>
+                    <div class="small-3 columns">
+                        <a href="#" class="small button secondary expand" id="resetbutton">
+                            <img src="@routes.Assets.versioned("images/reset.png")" alt="swap"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns" id="routingresults">
+                        <div id="results-section-container"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <footer>
+                            <a href="http://static.kiri.travel/$locale-apps">Mobile Apps</a> |
+                            <a href="http://classic.kiri.travel">Old Version</a><br/>
+                            <a href="http://static.kiri.travel/$locale-legal">Legal</a> |
+                            <a href="http://static.kiri.travel/$locale-feedback">Feedback</a> |
+                            <a href="http://static.kiri.travel/$locale-about">About KIRI</a>
+                        </footer>
+                            &nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </div>
+
+            <div id="map" class="large-9 large-pull-3 columns"></div>
+        </div>
+
+
+        <script src="@routes.Assets.versioned("foundation/js/vendor/jquery.js")"></script>
+        <script src="@routes.Assets.versioned("foundation/js/vendor/fastclick.js")"></script>
+        <script src="@routes.Assets.versioned("foundation/js/foundation.min.js")"></script>
+        <script src="@routes.Assets.versioned("foundation/js/foundation/foundation.alert.js")"></script>
+
+        <script src="@routes.Assets.versioned("js/newprotocol.js")"></script>
+        <script src="@routes.Assets.versioned("js/index.js")"></script>
+
+
+
+    </body>
+</html>
