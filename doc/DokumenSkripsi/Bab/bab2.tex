@@ -1,31 +1,31 @@
 \chapter{Landasan Teori}
 \label{chap:LandasanTeori}
 
-\section{MySQL Spatial Extensions}
-\label{sec:mysqlspatial}
-MySQL merupakan sistem manajemen basisdata yang mempunyai performa tepercaya, handal, dan mudah penggunaannya. Penggunaan MySQL dipilih untuk aplikasi berbasis web. Bentuk basisdata MySQL adalah relasional, yang berarti tabel-tabel yang terdapat pada MySQL saling berhubungan. Server MySQL berada pada klien / server atau pada sistem yang tertanam pada aplikasi.
-
-MySQL mengimplementasikan ekstensi spasial, yaitu MySQL dengan tipe geometri. MySQL dengan tipe geometri mempunyai kolom khusus dengan tipe geometri dan mempunyai fungsi untuk membuat dan menganalisis nilai geometri. Ekstensi spasial MySQL memungkinkan generasi, penyimpanan, dan analisis fitur geometris :
-
-\begin{itemize}
-	\item Tipe data untuk merepresentasikan nilai spasial.
-	\item Fungsi untuk manipulasi nilai spasial.
-	\item Pengindeksan spasial untuk mempercepat waktu akses ke kolom spasial.
-\end{itemize}
-
-Fitur geografi dapat berupa apapun di dunia yang mempunyai lokasi. Fitur geografi dapat berupa:
-
-\begin{itemize}
-	\item Sebuah entitas, seperti gunung, laut, dan kota.
-	\item Sebuah ruang, seperti batas kota dan daerah tropis.
-	\item Sebuah definisi tempat, seperti perempatan jalan.
-\end{itemize}
+%\section{MySQL Spatial Extensions}
+%\label{sec:mysqlspatial}
+%MySQL merupakan sistem manajemen basisdata yang mempunyai performa tepercaya, handal, dan mudah penggunaannya. Penggunaan MySQL dipilih untuk aplikasi berbasis web. Bentuk basisdata MySQL adalah relasional, yang berarti tabel-tabel yang terdapat pada MySQL saling berhubungan. Server MySQL berada pada klien / server atau pada sistem yang tertanam pada aplikasi.
+%
+%MySQL mengimplementasikan ekstensi spasial, yaitu MySQL dengan tipe geometri. MySQL dengan tipe geometri mempunyai kolom khusus dengan tipe geometri dan mempunyai fungsi untuk membuat dan menganalisis nilai geometri. Ekstensi spasial MySQL memungkinkan generasi, penyimpanan, dan analisis fitur geometris :
+%
+%\begin{itemize}
+%	\item Tipe data untuk merepresentasikan nilai spasial.
+%	\item Fungsi untuk manipulasi nilai spasial.
+%	\item Pengindeksan spasial untuk mempercepat waktu akses ke kolom spasial.
+%\end{itemize}
+%
+%Fitur geografi dapat berupa apapun di dunia yang mempunyai lokasi. Fitur geografi dapat berupa:
+%
+%\begin{itemize}
+%	\item Sebuah entitas, seperti gunung, laut, dan kota.
+%	\item Sebuah ruang, seperti batas kota dan daerah tropis.
+%	\item Sebuah definisi tempat, seperti perempatan jalan.
+%\end{itemize}
 
 \section{Play Framework}
 \label{sec:play}
 \subsection{Struktur Play Framework}
 \play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi ada juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang komplit, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. 
-Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman :
+Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman:
 
 \begin{enumerate}
 	\item Penggunaan \play sederhana.
@@ -47,6 +47,7 @@ Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman :
 	\label{fig:2_play_struktur}
 \end{figure}
 
+\subsubsection{Conf. Play}
 Konfigurasi \play terdapat pada direktori \textit{conf}. Dalam direktori \textit{conf}, terdapat file \textit{application.conf} dan \textit{routes}. File \textit{application.conf} mengandung informasi data konfigurasi aplikasi, seperti \textit{logging}, koneksi basis data, dan port berapa server berjalan. File \textit{routes} menentukan \textit{routes} aplikasi, yaitu pemetaan dari URL HTTP ke kode aplikasi. Setiap \textit{routes} memiiki tiga bagian, yaitu HTTP \textit{method}, URL \textit{path}, dan \textit{action method}. HTTP \textit{method} merupakan metode yang dipakai dalam pengiriman HTTP. URL \textit{path} adalah URL yang dipakai untuk mengakses halaman. \textit{Action method} merupakan metode  yang dipanggil ketika mengakses halaman pada URL \textit{path}. Sebagai contoh dapat dilihat pada \ref{fig:2_play_routes}, HTTP \textit{method} yang dipakai pada URL /list adalah HTTP \textit{method} GET dan akan memanggil \textit{method} list pada kelas Products di controllers.
 
 \begin{figure}[H]
@@ -56,29 +57,77 @@ Konfigurasi \play terdapat pada direktori \textit{conf}. Dalam direktori \textit
 	\label{fig:2_play_routes}
 \end{figure}
 
-Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, JavaScript, dan halaman statis HTML. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_public}.
+\subsubsection{Public Play}
+Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, JavaScript, dan halaman statis HTML. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_struktur}.
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics{Gambar/play-public}
+%	\caption{Contoh Direktori \textit{public}} 
+%	\label{fig:2_play_public}
+%\end{figure}
+
+\subsubsection{App. Play}
+Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_struktur}. Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman web. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request} berupa view. Ada dua file template, yaitu index.scala.html dan main.scala.html yang berfungsi untuk menentukan halaman HTML yang akan dimuat. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. View dapat menerima parameter yang didefinisikan pada template view. Contoh view dengan menerima parameter berupa String dapat dilihat pada figur \ref{fig:2_play_view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view} dengan memberi parameter "Hello World". \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada figur \ref{fig:2_play_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima \textit{parameter} berupa "Hello World". Hasil Results dapat berupa banyak method, misalnya ok untuk mengembalikan kode \textit{HTTP Response} 200, notFound untuk mengembalikan kode \textit{HTTP Response} 404 atau tidak ada halaman yang dituju, badRequest adalah Result dengan kode \textit{HTTP Response} 400 atau adanya kesalahan masukan pengguna, internalServerError adalah Result dengan kode \textit{HTTP Response} 500 atau adanya kesalahan pada server, status adalah Result dengan kode \textit{HTTP Response} yang dapat ditentukan sendiri beserta pesannya, redirect adalah Result untuk mengalihkan halaman. Contoh berbagai Result tedapat pada figur \ref{fig:2_play_controller_method}.
+% Products pada \textit{parameter ok} menyerahkan semua data kepada \textit{model}, yaitu kelas Product dan merepresentasikan data ke \textit{view}, yaitu \textit{template list}. \textit{Method} list() mengembalikan \textit{view products} dengan mengirimkan \textit{parameter} berupa \textit{list of products}. 
+
 
 \begin{figure}[H]
 	\centering
-	\includegraphics{Gambar/play-public}
-	\caption{Contoh Direktori \textit{public}} 
-	\label{fig:2_play_public}
+	
+	\begin{lstlisting}
+	@(title: String)
+
+	<!DOCTYPE html>
+
+	<html>
+    		<head>
+       	 <title>@title</title>
+       	 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+       	 <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        	<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+    		</head>
+    		<body>
+        		@title
+    		</body>
+	</html>
+	\end{lstlisting}
+	\caption{Contoh View}
+	\label{fig:2_play_view}
 \end{figure}
 
-Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_app}. Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman web. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request}. Ada dua file template, yaitu index.scala.html dan main.scala.html yang berfungsi untuk menentukan halaman HTML yang akan dimuat. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view}. \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada gambar \ref{fig:2_play_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima \textit{parameter} berupa \textit{products.list.render(products)}. Products pada \textit{parameter ok} menyerahkan semua data kepada \textit{model}, yaitu kelas Product dan merepresentasikan data ke \textit{view}, yaitu \textit{template list}. \textit{Method} list() mengembalikan \textit{view products} dengan mengirimkan \textit{parameter} berupa \textit{list of products}. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics{Gambar/play-app}
-	\caption{Contoh Direktori \textit{app}} 
-	\label{fig:2_play_app}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics{Gambar/play-controller}
-	\caption{Contoh \textit{Method} pada \textit{Controller}} 
+	
+	\begin{lstlisting}
+	public Result index() {
+        return ok(index.render("Hello World"));
+    }
+	\end{lstlisting}
+	\caption{Method pada Controller}
 	\label{fig:2_play_controller}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		Result ok = ok("Hello world!");
+		
+		Result notFound = notFound();
+		Result pageNotFound = notFound("<h1>Page not found</h1>").as("text/html");
+		
+		Result badRequest = badRequest(views.html.form.render(formWithErrors));
+		
+		Result oops = internalServerError("Oops");
+		
+		Result anyStatus = status(488, "Strange response type");
+		
+		Result redirect = redirect("/user/home");
+	\end{lstlisting}
+	\caption{Contoh Results}
+	\label{fig:2_play_controller_method}
 \end{figure}
 
 \subsection{Body Parsers}
@@ -95,9 +144,8 @@ Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \texti
 %\label{sec:kodeKIRI}
 
 
-\section{Java Internationalization}
-\label{sec:i18n}
-Internationalization \cite{i18n} sering disebut juga i18n, merupakan proses melakukan adaptasi ke berbagai bahasa dan wilayah tanpa perubahan rekayasa. Program yang sudah diproses Internationalization mempunyai karakteristik :
+\subsection{Internationalization}
+Pengguna aplikasi mungkin berasal dari beda negara dan bahasa, juga punya format yang berbeda untuk tanggal, angka, dan waktu. Kombinasi dari bahasa aturan format disebut \textit{locale}. Adaptasi program untuk berbeda \textit{locale} disebut \textit{internationalization (i18n)} atau \textit{localization (l10n)}. Perbedaan \textit{internationalization} dan \textit{localization} adalah \textit{internationalization} melakukan \textit{refactor} untuk menghapus kode lokal dari aplikasi, sedangkan \textit{localization} membuat versi lokal dari aplikasi. Program yang sudah diproses Internationalization mempunyai karakteristik:
 
 \begin{itemize}
 	\item Dengan penambahan data lokalisasi, eksekusi yang sama dapat dijalankan di seluruh dunia.
@@ -107,9 +155,39 @@ Internationalization \cite{i18n} sering disebut juga i18n, merupakan proses mela
 	\item Internationalization dapat dilakukan proses lokalisasi dengan cepat.
 \end{itemize}
 
+Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan seperti pada figur \ref{fig:2_play_i18n}.
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		welcome = Welcome!
+		users.login = Log in
+		shop.thanks = Thank you for your order
+	\end{lstlisting}
+
+	\label{fig:2_play_i18n}
+\end{figure}
+
+Play harus mengetahui bahasa apa saja yang ada pada aplikasi. Untuk itu, daftarkan bahasa pada application.conf seperti pada figur \ref{fig:2_play_i18n_conf}.
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		application.langs="en,en-US,nl"
+	\end{lstlisting}
+
+	\label{fig:2_play_i18n_conf}
+\end{figure}
+
+Setelah itu, buat file pada direktori \textit{conf} dengan nama messages.LANG dimana LANG adalah bahasa yang digunakan. Sebagai contoh untuk file bahasa Prancis akan disimpan pada conf/messages.fr dengan isinya \begin{lstlisting}		welcome=Bienvenue!
+	\end{lstlisting}.
+	
+	
 \section{OpenLayers}
 \label{sec:openlayers}
-OpenLayers \cite{openlayers} merupakan \textit{library} yang memiliki performa tinggi dan fitur yang dikemas untuk kebutuhan menampilkan peta menggunakan JavaScript. Fitur yang terdapat pada OpenLayers adalah :
+OpenLayers \cite{openlayersbook} merupakan \textit{library} yang memiliki performa tinggi dan fitur yang dikemas untuk kebutuhan menampilkan peta menggunakan JavaScript. Dalam pengembangan aplikasi yang menggunakan fitur peta, tugas yang paling penting dan utama adalah membuat peta tersebut. Peta menjadi inti untuk menambahkan dan menampilkan data. Fitur yang terdapat pada OpenLayers adalah:
 
 \begin{itemize}
 \item \textit{Tiled Layers}\\
@@ -122,36 +200,130 @@ OpenLayers \cite{openlayers} merupakan \textit{library} yang memiliki performa t
 			OpenLayers menyesuaikan peta WebGL, Canvas 2D, dan semua kelebihan dari HTML 5. Atur tampilan peta dengan mengubah langsung CSS.
 \end{itemize}
 
-Modul OpenLayers yang dipakai dalam penelitian ini adalah :
+Modul OpenLayers yang dipakai dalam penelitian ini adalah:
 \begin{itemize}
 	\item 	Bing Maps untuk menampilkan peta menggunakan Bing. KIRI menggunakan \textit{map provider} Bing Maps sebagai peta pada halaman utama KIRI. 
 	\item Draw untuk menggambar poin pada peta. Saat peta KIRI menangkap \textit{event mouseclick}, muncul poin yang berupa kustom gambar pada peta KIRI sebagai asal tempat dan tujuan. 
 \end{itemize}
 
+\subsection{Bing Maps}
+Peta yang digunakan merupakan Bing Maps dari Microsoft. Jika ingin menggunakan Bing Maps pada Openlayers, harus mendapatkan kunci yang didapat dari Bing Maps serta memilih tipe peta yang akan ditampilkan. Sebagai contoh pada figur \ref{fig:2_ol_bing}.
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		var mapLayer = new ol.layer.Tile(
+        {
+            source : new ol.source.BingMaps(
+                {
+                    key : 'AuV7xXD6_UMiQ5BLoZr0xkpjLpzWqMT55772Q8XtLIQeuDebHPKiNXSlZXxEr1GA',
+                    imagerySet : 'Road'
+                })
+        });
+	\end{lstlisting}
+
+	\label{fig:2_ol_bing}
+\end{figure}
+
+\subsection{Draw Poin}
+Pada peta KIRI, pengguna dapat memilih tempat awal dan tujuan dengan memasukkan nama tempat atau memilih tempat pada peta. Pada Openlayers, disediakan fitur untuk menangani kursor klik pengguna. Pertama menentukan vektor gambar yang akan ditampilkan pada peta seperti pada figur \ref{fig:2_ol_poin_vector}. Setelah itu, menggambar pada peta seperti pada figur \ref{fig:2_ol_poin_draw}.
+
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		var source = new ol.source.Vector({wrapX: false});
+		var vector = new ol.layer.Vector({
+  			source: source,
+ 			style: new ol.style.Style({
+    				fill: new ol.style.Fill({
+      				color: 'rgba(255, 255, 255, 0.2)'
+    				}),
+    				stroke: new ol.style.Stroke({
+      				color: '#ffcc33',
+      				width: 2
+    				}),
+    				image: new ol.style.Circle({
+      				radius: 7,
+      				fill: new ol.style.Fill({
+        					color: '#ffcc33'
+      				})
+    				})
+  			})
+		});
+	\end{lstlisting}
+
+	\label{fig:2_ol_poin_vector}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		draw = new ol.interaction.Draw({
+     		 source: source,
+      		 type: /** @type {ol.geom.GeometryType} */ (value),
+     		 geometryFunction: geometryFunction,
+      		maxPoints: maxPoints
+    });
+	\end{lstlisting}
+
+	\label{fig:2_ol_draw}
+\end{figure}
+
+
 \section{Zurb Foundation}
 \label{sec:zurbfoundation}
-Zurb Foundation \cite{zurbfoundation} merupakan \textit{framework Front-End} yang responsif dan terdepan untuk membuat tampilan halaman web. Halaman web yang menggunakan Zurb Foundation sudah \textit{mobile-friendly} dan siap untuk diubah sesuai dengan keinginan. Fitur yang dimiliki Zurb Foundation adalah :
+%Zurb Foundation \cite{zurbfoundation} merupakan \textit{framework Front-End} yang responsif dan terdepan untuk membuat tampilan halaman web. Halaman web yang menggunakan Zurb Foundation sudah \textit{mobile-friendly} dan siap untuk diubah sesuai dengan keinginan. Fitur yang dimiliki Zurb Foundation adalah:
+%
+%\begin{itemize}
+%	\item Zurb Foundation memuat halaman web menjadi cepat.
+%	\item Zurb Foundation melakukan optimasi halaman web dengan memilih bagian halaman web untuk dimuat berdasarkan tipe perangkat pengguna.
+%	\item Zurb Foundation lebih cepat dalam menulis kode.
+%	\item Zurb Foundation cepat untuk dipelajari.
+%%	\item Zurb Foundation merupakan pilihan profesional bagi perusahaan, desainer, dan pengembang.
+%	\item Zurb Foundation adalah \textit{framework} yang responsif.
+%	\item Zurb Foundation mempunyai tampilan yang baru dan modern.
+%\end{itemize}
 
-\begin{itemize}
-	\item Zurb Foundation memuat halaman web menjadi cepat.
-	\item Zurb Foundation melakukan optimasi halaman web dengan memilih bagian halaman web untuk dimuat berdasarkan tipe perangkat pengguna.
-	\item Zurb Foundation lebih cepat dalam menulis kode.
-	\item Zurb Foundation cepat untuk dipelajari.
-%	\item Zurb Foundation merupakan pilihan profesional bagi perusahaan, desainer, dan pengembang.
-	\item Zurb Foundation adalah \textit{framework} yang responsif.
-	\item Zurb Foundation mempunyai tampilan yang baru dan modern.
-\end{itemize}
+Zurb Foundation \cite{zurbfoundationbook} merupakan sebuah \textit{toolkit} yang membantu untuk desain dan mengembangkan sebuah halaman \textit{web}. Zurb Foundation menggunakan sistem \textit{grid}, banyak komponen CSS serta JavaScript. 
 
-%Karena tampilan KIRI menggunakan Javascript, maka Zurb Foundation yang digunakan adalah Javascript. Modul yang dipakai dalam Zurb Foundation adalah:
-%\begin{enumerate}
-%	\item jquery.js dan fastclick.js untuk instalasi Zurb Foundation.
-%	\item foundation.min.js untuk memuat fungsi utama Zurb Foundation dan semua \textit{plugin} Javascript.
-%	\item foundation.alert.js untuk menampilkan \textit{alert} pada web.
-%\end{enumerate}
+\subsection{Sistem Grid}
+Sistem \textit{grid} pada Zurb Foundation adalah semacam \textit{spreadsheet}, graf atau tabel yang digunakan untuk mengatur tampilan HTML. Gambaran sistem \textit{grid} dapat dilihat pada gambar \ref{fig:2_zurb_grid_blank}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/zurb-gridblank}
+	\caption{Sistem \textit{grid} kosong sebelum memulai desain.} 
+	\label{fig:2_zurb_grid_blank}
+\end{figure}
+
+Setiap sel merupakan area konten yang dapat digabung dengan sel lain yang bersebelahan untuk memperbesar area konten. Sel yang digunakan pada Zurb Foundation adalah 12 sel pada setiap baris. Gambaran pembagian sel pada Zurb Foundation dapat dilihat pada gambar \ref{fig:2_zurb_grid}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/zurb-grid}
+	\caption{Contoh pembagian sistem \textit{grid}.} 
+	\label{fig:2_zurb_grid}
+\end{figure}
+
+Komponen Foundation adalah kode CSS  yang membantu untuk desain dan merepresentasikan konten halaman \textit{web}. Dengan menggunakan komponen Foundation, tidak perlu desain sendiri dari awal. CSS pada Foundation juga dapat dikustomisasi sesuai dengan kebutuhan. Jika ingin menggunakan komponen Foundation, kita hanya perlu menggunakan tag class pada elemen yang diinginkan. Contoh penggunaaan komponen Foundation dapat dilihat pada figur \ref{fig:2_zurb_grid}.
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{lstlisting}
+		<img class="show-for-small" src="./images/little.png"/>
+	\end{lstlisting}
+
+	\label{fig:2_zurb_contoh}
+\end{figure}
 
 \section{Chrome DevTools}
 \label{sec:devtools}
-Chrome DevTools\cite{devtools} merupakan perangkat untuk memperhatikan dan melakukan \textit{debugging} halaman web yang terdapat pada \textit{browser} Google Chrome. DevTools dapat digunakan secara efisien untuk memeriksa tampilan, mengatur \textit{breakpoints} JavaScript, dan optimasi kode. DevTools dapat diakses dengan melakukan klik kanan pada halaman web lalu klik periksa elemen. DevTools disusun dalam beberapa panel \textit{task-orientated}. Beberapa panel tersebut adalah :
+Chrome DevTools\cite{devtools} merupakan perangkat untuk memperhatikan dan melakukan \textit{debugging} halaman web yang terdapat pada \textit{browser} Google Chrome. DevTools dapat digunakan secara efisien untuk memeriksa tampilan, mengatur \textit{breakpoints} JavaScript, dan optimasi kode. DevTools dapat diakses dengan melakukan klik kanan pada halaman web lalu klik periksa elemen. DevTools disusun dalam beberapa panel \textit{task-orientated}. Beberapa panel tersebut adalah:
 
 \begin{enumerate}
 	\item \textbf{Elements}, untuk memeriksa, melihat, dan mengubah tampilan halaman web.
@@ -174,7 +346,7 @@ Panel Elements dapat memperlihatkan struktur halaman web dalam bentuk \textit{Do
 \end{figure}
 
 \subsection{Network}
-Panel Network memberikan informasi tentang sumber daya yang diminta dan sumber daya yang diunduh melalui jaringan secara \textit{real-time}. Panel Network juga memperlihatkan waktu yang dibutuhkan untuk permintaan sumber daya. Sebagai contoh pada gambar \ref{fig:2_devtools_network}, saat melakukan pencarian rute, panel Network memperlihatkan apa saja sumber daya yang diperlukan serta waktu yang dibutuhkan pada proses tersebut. Tiap sumber daya pada panel Network terdapat kolom :
+Panel Network memberikan informasi tentang sumber daya yang diminta dan sumber daya yang diunduh melalui jaringan secara \textit{real-time}. Panel Network juga memperlihatkan waktu yang dibutuhkan untuk permintaan sumber daya. Sebagai contoh pada gambar \ref{fig:2_devtools_network}, saat melakukan pencarian rute, panel Network memperlihatkan apa saja sumber daya yang diperlukan serta waktu yang dibutuhkan pada proses tersebut. Tiap sumber daya pada panel Network terdapat kolom:
 
 \begin{itemize}
 	\item \textbf{Name}, nama sumber daya.
@@ -198,7 +370,7 @@ Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya te
 			Header menampilkan \textit{request} URL, \textit{request method}, \textit{status code}, \textit{response headers}, \textit{request headers}, dan \textit{query string parameters} beserta nilainya.
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale=0.5]{Gambar/devtools-network-header}
+				\includegraphics[scale=0.3]{Gambar/devtools-network-header}
 				\caption{Contoh Header} 
 				\label{fig:2_devtools_network_header}
 			\end{figure}
@@ -207,14 +379,14 @@ Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya te
 			
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale=0.5]{Gambar/devtools-network-preview-a}
+				\includegraphics[scale=0.3]{Gambar/devtools-network-preview-a}
 				\caption{Contoh peninjauan sumber daya tersedia} 
 				\label{fig:2_devtools_network_preview_a}
 			\end{figure}
 			
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale=0.5]{Gambar/devtools-network-preview-b}
+				\includegraphics[scale=0.3]{Gambar/devtools-network-preview-b}
 				\caption{Contoh peninjauan sumber daya tidak tersedia} 
 				\label{fig:2_devtools_network_preview_b}
 			\end{figure}
@@ -224,7 +396,7 @@ Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya te
 			
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale=0.5]{Gambar/devtools-network-response}
+				\includegraphics[scale=0.3]{Gambar/devtools-network-response}
 				\caption{Contoh Response} 
 				\label{fig:2_devtools_network_response}
 			\end{figure}
@@ -245,7 +417,7 @@ Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya te
 			
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale=0.5]{Gambar/devtools-network-cookies}
+				\includegraphics[scale=0.3]{Gambar/devtools-network-cookies}
 				\caption{Contoh Cookies} 
 				\label{fig:2_devtools_network_cookies}
 			\end{figure}
@@ -256,7 +428,7 @@ Panel Sources memungkinkan untuk melakukan \textit{debugging} JavaScript dengan 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{Gambar/devtools-sources}
+	\includegraphics[scale=0.3]{Gambar/devtools-sources}
 	\caption{Panel Sources dengan menyalakan Conditional \textit{breakpoints}} 
 	\label{fig:2_devtools_sources}
 \end{figure}
