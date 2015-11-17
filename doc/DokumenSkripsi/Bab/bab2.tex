@@ -24,18 +24,18 @@
 \section{Play Framework}
 \label{sec:play}
 \subsection{Struktur Play Framework}
-\play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi ada juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang komplit, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. 
+\play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi ada juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang komplit, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. Referensi yang digunakan membahas \play 2.2, sedangkan versi \play yang dipakai dalam penelitian ini adalah versi 2.4. Ada sedikit perbedaan sintaks yang akan dijelaskan pada bagian yang berbeda.
 Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman:
 
 \begin{enumerate}
 	\item Penggunaan \play sederhana.
 	\item Konfigurasi skema URL aplikasi deklaratif.
-	\item Pemetaan type-safe \footnote{bahasa pemrograman untuk mencegah tipe data yang salah.}
-	\item \play menyediakan contoh sintaks \textit{type-safe}.
+	\item Pemetaan type-safety.
+	\item \play menyediakan contoh sintaks type-safety.
 	\item Arsitektur yang mencakup teknologi HTML5.
 	\item Kode langsung aktif berubah ketika memuat kembali halaman web.
-	\item Fitur \textit{full-stack web-framework}, termasuk \textit{persistence}, keamanan, dan \textit{internationalization}. \textit{Persistence} adalah ide yang menggunakan koneksi TCP yang sama untuk mengirim dan menerima beberapa HTTP \textit{requests/responses} tanpa membuka TCP baru untuk setiap \textit{requests/responses} dengan tujuan untuk meningkatkan kinerja HTTP \footnote{ \url{http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html},diakses 30 September 2015}.
-	\item Mendukung aplikasi \textit{event-driven} dan dinamis. Yang dimaksud dengan \textit{event-driven} adalah paradigma program yang alur eksekusinya ditentukan oleh \textit{event}, contohnya kursor klik atau menekan tombol \footnote{\url{http://www.technologyuk.net/computing/software_development/event_driven_programming.shtml}, diakses 30 September 2015}.
+	\item Fitur \textit{full-stack web-framework}, termasuk \textit{persistence}, keamanan, dan \textit{internationalization}. \textit{Persistence} adalah ide yang menggunakan koneksi TCP yang sama untuk mengirim dan menerima beberapa HTTP \textit{requests/responses} tanpa membuka TCP baru untuk setiap \textit{requests/responses} dengan tujuan untuk meningkatkan kinerja HTTP.
+	\item Mendukung aplikasi \textit{event-driven} dan dinamis.
 \end{enumerate}
 
 \play memiliki struktur yang dapat dilihat pada gambar \ref{fig:2_play_struktur}.
@@ -47,17 +47,17 @@ Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman:
 	\label{fig:2_play_struktur}
 \end{figure}
 
-\subsubsection{Conf. Play}
+\subsubsection{Direktori conf.}
 Konfigurasi \play terdapat pada direktori \textit{conf}. Dalam direktori \textit{conf}, terdapat file \textit{application.conf} dan \textit{routes}. File \textit{application.conf} mengandung informasi data konfigurasi aplikasi, seperti \textit{logging}, koneksi basis data, dan port berapa server berjalan. File \textit{routes} menentukan \textit{routes} aplikasi, yaitu pemetaan dari URL HTTP ke kode aplikasi. Setiap \textit{routes} memiiki tiga bagian, yaitu HTTP \textit{method}, URL \textit{path}, dan \textit{action method}. HTTP \textit{method} merupakan metode yang dipakai dalam pengiriman HTTP. URL \textit{path} adalah URL yang dipakai untuk mengakses halaman. \textit{Action method} merupakan metode  yang dipanggil ketika mengakses halaman pada URL \textit{path}. Sebagai contoh dapat dilihat pada \ref{fig:2_play_routes}, HTTP \textit{method} yang dipakai pada URL /list adalah HTTP \textit{method} GET dan akan memanggil \textit{method} list pada kelas Products di controllers.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics{Gambar/play-routes}
+	\includegraphics[scale=0.7]{Gambar/play-routes}
 	\caption{Contoh \textit{Routes}} 
 	\label{fig:2_play_routes}
 \end{figure}
 
-\subsubsection{Public Play}
+\subsubsection{Direktori public}
 Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, JavaScript, dan halaman statis HTML. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_struktur}.
 %
 %\begin{figure}[H]
@@ -67,21 +67,19 @@ Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung 
 %	\label{fig:2_play_public}
 %\end{figure}
 
-\subsubsection{App. Play}
-Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_struktur}. Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman web. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request} berupa view. Ada dua file template, yaitu index.scala.html dan main.scala.html yang berfungsi untuk menentukan halaman HTML yang akan dimuat. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. View dapat menerima parameter yang didefinisikan pada template view. Contoh view dengan menerima parameter berupa String dapat dilihat pada figur \ref{fig:2_play_view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view} dengan memberi parameter "Hello World". \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada figur \ref{fig:2_play_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima \textit{parameter} berupa "Hello World". Hasil Results dapat berupa banyak method, misalnya ok untuk mengembalikan kode \textit{HTTP Response} 200, notFound untuk mengembalikan kode \textit{HTTP Response} 404 atau tidak ada halaman yang dituju, badRequest adalah Result dengan kode \textit{HTTP Response} 400 atau adanya kesalahan masukan pengguna, internalServerError adalah Result dengan kode \textit{HTTP Response} 500 atau adanya kesalahan pada server, status adalah Result dengan kode \textit{HTTP Response} yang dapat ditentukan sendiri beserta pesannya, redirect adalah Result untuk mengalihkan halaman. Contoh berbagai Result tedapat pada figur \ref{fig:2_play_controller_method}.
+\subsubsection{Direktori app.}
+Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_struktur}. 
+
+Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman \textit{view}. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request} berupa view. Ada dua file template, yaitu index.scala.html dan main.scala.html yang berfungsi untuk menentukan halaman HTML yang akan dimuat. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. View dapat menerima parameter yang didefinisikan pada template view. Contoh view dengan menerima parameter berupa String dapat dilihat pada kode listing \ref{lst_2_view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view} dengan memberi parameter "Hello World". \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada kode listing \ref{lst_2_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima \textit{parameter} berupa "Hello World". Pada \cite{playforjava}, hasil Result dalam \verb!static!, tetapi pada \play 2.4 \verb!static! dihilangkan.
 % Products pada \textit{parameter ok} menyerahkan semua data kepada \textit{model}, yaitu kelas Product dan merepresentasikan data ke \textit{view}, yaitu \textit{template list}. \textit{Method} list() mengembalikan \textit{view products} dengan mengirimkan \textit{parameter} berupa \textit{list of products}. 
 
-
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
-	@(title: String)
+\begin{lstlisting}[caption=Contoh View,label = {lst_2_view},language=Java]
+@(title: String)
 
 	<!DOCTYPE html>
 
 	<html>
-    		<head>
+    		 <head>
        	 <title>@title</title>
        	 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
        	 <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
@@ -91,51 +89,37 @@ Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \texti
         		@title
     		</body>
 	</html>
-	\end{lstlisting}
-	\caption{Contoh View}
-	\label{fig:2_play_view}
-\end{figure}
+\end{lstlisting}
 
 
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
+\begin{lstlisting}[caption=Contoh Controller,label = {lst_2_controller},language=Java]
 	public Result index() {
         return ok(index.render("Hello World"));
     }
-	\end{lstlisting}
-	\caption{Method pada Controller}
-	\label{fig:2_play_controller}
-\end{figure}
+\end{lstlisting}
 
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
-		Result ok = ok("Hello world!");
-		
-		Result notFound = notFound();
-		Result pageNotFound = notFound("<h1>Page not found</h1>").as("text/html");
-		
-		Result badRequest = badRequest(views.html.form.render(formWithErrors));
-		
-		Result oops = internalServerError("Oops");
-		
-		Result anyStatus = status(488, "Strange response type");
-		
-		Result redirect = redirect("/user/home");
-	\end{lstlisting}
-	\caption{Contoh Results}
-	\label{fig:2_play_controller_method}
-\end{figure}
+Beberapa alternatif hasil Results, yaitu:
+\begin{enumerate}
+	\item \textbf{Method ok} 
+	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 200 atau sukses dalam mengirim \textbf{HTTP Request}.
+	\item \textbf{Method notFound} 
+	Method yang berfungsi untuk mengembalikan Result dengan  kode \textit{HTTP Response} 404 atau tidak ada halaman yang dituju.
+	\item \textbf{Method badRequest} 
+	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 400 atau adanya kesalahan masukan pengguna.
+	\item \textbf{Method internalServerError}
+	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 500 atau adanya kesalahan pada server.
+	\item \textbf{Method status}
+	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} yang dapat ditentukan sendiri beserta pesannya.
+	\item \textbf{Method redirect}
+	Method yang berfungsi untuk mengembalikan Result untuk mengalihkan halaman.
+\end{enumerate}
 
 \subsection{Body Parsers}
 \textit{Body parsers} bertugas untuk melakukan pemetaan \textit{request body} menjadi objek. Setiap \textit{action method} POST dan PUT mengandung \textit{body}. Jumlah \textit{body} dapat satu atau banyak, dan dapat berupa XML, JSON, data biner, atau dapat berupa apapun sesuai Content-Type pada \textit{header request}. \textit{Body parsers} akan menguraikan \textit{body} menjadi objek Java. \textit{Body parsers} mengubah \textit{request} menjadi objek yang dapat digunakan oleh komponen Play. Karena \textit{body} JSON dan \textit{body} XML berbeda penguraiannya, Play menggunakan \textit{body parsers} yang berbeda pula implementasinya. Berbeda Content-Type pada \textit{header request}, \textit{body parsers} spesifik dapat mengubah data yang masuk menjadi sesuatu yang dapat dimengerti oleh Play. Ilustrasi dapat dilihat pada gambar \ref{fig:2_play_bodyparsers}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics{Gambar/play-bodyparsers}
+	\includegraphics[scale=0.7]{Gambar/play-bodyparsers}
 	\caption{Interaksi \textit{Body Parsers} dengan \textit{Request}} 
 	\label{fig:2_play_bodyparsers}
 \end{figure}
@@ -155,34 +139,31 @@ Pengguna aplikasi mungkin berasal dari beda negara dan bahasa, juga punya format
 	\item Internationalization dapat dilakukan proses lokalisasi dengan cepat.
 \end{itemize}
 
-Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan seperti pada figur \ref{fig:2_play_i18n}.
+Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan. Pesan ini dimuat dalam file messages.LANG dimana LANG merupakan bahasa yang dipakai. Sebagai contoh, terdapat dua bahasa yang dipakai pada aplikasi, yaitu Bahasa Inggris dan Bahasa Indonesia seperti pada kode listing \ref{lst_2_i18n_en} dan \ref{lst_2_i18n_id}
 
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
-		welcome = Welcome!
-		users.login = Log in
-		shop.thanks = Thank you for your order
-	\end{lstlisting}
+\begin{lstlisting}[caption=Contoh messages.en untuk i18n,label = {lst_2_i18n_en},language=Java]
+	from = From:
+	ph_from = e.g. Stasiun
+	ph_to = e.g. Monas,Jakarta
+	find = Find!
+	to = To:
+\end{lstlisting}
 
-	\label{fig:2_play_i18n}
-\end{figure}
+\begin{lstlisting}[caption=Contoh messages.id untuk i18n,label = {lst_2_i18n_id},language=Java]
+	from = Dari:
+	ph_from = misal: Stasiun
+	ph_to = misal: Monas, Jakarta
+	find = Cari!
+	to = Ke:
+\end{lstlisting}
 
-Play harus mengetahui bahasa apa saja yang ada pada aplikasi. Untuk itu, daftarkan bahasa pada application.conf seperti pada figur \ref{fig:2_play_i18n_conf}.
+Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file messages.LANG. Untuk itu, daftarkan bahasa pada application.conf seperti pada kode listing \ref{lst_2_conf_i18n}. Pada \cite{playforjava}, konfigurasi bahasa dalam satu String. Tetapi pada \play 2.4 konfigurasi bahasa dalam bentuk array of String.
 
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
-		application.langs="en,en-US,nl"
-	\end{lstlisting}
+\begin{lstlisting}[caption=Konfigurasi Bahasa i18n,label = {lst_2_conf_i18n},language=Java]
+	application.langs=["en","id"]
+\end{lstlisting}
 
-	\label{fig:2_play_i18n_conf}
-\end{figure}
 
-Setelah itu, buat file pada direktori \textit{conf} dengan nama messages.LANG dimana LANG adalah bahasa yang digunakan. Sebagai contoh untuk file bahasa Prancis akan disimpan pada conf/messages.fr dengan isinya \begin{lstlisting}		welcome=Bienvenue!
-	\end{lstlisting}.
 	
 	
 \section{OpenLayers}
@@ -207,72 +188,61 @@ Modul OpenLayers yang dipakai dalam penelitian ini adalah:
 \end{itemize}
 
 \subsection{Bing Maps}
-Peta yang digunakan merupakan Bing Maps dari Microsoft. Jika ingin menggunakan Bing Maps pada Openlayers, harus mendapatkan kunci yang didapat dari Bing Maps serta memilih tipe peta yang akan ditampilkan. Sebagai contoh pada figur \ref{fig:2_ol_bing}.
+Peta yang digunakan merupakan Bing Maps dari Microsoft. Jika ingin menggunakan Bing Maps pada Openlayers, harus mendapatkan kunci yang didapat dari Bing Maps serta memilih tipe peta yang akan ditampilkan. Sebagai contoh pada kode listing \ref{lst_2_ol_bing}.
 
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
-		var mapLayer = new ol.layer.Tile(
-        {
-            source : new ol.source.BingMaps(
-                {
-                    key : 'AuV7xXD6_UMiQ5BLoZr0xkpjLpzWqMT55772Q8XtLIQeuDebHPKiNXSlZXxEr1GA',
-                    imagerySet : 'Road'
-                })
-        });
-	\end{lstlisting}
-
-	\label{fig:2_ol_bing}
-\end{figure}
+\begin{lstlisting}[caption=Penggunaan Bing Maps pada Openlayers,label = {lst_2_ol_bing},language=Java]
+var mapLayer = new ol.layer.Tile(
+{
+	source : new ol.source.BingMaps(
+    	{
+     	key : 'AuV7xXD6_UMiQ5BLoZr0xkpjLpzWqMT55772Q8XtLIQeuDebHPKiNXSlZXxEr1GA',
+         imagerySet : 'Road'
+     })
+});
+\end{lstlisting}
 
 \subsection{Draw Poin}
-Pada peta KIRI, pengguna dapat memilih tempat awal dan tujuan dengan memasukkan nama tempat atau memilih tempat pada peta. Pada Openlayers, disediakan fitur untuk menangani kursor klik pengguna. Pertama menentukan vektor gambar yang akan ditampilkan pada peta seperti pada figur \ref{fig:2_ol_poin_vector}. Setelah itu, menggambar pada peta seperti pada figur \ref{fig:2_ol_poin_draw}.
+Pada peta KIRI, pengguna dapat memilih tempat awal dan tujuan dengan memasukkan nama tempat atau memilih tempat pada peta. Pada Openlayers, disediakan fitur untuk menangani kursor klik pengguna. Pertama menentukan gambar yang akan ditampilkan pada peta seperti pada kode listing \ref{lst_2_ol_image}. Setelah itu, menggambar pada peta seperti pada figur \ref{lst_2_ol_map}.
 
 
-\begin{figure}[H]
-	\centering
+\begin{lstlisting}[caption=Menentukan gambar yang akan dipakai pada peta,label = {lst_2_ol_image},language=Java]
+
 	
-	\begin{lstlisting}
-		var source = new ol.source.Vector({wrapX: false});
-		var vector = new ol.layer.Vector({
-  			source: source,
- 			style: new ol.style.Style({
-    				fill: new ol.style.Fill({
-      				color: 'rgba(255, 255, 255, 0.2)'
-    				}),
-    				stroke: new ol.style.Stroke({
-      				color: '#ffcc33',
-      				width: 2
-    				}),
-    				image: new ol.style.Circle({
-      				radius: 7,
-      				fill: new ol.style.Fill({
-        					color: '#ffcc33'
-      				})
-    				})
-  			})
-		});
-	\end{lstlisting}
-
-	\label{fig:2_ol_poin_vector}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
+	var markers = {start: null, finish: null};
 	
-	\begin{lstlisting}
-		draw = new ol.interaction.Draw({
-     		 source: source,
-      		 type: /** @type {ol.geom.GeometryType} */ (value),
-     		 geometryFunction: geometryFunction,
-      		maxPoints: maxPoints
-    });
-	\end{lstlisting}
+	var inputVectorSource = new ol.source.Vector();
 
-	\label{fig:2_ol_draw}
-\end{figure}
+	markers['start'] = new ol.Feature(
+	{
+		geometry: new ol.geom.Point(event.coordinate)
+	})
+	
+	markers['start'].setStyle(new ol.style.Style(
+	{
+		image: new ol.style.Icon({
+			src: '/assets/images/start.png',
+			anchor: [1.0, 1.0]
+		})
+	}));
+	
+	inputVectorSource.addFeature(markers['start']);
+	
+	
+\end{lstlisting}
 
+
+\begin{lstlisting}[caption=Menambahkan vektor pada peta,label = {lst_2_ol_map},language=Java]
+	
+var map = new ol.Map({
+    target: 'map',
+    layers : [ mapLayer, new ol.layer.Vector({source: inputVectorSource}), new ol.layer.Vector({source: resultVectorSource}) ],
+    view: new ol.View({
+        center: ol.proj.fromLonLat([107.60981,-6.91474]),
+        zoom: 12
+    })
+});
+		
+\end{lstlisting}
 
 \section{Zurb Foundation}
 \label{sec:zurbfoundation}
@@ -309,17 +279,11 @@ Setiap sel merupakan area konten yang dapat digabung dengan sel lain yang berseb
 	\label{fig:2_zurb_grid}
 \end{figure}
 
-Komponen Foundation adalah kode CSS  yang membantu untuk desain dan merepresentasikan konten halaman \textit{web}. Dengan menggunakan komponen Foundation, tidak perlu desain sendiri dari awal. CSS pada Foundation juga dapat dikustomisasi sesuai dengan kebutuhan. Jika ingin menggunakan komponen Foundation, kita hanya perlu menggunakan tag class pada elemen yang diinginkan. Contoh penggunaaan komponen Foundation dapat dilihat pada figur \ref{fig:2_zurb_grid}.
+Komponen Foundation adalah kode CSS  yang membantu untuk desain dan merepresentasikan konten halaman \textit{web}. Dengan menggunakan komponen Foundation, tidak perlu desain sendiri dari awal. CSS pada Foundation juga dapat dikustomisasi sesuai dengan kebutuhan. Jika ingin menggunakan komponen Foundation, kita hanya perlu menggunakan tag class pada elemen yang diinginkan. Contoh penggunaaan komponen Foundation dapat dilihat pada figur \ref{lst_2_zurb_contoh}.
 
-\begin{figure}[H]
-	\centering
-	
-	\begin{lstlisting}
-		<img class="show-for-small" src="./images/little.png"/>
-	\end{lstlisting}
-
-	\label{fig:2_zurb_contoh}
-\end{figure}
+\begin{lstlisting}[caption=Menggunakan kelas yang sudah disediakan dari Foundation,label = {lst_2_zurb_contoh}]
+	<img class="show-for-small" src="./images/little.png"/>
+\end{lstlisting}
 
 \section{Chrome DevTools}
 \label{sec:devtools}
