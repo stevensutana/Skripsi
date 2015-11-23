@@ -139,7 +139,7 @@ Pengguna aplikasi mungkin berasal dari beda negara dan bahasa, juga punya format
 	\item Internationalization dapat dilakukan proses lokalisasi dengan cepat.
 \end{itemize}
 
-Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan. Pesan ini dimuat dalam file messages.LANG dimana LANG merupakan bahasa yang dipakai. Sebagai contoh, terdapat dua bahasa yang dipakai pada aplikasi, yaitu Bahasa Inggris dan Bahasa Indonesia seperti pada kode listing \ref{lst_2_i18n_en} dan \ref{lst_2_i18n_id}
+Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan. Pesan ini dimuat dalam file messages.LANG dimana LANG merupakan bahasa yang dipakai. Messages.LANG disimpan dalam direktori conf. Sebagai contoh, terdapat dua bahasa yang dipakai pada aplikasi, yaitu Bahasa Inggris dan Bahasa Indonesia seperti pada kode listing \ref{lst_2_i18n_en} dan \ref{lst_2_i18n_id}
 
 \begin{lstlisting}[caption=Contoh messages.en untuk i18n,label = {lst_2_i18n_en},language=Java]
 	from = From:
@@ -160,7 +160,11 @@ Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan p
 Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file messages.LANG. Untuk itu, daftarkan bahasa pada application.conf seperti pada kode listing \ref{lst_2_conf_i18n}. Pada \cite{playforjava}, konfigurasi bahasa dalam satu String. Tetapi pada \play 2.4 konfigurasi bahasa dalam bentuk array of String.
 
 \begin{lstlisting}[caption=Konfigurasi Bahasa i18n,label = {lst_2_conf_i18n},language=Java]
-	application.langs=["en","id"]
+	...
+	# The application languages
+	# ~~~~~
+	play.i18n.langs = [ "en","id" ]
+	...
 \end{lstlisting}
 
 
