@@ -1,7 +1,6 @@
 \documentclass[a4paper,twoside]{article}
 \usepackage[T1]{fontenc}
 \usepackage[bahasa]{babel}
-\usepackage{color} %warna
 \usepackage{graphicx}
 \usepackage{graphics}
 \usepackage{float}
@@ -13,7 +12,7 @@
 \usepackage{listings} %source code
 \usepackage{lscape} %landscape untuk source code
 \usepackage{multicol} %multiple column
-\usepackage{ifthen} % if then
+\usepackage{url}
 \setlength{\headsep}{30pt}
 \usepackage[inner=2cm,outer=2.5cm,top=2.5cm,bottom=2cm]{geometry} %margin
 % \pagestyle{empty}
@@ -27,7 +26,7 @@
 \onehalfspacing
  
 \begin{document}
-
+\def\bibname{Daftar Referensi}
 \title{\@judultopik}
 \author{\nama \textendash \@npm} 
 
@@ -49,8 +48,7 @@
 % C : dokumen pendukung untuk pengambilan ke-2 di Skripsi 2
 \maketitle
 
-\pagenumbering{arabic}
-
+\newcommand{\play}{Play Framework }
 \lstset{
   numbers=left,
   stepnumber=1,    
@@ -59,6 +57,8 @@
 }
 \lstset{basicstyle=\tiny, commentstyle=\color{blue}}
 \lstset{frame=leftline, tabsize=4, breaklines=true}
+
+\pagenumbering{arabic}
 
 \section{Data Skripsi} %TIDAK PERLU MENGUBAH BAGIAN INI !!!
 Pembimbing utama/tunggal: {\bf \pembA}\\
@@ -69,19 +69,19 @@ Pengambilan pertama kali topik ini pada : Semester {\bf \semesterPertama} \\
 Pengambilan pertama kali topik ini di kuliah : {\bf \kulPertama} \\
 Tipe Laporan : {\bf \tipePR} -
 \ifdefstring{\tipePR}{A}{
-      Dokumen pendukung untuk {\BF pengambilan ke-2 di Skripsi 1} }
-    {
-    \ifdefstring{\tipePR}{B} {
-        Dokumen untuk reviewer pada presentasi dan {\bf review Skripsi 1}}
-      {  Dokumen pendukung untuk {\bf pengambilan ke-2 di Skripsi 2}}
-    }
+			Dokumen pendukung untuk {\BF pengambilan ke-2 di Skripsi 1} }
+		{
+		\ifdefstring{\tipePR}{B} {
+				Dokumen untuk reviewer pada presentasi dan {\bf review Skripsi 1}}
+			{	Dokumen pendukung untuk {\bf pengambilan ke-2 di Skripsi 2}}
+		}
 
 \section{Detail Perkembangan Pengerjaan Skripsi}
 Detail bagian pekerjaan skripsi sesuai dengan rencan kerja/laporan perkembangan terkahir :
   \begin{enumerate}
     \item Memahami dan melakukan analisa kode KIRI yang sudah ada.\\
     {\bf status :} Ada sejak rencana kerja skripsi.\\
-    {\bf hasil :} 
+    {\bf hasil :} \\
     Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terdapat beberapa bagian yaitu:
     \begin{enumerate}
     		\item \textbf{Peta}
@@ -787,8 +787,9 @@ Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file 
 
     \item Merancang dan mengimplementasikan kode KIRI yang sudah ada menjadi Play Framework.\\
     {\bf status :} Ada sejak rencana kerja skripsi.\\
-    {\bf hasil :}    
-    \begin{lstlisting}[caption=Template \textit{view} pada Play Framework]
+    {\bf hasil :}    \\
+    Melakukan implementasi Play Framework seperti pada kode listing \ref{lst_2_kode_play}.
+    \begin{lstlisting}[caption=Template \textit{view} pada Play Framework,label = {lst_2_kode_play}]
 @import play.i18n._
 <!DOCTYPE html>
 
@@ -919,17 +920,755 @@ Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file 
 
     \end{lstlisting}
     
-    
+\textbf{Form Samping}
+Untuk menampilkan pilihan kota pada \play, menampilkan semua pilihan kota yang terdapat pada KIRI. Kode dapat dilihat pada kode listing \ref{lst_3_play_dropdown_kota_tampilan}
+\begin{lstlisting}[caption=Menampilkan pilihan kota kepada pengguna ,label = {lst_3_play_dropdown_kota_tampilan}]
+..
+<select class="fullwidth" id="regionselect">
+    <option value="bdg">Bandung</option>
+    <option value="jkt">Jakarta</option>
+    <option value="sby">Surabaya</option>
+    <option value="mlg">Malang</option>
+</select>
+..
+\end{lstlisting}
 
+Untuk memperbarui peta menggunakan \play, membuat fungsi JavaScript updateMap dengan parameter array Float sebagai garis bujur dan garis lintang dan zoom sebagai tingkat zoom pada peta. Kode dapat dilihat pada kode listing \ref{lst_3_play_dropdown_kota_updateMap}.
+\begin{lstlisting}[caption=Fungsi JavaScript untuk memperbarui peta ,label = {lst_3_play_dropdown_kota_updateMap}]
+var updateMap = function(arrLonLat,zoom){
+    map.getView().setCenter(ol.proj.transform(arrLonLat, 'EPSG:4326', 'EPSG:3857'));
+    map.getView().setZoom(zoom);
+};
+\end{lstlisting}
+
+Untuk menambahkan aksi ketika memilih opsi \textit{dropdown} kota, pertama melakukan pencarian pada dokumen dengan \textit{id} regionselect. Handler tersebut berfungsi ketika mengganti pilihan pada dropdown, memasukkan koordinat yang tepat untuk opsi kota dan memanggil fungsi updateMap untuk memperbarui peta. Kode dapat dilihat pada kode listing \ref{lst_3_play_dropdown_kota_update}.
+\begin{lstlisting}[caption=Fungsi JavaScript untuk menambahkan \textit{handler} ketika mengganti \textit{dropdown} kota ,label = {lst_3_play_dropdown_kota_update}]
+var regionSelect = document.getElementById("regionselect");
+var handlerRegion = function () {
+    var regionValue = regionSelect.value;
+    if(regionValue=="bdg")
+    {
+        arrLonLat = [107.60981,-6.91474];
+        updateMap(arrLonLat,12);
+    }else if(regionValue=="jkt")
+    {
+        arrLonLat = [106.84517,-6.21154];
+        updateMap(arrLonLat,11);
+    }else if(regionValue=="sby")
+    {
+        arrLonLat = [112.71908,-7.27421];
+        updateMap(arrLonLat,12);
+    }else
+    {
+        arrLonLat = [112.6319264,-7.9812985];
+        updateMap(arrLonLat,13);
+    }
+};
+regionSelect.addEventListener("change",handlerRegion,false);
+\end{lstlisting}
+
+\textbf{Dropdown Menu Bahasa}
+Untuk menampilkan pilihan bahasa, menggunakan \textit{tag} HTML \verb!option!. Pada bagian ini. Kode dapat dilihat pada \ref{lst_3_pplay_dropdown_bahasa_tampilan}.
+
+\begin{lstlisting}[caption=Menampilkan pilihan bahasa kepada pengguna ,label = {lst_3_play_dropdown_bahasa_tampilan}]
+..
+<select class="fullwidth" id="localeselect">
+    <option value="en">English</option>
+    <option value="id">Bahasa Indonesia</option>
+</select>
+..
+\end{lstlisting}
+
+Ketika memilih \textit{dropdown} bahasa, pertama melakukan pencarian pada dokumen dengan \textit{id} localeselect. Setelah itu menambahkan \textit{handler} yang berisi melakukan pengecekan isi dari \textit{dropdown} bahasa, lalu memanggil \textit{method} JavaScript \verb!window.location.replace! dengan \textit{parameter} URL baru yang sesuai dengan bahasa. Kode dapat dilihat pada kode listing \ref{lst_3_play_dropdown_bahasa_fungsi}.
+\begin{lstlisting}[caption=Fungsi JavaScript untuk Internationalization ,label = {lst_3_play_dropdown_bahasa_fungsi}]
+..
+var localeSelect = document.getElementById("localeselect");
+var handlerLocale = function(){
+    var localeValue = localeSelect.value;
+    if(localeValue=="en")
+    {
+        window.location.replace("http://localhost:9000");
+    }
+    else if(localeValue =="id")
+    {
+        window.location.replace("http://localhost:9000/id");
+    }
+};
+localeSelect.addEventListener("change",handlerLocale,false);
+..
+\end{lstlisting}
+
+\textbf{Textfield}
+Pada \play, \textit{Textfield} pada KIRI dibuat  agar dapat dilakukan proses i18n, seperti pada kode listing \ref{lst_3_play_textfield_from} untuk \textit{textfield} tempat asal dan kode listing \ref{lst_3_play_textfield_to} untuk \textit{textfield} tempat tujuan.
+
+\begin{lstlisting}[caption=Menampilkan \textit{textfield} tempat awal kepada pengguna ,label = {lst_3_play_textfield_from}]
+..
+<div class="small-2 columns">
+    <label for="startInput" class="inline">@Messages.get("from")</label>
+</div>
+<div class="small-10 columns">
+    <input type="text" id="startInput" value=""
+    placeholder="@Messages.get("ph_from")">
+</div>
+..
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Menampilkan \textit{textfield} tempat tujuan kepada pengguna ,label = {lst_3_play_textfield_to}]
+..
+<div class="small-2 columns">
+    <label for="finishInput" class="inline">@Messages.get("to")</label>
+</div>
+<div class="small-10 columns">
+    <input type="text" id="finishInput" value=""
+    placeholder="@Messages.get("ph_to")">
+</div>
+..
+\end{lstlisting}
+	
+Pada \play, hal yang diubah adalah pengambilan gambar pada folder `assets/images. Kode dapat dilihat pada kode listing \ref{lst_3_play_textfield_koord_kode}.
+
+\begin{lstlisting}[caption=Membuat \textit{event} klik pada peta,label = {lst_3_play_textfield_koord_kode}]
+//for map click event
+map.on('click', function(event) {
+    if (startInput.value === '')
+    {
+        markers['start'] = new ol.Feature({
+            geometry: new ol.geom.Point(event.coordinate)
+        })
+        markers['start'].setStyle(new ol.style.Style({
+            image: new ol.style.Icon({
+                src: '/assets/images/start.png',
+                anchor: [1.0, 1.0]
+            })
+        }));
+        inputVectorSource.addFeature(markers['start']);
+        startInput.value = latLngToString(ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326'));
+    }else if (finishInput.value === '') {
+        markers['finish'] = new ol.Feature({
+            geometry: new ol.geom.Point(event.coordinate)
+        })
+        markers['finish'].setStyle(new ol.style.Style({
+            image: new ol.style.Icon({
+                src: 'assets/images/finish.png',
+                anchor: [0.0, 1.0]
+            })
+        }));
+        inputVectorSource.addFeature(markers['finish']);
+        finishInput.value = latLngToString(ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326'));
+    }
+});
+\end{lstlisting}
+
+\textbf{Tombol Swap}
+Pengguna dapat menukar isi dari \textit{textfield} tempat asal dan tujuan. Pertama kali yang dilakukan adalah mencari pada dokumen dengan \textit{id} swapbutton dan menambahkan fungsi seperti pada kode listing \ref{lst_3_play_swap}. Fungsi tersebut berisi menukar isi dari textfield tempat asal dan tempat tujuan seperti pada kode listing \ref{lst_3_php_swap_fungsi}.
+\begin{lstlisting}[caption=\textit{Method} untuk memanggil fungsi JavaScript ketika tombol \textit{swap} ditekan ,label = {lst_3_play_swap}]
+..
+var swapBtn = document.getElementById("swapbutton");
+swapBtn.addEventListener("click",swapInput);
+..
+\end{lstlisting}
+\begin{lstlisting}[caption=Fungsi JavaScript untuk menukar isi \textit{textfield} tempat asal dan tujuan ,label = {lst_3_pplay_swap_fungsi}]	
+/**
+ * Swap the inputs
+ */
+function swapInput() {
+    var temp = startInput.value;
+    startInput.value = finishInput.value;
+    finishInput.value = temp;
+    coordinates['start'] = null;
+    coordinates['finish'] = null;
+    
+    if(startInput.value != "" && finishInput.value != ""){
+        findRouteClicked();
+    }
+}
+\end{lstlisting}
+
+\textbf{Tombol Reset}
+Pertama kali yang dilakukan adalah mencari pada dokumen dengan \textit{id} resetbutton dan menambahkan fungsi reset ketika tombol reset ditekan seperti pada kode listing \ref{lst_3_play_reset}. 
+\begin{lstlisting}[caption=\textit{Method} untuk memanggil fungsi JavaScript ketika tombol \textit{reset} ditekan ,label = {lst_3_play_reset}]
+..
+var resetBtn = document.getElementById("resetbutton");
+resetBtn.addEventListener("click",reset);
+..
+\end{lstlisting}
+Fungsi reset berisi berbagai fungsi seperti pada kode listing \ref{lst_3_php_reset_fungsi}, yaitu:
+\begin{lstlisting}[caption=Fungsi JavaScript reset ,label = {lst_3_play_reset_fungsi}]	
+/**
+ * Reset Screen
+ */
+function reset() {
+    clearRoutingResultsOnTable();
+    clearRoutingResultsOnMap();
+    clearAlerts();
+    clearStartFinishMarker();
+    var x = ['start', 'finish'];
+    for (x in markers, function(sfIndex, sfValue) {
+        var placeInput = '#' + sfValue + 'Input';
+        placeInput.val('');
+        placeInput.prop('disabled', false);
+        '#' + sfValue + 'Select'.addClass('hidden');
+    });
+}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item \textbf{Fungsi clearRoutingResultsOnMap}\\
+	Fungsi untuk menghapus pada resultVectorSource yang merupakan berbagai \textit{marker} pada peta sebagai hasil pencarian rute dan memperbarui peta. Kode dapat dilihat pada kode listing \ref{lst_3_play_reset_clearMap}.
+	\begin{lstlisting}[caption=Fungsi JavaScript untuk menghapus hasil pencarian rute pada peta ,label = {lst_3_play_reset_clearMap}]
+	function clearRoutingResultsOnMap() {
+		resultVectorSource.clear();
+	    arrLonLat = [107.60981,-6.91474];
+	    updateMap(arrLonLat,12);
+	}
+	\end{lstlisting}
+	
+	\item \textbf{Fungsi clearRoutingResultsOnTable}\\
+	Fungsi untuk menghapus tampilan tabel sebagai hasil pencarian rute yang akan ditampilkan pada pengguna. Pertama melakukan pencarian pada dokumen dengan \textit{id} tabs dan tabs-content. Lalu, menghapus pada dokumen dengan \textit{id} tersebut. Kode dapat dilihat pada kode listing \ref{lst_3_play_reset_clearTable}.
+	
+	\begin{lstlisting}[caption=Fungsi JavaScript untuk menghapus tampilan tabel,label = {lst_3_play_reset_clearTable}]
+	function clearRoutingResultsOnTable() {
+		var tabs = document.getElementById("tabs");
+	    var tabsContent = document.getElementById("tabs-content");
+	    tabs.remove();
+	    tabsContent.remove();
+	}
+	\end{lstlisting}
+	
+	\item \textbf{Fungsi clearAlerts}\\
+	Fungsi untuk menghapus \textit{alerts} sebagai tanda yang akan ditampilkan kepada pengguna, seperti sedang melakukan pencarian rute atau masalah koneksi. Pertama melakukan pencarian dokumen dengan id alert-box, lalu menghapus pada dokumen. Kode dapat dilihat pada kode listing \ref{lst_3_play_reset_clearAlerts}.
+	
+	\begin{lstlisting}[caption=Fungsi JavaScript untuk menghilangkan \textit{alerts},label = {lst_3_play_reset_clearAlerts}]
+	function clearAlerts() {
+	    var alertBox = document.getElementById("alert-box");
+	    alertBox.remove();
+	}
+	\end{lstlisting}
+		
+\end{enumerate}
+
+\textbf{Tombol Find}
+Pada \play, kode yang diganti hanya tampilan saja. Kode dapat dilihat pada kode listing \ref{lst_3_play_find}.
+\begin{lstlisting}[caption=Fungsi JavaScript untuk ketika tombol \textit{find} ditekan,label = {lst_3_play_find}]
+...
+<div class="small-6 columns">
+    <a href="#" class="small button expand" id="findbutton"><strong>@Messages.get("find")</strong></a>
+</div>
+...
+\end{lstlisting}
+
+\textbf{Internationalization}
+Penggunaan i18n pada \play hampir sama dengan i18n pada PHP, pertama deklarasi semua variabel yang akan digunakan pada i18n, misal membuat file dengan nama messages.en untuk Bahasa Inggris dan messages.id untuk Bahasa Indonesia. Pada setiap file tersebut, masukkan kunci beserta value untuk untuk menentukan teks yang keluar pada halaman web seperti pada kode listing \ref{lst_3_i18n_play_en} dan kode listing \ref{lst_3_i18n_play_id}.
+\begin{lstlisting}[caption=Script \play untuk Bahasa Inggris,label = {lst_3_i18n_play_en}]
+from = From:
+ph_from = e.g. Stasiun
+ph_to = e.g. Monas,Jakarta
+find = Find!
+to = To:
+...
+\end{lstlisting}
+\begin{lstlisting}[caption=Script \play untuk Bahasa Indonesia,label = {lst_3_i18n_play_id}]
+from = Dari:
+ph_from = misal: Stasiun
+ph_to = misal: Monas, Jakarta
+find = Cari!
+to = Ke:
+...
+\end{lstlisting}
+Pada \play, ada dua cara untuk melakukan i18n dan sudah tersedia method untuk i18n, yaitu:
+
+\begin{enumerate}
+	\item Memanggil \textit{method} @Messages dengan parameter berupa String yang merupakan kunci dari file messages.LANG. Tetapi, dengan menggunakan cara ini, perlu dilakukan memuat ulang dua kali halaman \textit{web}. Kode dapat dilihat pada \ref{lst_3_i18n_play_1}
+	
+	\begin{lstlisting}[caption=Script \play untuk Internationalization,label = {lst_3_i18n_play_1}]
+		..
+		<label for="startInput" class="inline">@Messages("from")</label>
+		<label for="finishInput" class="inline">@Messages("to")</label>
+		<a href="#" class="small button expand" id="findbutton"><strong>@Messages("find")</strong></a>
+		...
+	\end{lstlisting}
+	
+	
+	\item Melakukan @import play.i18n.\_ pada \textit{template view} dan menggunakan \textit{method} @Messages.get dengan parameter berupa String yang merupakan kunci dari file messages.LANG. Kode dapat dilihat pada \ref{lst_3_i18n_play_2}.
+	
+		\begin{lstlisting}[caption=Script \play untuk Internationalization,label = {lst_3_i18n_play_2}]
+		@import play.i18n._
+		..
+		<label for="startInput" class="inline">@Messages.get("from")</label>
+		<label for="finishInput" class="inline">@Messages.get("to")</label>
+		<a href="#" class="small button expand" id="findbutton"><strong>@Messages.get("find")</strong></a>
+	\end{lstlisting}
+	
+\end{enumerate}
+
+Memanggil method @Messages dengan parameter berupa String yang merupakan kunci dari file messages.LANG. Dengan memanggil method @Messages ini, akan mengganti dengan value pada file messages.LANG seperti pada kode listing \ref{lst_3_i18n_play}.
+
+\textbf{Tampilan}\\
+Tampilan pada \play menggunakan format bahasa Scala. Tetapi penggunaan Scala pada \play tidak mengharuskan mahir dalam menggunakan Scala. \play menggunakan Scala tetapi ada ekstensi tambahan lagi yaitu HTML sehingga tidak berbeda jauh dalam penggunaannya dengan HTML biasa hanya dalam Scala, pedeklarasian variabel menggunakan notasi @, sedangkan pada PHP menggunakan notasi \$.
+
+\textbf{JavaScript dan stylesheet}\\
+Penggunaan \textit{stylesheet} dan Javascript pada PHP hanya tinggal memasukkan direktori file yang hendak digunakan, seperti pada kode listing \ref{lst_3_php_js}. Sedangkan pada \play, penggunaan \textit{stylesheet} dan Javascript harus didefinisikan terlebih dahulu pada routes seperti pada kode listing \ref{lst_3_routes}. Pada \cite{playforjava}, untuk akses folder public method yang dipanggil adalah method \verb!at! dan juga tidak disebutkan file mana yang akan diakses, sedangkan pada Play 2.4 method yang dipakai adalah method \verb!versioned! dan menyebutkan file mana yang akan diakses, yaitu file:Asset. Setelah melakukan definisi pada routes, memasukkan stylesheet atau Javascript pada \textit{view} dengan memanggil routes dengan direktori file yang hendak digunakan seperti pada kode listing \ref{lst_3_play_js}. 
+
+\begin{lstlisting}[caption=Penggunaan \textit{stylesheet} dan Javascript pada PHP,label = {lst_3_php_js}]
+	<link rel="stylesheet" href="css/styleIndex.css" />
+	<script src="foundation/js/vendor/modernizr.js"></script>
+\end{lstlisting}
+\begin{lstlisting}[caption=Routes untuk penggunaan \textit{stylesheet} dan Javascript,label = {lst_3_routes}]
+	GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+\end{lstlisting}
+\begin{lstlisting}[caption=Penggunaan \textit{stylesheet} dan Javascript pada \play,label = {lst_3_play_js}]
+	 <link rel="stylesheet" href="@routes.Assets.versioned("css/styleIndex.css")" type="text/css">
+	 <script src="@routes.Assets.versioned("foundation/js/vendor/modernizr.js")"></script>
+\end{lstlisting}
+Untuk mendapatkan elemen View pada JavaScript PHP langsung memanggil \verb!id! tujuan yang ada pada View sebagai parameter, seperti pada kode listing \ref{lst_3_elem_PHP}. Sedangkan pada \play, mendapatkan elemen View pada JavaScript harus menggunakan method document.getElementById dengan parameter berupa \verb!id! tujuan, seperti pada kode listing \ref{lst_3_elem_play}.
+\begin{lstlisting}[caption=Mendapatkan elemen View pada JavaScript PHP,label = {lst_3_elem_PHP}]
+		$('.tabs').remove();
+		$('.tabs-content').remove();
+\end{lstlisting}
+\begin{lstlisting}[caption=Mendapatkan elemen View pada JavaScript \play,label = {lst_3_elem_play}]
+    var tabs = document.getElementById("tabs").remove();
+    var tabs_content = document.getElementById("tabs-content").remove();
+\end{lstlisting}
+
+    
     \item Melakukan pengujian dan eksperimen.\\
     {\bf status :} Ada sejak rencana kerja skripsi.\\
     {\bf hasil :} 
 
     \item Membuat dokumen skripsi.\\
     {\bf status :} Ada sejak rencana kerja skripsi.\\
-    {\bf hasil :} Dokumen skripsi sudah ditulis sampai dengan bab 3.
+    {\bf hasil :} \\
+    
+\textbf{Pendahuluan}\\
+
+\textbf{Latar Belakang}\\
+
+KIRI \cite{statickiri} adalah sebuah aplikasi yang membantu pengguna dalam mengggunakan kendaraan umum. Peran KIRI sangat sederhana, yaitu memberitahu dimana lokasi sekarang dan kemana lokasi tujuan, lalu KIRI akan memberitahu bagaimana cara sampai ke lokasi tujuan dengan menggunakan kendaraan umum. 
+
+Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} merupakan bahasa \textit{scripting} yang cocok untuk pengembangan halaman \textit{web}. Tetapi menurut peneliti, bahasa PHP tidak cocok untuk proyek besar. Masalah yang sering dijumpai pada bahasa PHP adalah tidak ada \textit{type safety}. 
+
+\textit{Type safety} \footnote{ \url{https://en.wikipedia.org/wiki/Type_safety}, diakses 27 Oktober 2015} adalah fitur keamanan untuk mencegah kesalahan tipe data. Kesalahan tipe data dapat disebabkan oleh perbedaan tipe untuk konstanta program, variabel, dan fungsi. Sebagai contoh tipe data yang dibutuhkan berupa Float tetapi dalam program tipe data yang dimasukkan berupa Integer. Beberapa bahasa pemrograman terdapat fitur \textit{type safety}. Java mendukung Type Safety.
+
+\play adalah \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. \play menerapkan konsep MVC, yaitu Model, View, dan Controller\cite{playforjava}. 
+
+\textit{Porting} adalah proses adaptasi perangkat lunak yang awalnya tidak ditujukan untuk dieksekusi pada lingkungan tertentu. Istilah \textit{porting} digunakan ketika mengacu pada perubahan yang dibuat ketika tidak kompatibel dengan lingkungan.
+
+Pengembangan yang akan dilakukan adalah melakukan \textit{porting} kode KIRI (PHP) menjadi \play agar struktur kode KIRI menjadi rapih dan bahasa yang digunakan adalah bahasa Java. Dengan demikian, penulis bermaksud membuat proyek tugas akhir dengan judul ``Porting PHP menjadi \play (Studi Kasus: KIRI \textit{Front-End})``
+
+\textbf{Rumusan Masalah}
+\begin{itemize}
+	\item Bagaimana memahami dan menganalisis kode KIRI yang sudah ada?
+	\item Bagaimana melakukan porting kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java) ?
+\end{itemize}
+
+\textbf{Tujuan}
+\begin{itemize}
+	\item Memahami dan menganalisis kode KIRI.
+	\item Menjadikan kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java).
+\end{itemize}
+
+\textbf{Batasan Masalah}
+\begin{enumerate}
+	\item Play Framework yang digunakan adalah versi 2.4.3.
+	\item Kode KIRI yang sudah ada diambil dari Github pascalalfadian\cite{githubkiri}.
+\end{enumerate}
+
+\textbf{Metode Penelitian}\\
+Berikut adalah metode penelitian yang digunakan dalam pembuatan skripsi ini:
+	\begin{enumerate}
+		\item Melakukan studi literatur tentang metode yang berkaitan dengan kode PHP dan Java (Play Framework).
+		\item Memahami dan melakukan analisis kode KIRI yang sudah ada.
+		\item Merancang dan mengimplementasikan kode KIRI yang sudah ada menjadi Play Framework.
+		\item Melakukan pengujian dan eksperimen.
+		\item Membuat dokumen skripsi.
+	\end{enumerate}
+	
+\textbf{Sistematika Penulisan}\\
+Setiap bab dalam penulisan ini memiliki sistematika yang dijelaskan ke dalam poin-poin sebagai berikut:
+	\begin{enumerate}
+		\item Bab 1: Pendahuluan, yaitu membahas tentang latar belakang, rumusan masalah, tujuan, batasan masalah, metode penelitian dan sistematika penulisan.
+		\item Bab 2: Dasar Teori, yaitu membahas mengenai teori-teori yang mendukung berjalannya skripsi ini yang berisi tentang penggunaan Play Framework.
+		\item Bab 3: Analisis, yaitu membahas mengenai analisis masalah yang berisi tentang kode KIRI \textit{Front-End Server Side} serta melakukan \textit{porting} kode KIRI \textit{Front-End Server Side} menjadi Play Framework.
+	\end{enumerate}
+	
+	
+	
+\textbf{Landasan Teori}\\
+
+\textbf{Play Framework}\\
+Sudah dijelaskan pada poin kedua.
+
+\textbf{OpenLayers}\\
+OpenLayers \cite{openlayersbook} merupakan \textit{library} yang memiliki performa tinggi dan fitur yang dikemas untuk kebutuhan menampilkan peta menggunakan JavaScript. Dalam pengembangan aplikasi yang menggunakan fitur peta, tugas yang paling penting dan utama adalah membuat peta tersebut. Peta menjadi inti untuk menambahkan dan menampilkan data. Fitur yang terdapat pada OpenLayers adalah:
+
+\begin{itemize}
+\item \textit{Tiled Layers}\\
+			OpenLayers dapat menggunakan banyak \textit{map provider}, seperti OSM, Bing, MapBox, Stamen, MapQuest, dan berbagai sumber lain yang dapat ditemukan. Dengan menggunakan OpenLayers, tidak perlu menulis ulang kode yang sudah ada dan dapat mengganti kapanpun sumber \textit{map provider} yang ingin digunakan.
+	\item \textit{Vector Layers}\\
+			OpenLayers dapat mengubah data vektor dari berbagai tipe sumber, seperti GeoJSON, TopoJSON, KML, dan GML.
+	\item Cepat dan Siap untuk Perangkat \textit{Mobile}\\
+			OpenLayers mendukung perangkat \textit{mobile}. OpenLayers dapat membangun profil kustom yang berisi komponen yang dibutuhkan saja.
+	\item Mudah menyesuaikan peta dan \textit{cutting edge}\\
+			OpenLayers menyesuaikan peta WebGL, Canvas 2D, dan semua kelebihan dari HTML 5. Atur tampilan peta dengan mengubah langsung CSS.
+\end{itemize}
+
+Modul OpenLayers yang dipakai dalam penelitian ini adalah:
+\begin{itemize}
+	\item 	Bing Maps untuk menampilkan peta menggunakan Bing. KIRI menggunakan \textit{map provider} Bing Maps sebagai peta pada halaman utama KIRI. 
+	\item Draw untuk menggambar poin pada peta. Saat peta KIRI menangkap \textit{event mouseclick}, muncul poin yang berupa kustom gambar pada peta KIRI sebagai asal tempat dan tujuan. 
+\end{itemize}
+
+\textbf{Bing Maps}
+Peta yang digunakan merupakan Bing Maps dari Microsoft. Jika ingin menggunakan Bing Maps pada Openlayers, harus mendapatkan kunci yang didapat dari Bing Maps serta memilih tipe peta yang akan ditampilkan. Sebagai contoh pada kode listing \ref{lst_2_ol_bing}.
+
+\begin{lstlisting}[caption=Penggunaan Bing Maps pada Openlayers,label = {lst_2_ol_bing},language=Java]
+var mapLayer = new ol.layer.Tile(
+{
+	source : new ol.source.BingMaps(
+    	{
+     	key : 'AuV7xXD6_UMiQ5BLoZr0xkpjLpzWqMT55772Q8XtLIQeuDebHPKiNXSlZXxEr1GA',
+         imagerySet : 'Road'
+     })
+});
+\end{lstlisting}
+
+\textbf{Draw Poin}\\
+Pada peta KIRI, pengguna dapat memilih tempat awal dan tujuan dengan memasukkan nama tempat atau memilih tempat pada peta. Pada Openlayers, disediakan fitur untuk menangani kursor klik pengguna. Pertama menentukan gambar yang akan ditampilkan pada peta seperti pada kode listing \ref{lst_2_ol_image}. Setelah itu, menggambar pada peta seperti pada figur \ref{lst_2_ol_map}.
+
+
+\begin{lstlisting}[caption=Menentukan gambar yang akan dipakai pada peta,label = {lst_2_ol_image},language=Java]
+
+	
+	var markers = {start: null, finish: null};
+	
+	var inputVectorSource = new ol.source.Vector();
+
+	markers['start'] = new ol.Feature(
+	{
+		geometry: new ol.geom.Point(event.coordinate)
+	})
+	
+	markers['start'].setStyle(new ol.style.Style(
+	{
+		image: new ol.style.Icon({
+			src: '/assets/images/start.png',
+			anchor: [1.0, 1.0]
+		})
+	}));
+	
+	inputVectorSource.addFeature(markers['start']);
+	
+	
+\end{lstlisting}
+
+
+\begin{lstlisting}[caption=Menambahkan vektor pada peta,label = {lst_2_ol_map},language=Java]
+	
+var map = new ol.Map({
+    target: 'map',
+    layers : [ mapLayer, new ol.layer.Vector({source: inputVectorSource}), new ol.layer.Vector({source: resultVectorSource}) ],
+    view: new ol.View({
+        center: ol.proj.fromLonLat([107.60981,-6.91474]),
+        zoom: 12
+    })
+});
+		
+\end{lstlisting}
+
+\textbf{Foundation}\\
+
+Zurb Foundation \cite{zurbfoundationbook} merupakan sebuah \textit{toolkit} yang membantu untuk desain dan mengembangkan sebuah halaman \textit{web}. Zurb Foundation menggunakan sistem \textit{grid}, banyak komponen CSS serta JavaScript. 
+
+\textbf{Sistem Grid}\\
+Sistem \textit{grid} pada Zurb Foundation adalah semacam \textit{spreadsheet}, graf atau tabel yang digunakan untuk mengatur tampilan HTML. Gambaran sistem \textit{grid} dapat dilihat pada gambar \ref{fig:2_zurb_grid_blank}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/zurb-gridblank}
+	\caption{Sistem \textit{grid} kosong sebelum memulai desain.} 
+	\label{fig:2_zurb_grid_blank}
+\end{figure}
+
+Setiap sel merupakan area konten yang dapat digabung dengan sel lain yang bersebelahan untuk memperbesar area konten. Sel yang digunakan pada Zurb Foundation adalah 12 sel pada setiap baris. Gambaran pembagian sel pada Zurb Foundation dapat dilihat pada gambar \ref{fig:2_zurb_grid}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/zurb-grid}
+	\caption{Contoh pembagian sistem \textit{grid}.} 
+	\label{fig:2_zurb_grid}
+\end{figure}
+
+Komponen Foundation adalah kode CSS  yang membantu untuk desain dan merepresentasikan konten halaman \textit{web}. Dengan menggunakan komponen Foundation, tidak perlu desain sendiri dari awal. CSS pada Foundation juga dapat dikustomisasi sesuai dengan kebutuhan. Jika ingin menggunakan komponen Foundation, kita hanya perlu menggunakan tag class pada elemen yang diinginkan. Contoh penggunaaan komponen Foundation dapat dilihat pada figur \ref{lst_2_zurb_contoh}.
+
+\begin{lstlisting}[caption=Menggunakan kelas yang sudah disediakan dari Foundation,label = {lst_2_zurb_contoh}]
+	<img class="show-for-small" src="./images/little.png"/>
+\end{lstlisting}
 
   \end{enumerate}
+
+\textbf{Chrome DevTools}\\
+Chrome DevTools\cite{devtools} merupakan perangkat untuk memperhatikan dan melakukan \textit{debugging} halaman web yang terdapat pada \textit{browser} Google Chrome. DevTools dapat digunakan secara efisien untuk memeriksa tampilan, mengatur \textit{breakpoints} JavaScript, dan optimasi kode. DevTools dapat diakses dengan melakukan klik kanan pada halaman web lalu klik periksa elemen. DevTools disusun dalam beberapa panel \textit{task-orientated}. Beberapa panel tersebut adalah:
+
+\begin{enumerate}
+	\item \textbf{Elements}, untuk memeriksa, melihat, dan mengubah tampilan halaman web.
+	\item \textbf{Network}, untuk memantau aktivitas jaringan pada halaman web secara \textit{real-time}.
+	\item \textbf{Sources}, untuk melakukan \textit{debugging} pada JavaScript dengan menentukan \textit{breakpoints}.
+	\item \textbf{Timeline}, untuk merekam dan analisis aktivitas halaman web.
+	\item \textbf{Profiles}, untuk menggambarkan waktu eksekusi dan penggunaan memori dari halaman web.
+	\item \textbf{Resources}, untuk memeriksa sumber daya halaman web, seperti basis data, \textit{cookies}, \textit{cache}, gambar, dan tampilan halaman web.
+	\item \textbf{Console}, untuk mencatat informasi diagnostik pada proses pengembangan serta menyediakan \textit{prompt shell} yang dapat digunakan untuk interaksi dengan dokumen dan DevTools.
+\end{enumerate}
+
+\textbf{Elements}\\
+Panel Elements dapat memperlihatkan struktur halaman web dalam bentuk \textit{Document Object Model} (DOM), dan dapat mengubah elemen DOM dengan cepat. DOM adalah struktur logis dokumen serta cara dokumen diakses dan diubah \footnote{\url{http://www.w3.org/TR/DOM-Level-2-Core/introduction.html}, diakses 2 Oktober 2015}. Sebagai contoh pada gambar \ref{fig:2_devtools_elements}, pemeriksaan elemen akan memperlihatkan dua bagian, yaitu DOM dan CSS yang digunakan pada DOM.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{Gambar/devtools-elements}
+	\caption{Panel Elements} 
+	\label{fig:2_devtools_elements}
+\end{figure}
+
+\textbf{Network}\\
+Panel Network memberikan informasi tentang sumber daya yang diminta dan sumber daya yang diunduh melalui jaringan secara \textit{real-time}. Panel Network juga memperlihatkan waktu yang dibutuhkan untuk permintaan sumber daya. Sebagai contoh pada gambar \ref{fig:2_devtools_network}, saat melakukan pencarian rute, panel Network memperlihatkan apa saja sumber daya yang diperlukan serta waktu yang dibutuhkan pada proses tersebut. Tiap sumber daya pada panel Network terdapat kolom:
+
+\begin{itemize}
+	\item \textbf{Name}, nama sumber daya.
+	\item \textbf{Status}, kode status HTTP \textit{request}.
+	\item \textbf{Type}, tipe sumber daya.
+	\item \textbf{Initiator}, asal dari sumber daya yang diminta.
+	\item \textbf{Size}, ukuran sumber daya.
+	\item \textbf{Time}, waktu yang dibutuhkan dalam permintaan sumber daya.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{Gambar/devtools-network}
+	\caption{Panel Network} 
+	\label{fig:2_devtools_network}
+\end{figure}
+
+Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya tersebut yang berisi kolom:
+\begin{itemize}
+	\item \textbf{Header}\\
+			Header menampilkan \textit{request} URL, \textit{request method}, \textit{status code}, \textit{response headers}, \textit{request headers}, dan \textit{query string parameters} beserta nilainya.
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-network-header}
+				\caption{Contoh Header} 
+				\label{fig:2_devtools_network_header}
+			\end{figure}
+	\item \textbf{Preview}\\
+			Preview menampilkan peninjauan sumber daya jika sumber daya tersebut tersedia. Gambar \ref{fig:2_devtools_network_preview_a} menunjukkan adanya peninjauan sumber daya, sedangkan gambar \ref{fig:2_devtools_network_preview_b} menunjukkan tidak ada peninjauan sumber daya.
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-network-preview-a}
+				\caption{Contoh peninjauan sumber daya tersedia} 
+				\label{fig:2_devtools_network_preview_a}
+			\end{figure}
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-network-preview-b}
+				\caption{Contoh peninjauan sumber daya tidak tersedia} 
+				\label{fig:2_devtools_network_preview_b}
+			\end{figure}
+			
+	\item \textbf{Response}\\
+			Response menampilkan respon dari sumber daya yang dipilih. Gambar \ref{fig:2_devtools_network_response} menunjukkan respon dari sumber daya.
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-network-response}
+				\caption{Contoh Response} 
+				\label{fig:2_devtools_network_response}
+			\end{figure}
+			
+	\item \textbf{Cookies}\\
+			Cookies digunakan server web untuk menyimpan data pada \textit{browser} klien.  Kolom Cookies menampilkan seluruh \textit{cookie} yang terdapat pada halaman web. Pada gambar \ref{fig:2_devtools_network_cookies} terdapat kolom:
+			\begin{itemize}
+				\item \textbf{Name}, nama \textit{cookie}.
+				\item \textbf{Value}, nilai \textit{cookie}.
+				\item \textbf{Domain}, asal \textit{cookie}.
+				\item \textbf{Path}, URL \textit{cookie}.
+				\item \textbf{Expires / Max-Age}, batas habis \textit{cookie}.
+				\item \textbf{Size}, ukuran \textit{cookie}.
+				\item \textbf{HTTP}
+				\item \textbf{Secure}
+				\item \textbf{First-Party}
+			\end{itemize}					 
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-network-cookies}
+				\caption{Contoh Cookies} 
+				\label{fig:2_devtools_network_cookies}
+			\end{figure}
+\end{itemize}
+
+\textbf{Sources}\\
+Panel Sources memungkinkan untuk melakukan \textit{debugging} JavaScript dengan menggunakan \textit{breakpoints} \footnote{Terdapat dua cara untuk menambahkan \textit{breakpoints}. Cara pertama adalah Manual \textit{breakpoints}, yaitu mengatur \textit{breakpoints} pada baris kode. Cara kedua adalah Conditional \textit{breakpoints}, yaitu \textit{breakpoints} secara otomatis muncul ketika suatu kondisi terpenuhi, misal ketika \textit{on click}}. Pengembang membutuhkan alat \textit{debugging} untuk menemukan penyebab masalah dan memperbaikinya dengan cepat.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{Gambar/devtools-sources}
+	\caption{Panel Sources dengan menyalakan Conditional \textit{breakpoints}} 
+	\label{fig:2_devtools_sources}
+\end{figure}
+
+\textbf{Timeline}\\
+Panel Timeline memberikan gambaran lengkap waktu yang dibutuhkan semua sumber daya yang dibutuhkan ketika memuat dan menggunakan halaman web. Sebagai contoh pada gambar \ref{fig:2_devtools_timeline}, panel Timeline memberikan gambaran lengkap ketika melakukan pencarian rute. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{Gambar/devtools-timeline}
+	\caption{Panel Timeline saat melakukan pencarian rute} 
+	\label{fig:2_devtools_timeline}
+\end{figure}
+
+\textbf{Profile}\\
+Panel Profile memberikan riwayat waktu pelaksanaan dan penggunaan memori dari halaman web. Profile yang tersedia adalah:
+\begin{itemize}
+	\item CPU \textit{profiler} menunjukkan waktu eksekusi yang dihabiskan oleh fungsi JavaScript. Gambar \ref{fig:2_devtools_profile_cpu} menunjukkan waktu eksekusi yang dihabiskan oleh JavaScript.
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-profile-cpu}
+				\caption{Contoh CPU \textit{profiler}} 
+				\label{fig:2_devtools_profile_cpu}
+			\end{figure}
+	\item Heap \textit{profiler} menunjukkan distribusi memori oleh JavaScript dan DOM yang berhubungan pada halaman web. Gambar \ref{fig:2_devtools_profile_heap} menunjukkan disribusi memori. 
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.3]{Gambar/devtools-profile-heap}
+				\caption{Contoh Heap \textit{profiler}} 
+				\label{fig:2_devtools_profile_heap}
+			\end{figure}
+	\item JavaScript \textit{profiler} menunjukkan dimana waktu eksekusi dihabiskan pada skrip.
+\end{itemize}
+
+\textbf{Analisis}
+
+\textbf{Analisis Sistem Kini}
+Sudah dijelaskan pada poin pertama.
+
+\textbf{Analisis Sistem Usulan}
+Sudah dijelaskan pada poin ketiga.
+
+\textbf{Analisis Use Case}\\
+Diagram \textit{use case} pada KIRI hanya mempunyai satu aktor, yaitu pengguna. Diagram \textit{use case} dapat dilihat pada gambar \ref{fig:3_usecase}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/usecase}
+	\caption{Use Case Diagram KIRI} 
+	\label{fig:3_usecase}
+\end{figure}
+
+Terdapat empat \textit{use case}, yaitu:
+\begin{enumerate}
+	\item \textbf{Memasukkan lokasi}, pengguna dapat memasukkan lokasi dengan memasukkan nama lokasi ataupun melakukan klik pada peta dan diubah menjadi koordinat.
+	\item \textbf{Memilih rute alternatif}, pengguna dapat memilih rute alternatif (jika ada) setelah proses pencarian rute.
+	\item \textbf{Mengganti bahasa}, pengguna dapat memilih bahasa yang ingin digunakan dengan bahasa yang disediakan, Bahasa Indonesia atau Bahasa Inggris.
+	\item \textbf{Mengganti lokasi kota}, pengguna dapat memilih lokasi kota mana yang ingin digunakan dengan pilihan kota yang disediakan, yaitu: Bandung, Jakarta, Surabaya, dan Malang.
+	
+\end{enumerate}
+
+\textbf{Skenario Use Case}
+\begin{enumerate}
+	\item \textbf{Memasukkan lokasi}
+	\begin{itemize}
+			\item Nama: Memasukkan lokasi
+			\item Aktor: Pengguna
+			\item Deskripsi: Memasukkan lokasi dengan memasukkan nama lokasi ataupun melakukan klik pada peta dan diubah menjadi koordinat.
+			\item Kondisi awal: -
+			\item Kondisi akhir: Pencarian rute dan rute alternatif (jika ada) yang akan ditampilkan pada pengguna berupa rute pada peta dan penjelasan rute.
+			\item Skenario utama: \\ \\
+				\begin{tabular}{|p{0.5cm} |p{6cm}| p{6cm}|}
+						\hline
+							No 	& Aksi Aktor & Reaksi Sistem \\ \hline
+							1 	& Pengguna memasukkan lokasi 	&	Sistem mendapatkan lokasi kemudian menampilkan hasil pencarian rute \\ \hline 
+						\end{tabular} 
+			\item Eksepsi: Lokasi tidak ditemukan.
+		\end{itemize}
+	\item \textbf{Memilih rute alternatif}
+	\begin{itemize}
+			\item Nama: Memilih rute alternatif
+			\item Aktor: Pengguna
+			\item Deskripsi: Memilih rute alternatif.
+			\item Kondisi awal: Pencarian rute sudah berhasil dan ada rute alternatif
+			\item Kondisi akhir: Menampilkan kepada pengguna rute alternatif pada peta beserta penjelasannya.
+			\item Skenario utama: \\ \\
+				\begin{tabular}{|p{0.5cm} |p{6cm}| p{6cm}|}
+						\hline
+							No 	& Aksi Aktor & Reaksi Sistem \\ \hline
+							1 	& Pengguna memilih rute alternatif 	&	Sistem menampilkan pencarian rute alternatif pada peta dan penjelasannya \\ \hline 
+						\end{tabular} 
+			\item Eksepsi: Tidak ada rute alternatif.
+		\end{itemize}
+	\item \textbf{Mengganti bahasa}
+	\begin{itemize}
+			\item Nama: Mengganti bahasa
+			\item Aktor: Pengguna
+			\item Deskripsi: Memilih opsi bahasa yang akan digunakan.
+			\item Kondisi awal: -
+			\item Kondisi akhir: Menampilkan kepada pengguna dengan bahasa yang dipilih
+			\item Skenario utama: \\ \\
+				\begin{tabular}{|p{0.5cm} |p{6cm}| p{6cm}|}
+						\hline
+							No 	& Aksi Aktor & Reaksi Sistem \\ \hline
+							1 	& Pengguna memilih opsi bahasa 	&	Sistem menampilkan tampilan dengan bahasa yang dipilih oleh pengguna \\ \hline 
+						\end{tabular} 
+			\item Eksepsi: -
+		\end{itemize}
+	\item \textbf{Mengganti lokasi kota}
+	\begin{itemize}
+			\item Nama: Mengganti lokasi kota
+			\item Aktor: Pengguna
+			\item Deskripsi: Memilih opsi lokasi kota yang akan ditampilkan pada peta dan pencarian rute pada kota tersebut.
+			\item Kondisi awal: -
+			\item Kondisi akhir: Menampilkan kepada pengguna dengan lokasi kota yang dipilih
+			\item Skenario utama: \\ \\
+				\begin{tabular}{|p{0.5cm} |p{6cm}| p{6cm}|}
+						\hline
+							No 	& Aksi Aktor & Reaksi Sistem \\ \hline
+							1 	& Pengguna memilih opsi lokasi kota 	&	Sistem menampilkan peta dengan lokasi kota yang dipilih dan menyiapkan pencarian rute pada kota tersebut \\ \hline 
+						\end{tabular} 
+			\item Eksepsi: -
+		\end{itemize}
+\end{enumerate}
+
+
+\textbf{Analisis Activity Diagram}
+Diagram aktivitas KIRI dapat dilihat pada \ref{fig:3_activitydiagram}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/activitydiagram}
+	\caption{Activity Diagram KIRI} 
+	\label{fig:3_activitydiagram}
+\end{figure}
+
+Aktivitas-aktivitas yang ada pada KIRI dapat dijelaskan sebagai berikut:
+
+\begin{enumerate}
+	\item Pengguna memberikan masukan. Masukan dapat berupa dua, yaitu:
+	\begin{itemize}
+		\item Masukan berupa nama lokasi.
+		\item Masukan berupa klik pada peta. Pengguna klik pada peta, kemudian sistem mendapatkan koordinat pada lokasi yang diklik pengguna dan menulis koordinat tersebut kepada \textit{textfield} tempat asal atau tujuan.
+	\end{itemize}
+	\item Sistem melakukan proses pencarian rute dan melakukan pengecekan apakah ada rute alternatif atau tidak.
+	\begin{itemize}
+		\item Jika tidak ada rute alternatif, maka menunjukkan rute dan memperbarui peta.
+		\item Jika ada rute alternatif, menunjukkan pada pengguna rute \textit{default} dan rute alternatif.
+	\end{itemize}
+	\item Pengguna memilih rute default atau rute alternatif.
+	\begin{itemize}
+		\item Jika pengguna memilih rute default, aktivitas selesai.
+		\item Jika pengguna memilih rute alternatif, maka sistem menunjukkan rute alternatif dan memperbarui peta.
+	\end{itemize}
+\end{enumerate}
+
 
 \bibliographystyle{ieeetr}
 \bibliography{pustaka}
@@ -959,13 +1698,12 @@ Keterangan (*)\\
 6 : Persentase yang sudah diselesaikan sampai saat ini 
 
 %\section{Kendala yang dihadapi}
-%%TULISKAN BAGIAN INI JIKA DOKUMEN ANDA TIPE A ATAU C
+%TULISKAN BAGIAN INI JIKA DOKUMEN ANDA TIPE A ATAU C
 %Kendala - kendala yang dihadapi selama mengerjakan skripsi :
 %\begin{itemize}
-%  \item Terlalu banyak melakukan prokratinasi
-%  \item Terlalu banyak godaan berupa hiburan (game, film, dll)
-%  \item Skripsi diambil bersamaan dengan kuliah ASD karena selama 5 semester pertama kuliah tersebut sangat dihindari dan tidak diambil, dan selama 4 semester terakhir kuliah tersebut selalu mendapat nilai E
-%  \item Mengalami kesulitan pada saat sudah mulai membuat program komputer karena selama ini selalu dibantu teman
+%	\item Terlalu banyak melakukan prokratinasi
+%	\item Mengalami kesulitan dalam instalasi Play Framework
+%	\item Kurang familiar dengan pemrograman Play Framework
 %\end{itemize}
 
 \vspace{1cm}
@@ -985,7 +1723,7 @@ Menyetujui, \\
 % \centering Bandung, \makebox[0.5cm]{\hrulefill}/\makebox[0.5cm]{\hrulefill}/2013\\
 \vspace{2cm} Nama: \pemB \\ Pembimbing Pendamping
 \end{minipage}
-\vspace{0.5cm}
+\vspace{0.3cm}
 }{
 % \centering Bandung, \makebox[0.5cm]{\hrulefill}/\makebox[0.5cm]{\hrulefill}/2013\\
 \vspace{2cm} Nama: \pembA \\ Pembimbing Tunggal
