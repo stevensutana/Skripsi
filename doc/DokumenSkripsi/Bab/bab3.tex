@@ -13,11 +13,23 @@ Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terda
 \end{figure}
 
 \subsection{Peta}
-Peta pada KIRI (Gambar \ref{fig:3_KIRI_peta}) berfungsi untuk menampilkan peta pada pengguna berdasarkan kota pengguna dan juga menentukan tempat asal dan tujuan pengguna dengan melakukan klik pada peta.
+Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terdapat beberapa bagian yaitu:
+    \begin{enumerate}
+    		\item \textbf{Peta}
+    		\item \textbf{Form Samping} yang terdiri dari beberapa bagian, yaitu:
+    		\begin{enumerate}
+    			\item Dropdown Menu Kota
+    			\item Dropdown Menu Bahasa
+    			\item Textfield
+    			\item Tombol Swap
+    			\item Tombol Reset
+    			\item Tombol Find
+    		\end{enumerate}
+    \end{enumerate}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{Gambar/KIRI-peta}
+	\includegraphics[scale=0.4]{Gambar/KIRI-peta}
 	\caption{Peta pada KIRI} 
 	\label{fig:3_KIRI_peta}
 \end{figure}
@@ -74,7 +86,15 @@ Form yang terdapat pada halaman utama KIRI (Gambar \ref{fig:3_KIRI_form}) terdir
 	\label{fig:3_KIRI_drop_kota}
 \end{figure}
 
-Melakukan deklarasi variabel regioninfos sebagai \textit{associated array} pada file constants.php. Setiap kota direpresentasikan sebagai proto\_region\_KOTA dimana KOTA adalah kota yang ada pada KIRI. Setiap proto\_region\_KOTA terdapat \textit{lat} sebagai garis lintang, \textit{lon} sebagai garis bujur dan zoom sebagai tingkat \textit{zoom} untuk memperbarui peta. Proto\_region\_KOTA juga terdapat \textit{name} untuk menampilkan pilihan kota dan \textit{searchplace\_regex} untuk pencarian rute pada pilihan kota seperti pada kode listing \ref{lst_3_php_dropdown_kota_regioninfos}.
+Melakukan deklarasi variabel regioninfos sebagai \textit{associated array} pada file constants.php. Setiap kota direpresentasikan sebagai variabel proto\_region\_KOTA dimana KOTA adalah kota yang ada pada KIRI. Setiap proto\_region\_KOTA merupakan array dengan indeks:
+\begin{enumerate}
+	\item \textit{lat} sebagai garis lintang,
+	\item \textit{lon} sebagai garis bujur,
+	\item \textit{zoom} sebagai tingkat \textit{zoom} untuk memperbarui peta,
+	\item \textit{name} untuk menampilkan pilihan kota,
+	\item \textit{searchplace\_regex} untuk pencarian rute pada pilihan kota.
+\end{enumerate} 
+Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_regioninfos}.
 
 \begin{lstlisting}[caption=Deklarasi variabel regioninfos,label = {lst_3_php_dropdown_kota_regioninfos}]
 ..
@@ -538,6 +558,99 @@ Setelah itu, masukkan \textit{script} PHP pada \textit{tag} HTML yang ingin diub
 	...
 \end{lstlisting}
 
+\subsection{Pencarian Rute}
+Pencarian rute pada KIRI dilakukan di \textit{server side}, yaitu pada \textit{file} handle.php. Langkah awal pada ``handle.php`` dapat dijelaskan sebagai berikut:
+\begin{enumerate}
+	\item ``constants.php`` untuk mengambil data yang sudah dimasukkan.
+	\item ``utils.php`` untuk fungsi manipulasi data, koneksi database, mengirimkan pencatatan, dan melakukan validasi.
+	\item \verb!start_working! untuk menyiapkan header pada PHP.
+	\item \verb!init_mysql! untuk koneksi pada database menggunakan MySQL. 
+	\item Mendapatkan data `mode`, `version`, dan `apikey` dari \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `mode`, `version`, dan `apikey`.
+	\item Jika data ``\texttt{version = null}``, maka isi dengan ``1``. 
+	\item Melakukan pengecekan `apikey` apakah ada di \textit{database} atau tidak. Jika ada, cek lagi apakah ada pengecualian IP komputer pada database.
+\end{enumerate}
+
+\subsubsection{Mode Findroute}
+Bagian ini terletak di baris 14-181 dari ``handle.php'' (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah memasukkan data `start`, `finish`, dan `locale` dengan mendapatkan \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `start`, `finish`, dan `locale`. Tetapi sebelum dimasukkan, memanggil \textit{method} \verb!addslashes! yang berfungsi jika ada karakter spesial seperti ',",\ tidak dianggap sebagai suatu String yang berbeda. Setelah itu melakukan pengecekan untuk lokalisasi. Jika ada, load file (lokalisasi Bahasa Inggris atau lokalisasi Bahasa Indonesia). Setelah itu melakukan pengecekan variabel `presentation`, ada dua yaitu  \textit{mobile} atau \textit{desktop}. Melakukan pengecekan version yang digunakan:
+\begin{itemize}
+	\item Jika ``\texttt{version >= 2}``, maka memasukkan data `count` dengan ``1``. Jika ``\texttt{presentation = mobile}``,maka memasukkan data `count` dengan jumlah \textit{array alternatives}. Setelah itu melakukan pengulangan sebanyak `count` yang berisi:\\
+		Menambahkan \textit{query URL} menjangan dengan:
+		\begin{itemize}
+			\item 	``?start=koordinat start`` dan ``finish=koordinat finish``.
+			\item `mw`, `wm`, dan `pt` masing-masing dengan nilai dari \textit{array alternative} satu persatu dengan indeks `mw`, `wm`, dan `pt`.
+			\item memanggil fungsi file\_get\_content yang akan mengembalikan ``FALSE`` jika gagal dan mengembalikan JSON pesan kesalahan. Jika berhasil akan mendapatkan String dengan \textit{URL} dari menjangan, pembacaan dari 1 sebanyak 51200.
+			\item memasukkan ke \textit{array} `results` yang mempunyai indeks `result` dengan nilai ``true``.
+		\end{itemize}
+	\item Jika ``\texttt{version < 2}``, langsung akses \textit{URL} menjangan dengan \textit{query} ``?start=koordinat start`` dan ``finish=koordinat finish``.
+\end{itemize}
+
+Langkah selanjutnya adalah pengulangan sejumlah data `results` menjadi `result `dengan nilai yang dimasukkan ke data `dummy` yang berisi:
+\begin{itemize}
+	\item Membuat data `steps` yang berisi data `result` yang telah dipisahkan per baris.
+	\item Melakukan pengulangan setiap data `steps` dan dimasukkan ke `step` yang berisi:
+	\begin{itemize}
+		\item Membuang spasi yang ada pada data `step`. Jika `step` sudah tidak ada isinya, melanjutkan ke langkah selanjutnya.
+		\item Jika ``\texttt{step = none}``, melakukan pengecekan pada banyaknya data `results`. Jika banyak data bukan satu berarti ada rute alternatif dan akan melanjutkan ke langkah selanjutnya. Tetapi jika banyak data satu, tidak ada rute alternatif.
+		\item Mendaftarkan data `means`, `means\_detail`, `route`, `distance`, dan `nearbyplaceids` yang didapat dari data `step` yang telah dipisahkan `/`. Jika salah satu data kosong, akan menutup koneksi SQL dan mengeluarkan pesan kesalahan.
+		\item Inisialisasi data `points` yang didapat dari data `route` yang sudah dipisahkan spasi, inisialisasi data `from` dari data `points` dengan indeks 0 dan inisialisasi data `to` dari data `points` dengan indeks terakhir.
+		\item Jika nilai data `points` ada yang sama dengan ``start``, maka mengganti data `points` tersebut dengan data `start`. Jika nilai data `points` ada yang sama dengan ``finish``, maka mengganti data `points` tersebut dengan data `finish`.
+		 \item Memasukkan data `humanized\_from` dengan memanggil fungsi humanize\_point dengan \textit{parameter} `from` dan `humanized\_to` dengan memanggil fungsi humanize\_point dengan \textit{parameter} `to`.
+		 \item Jika ``\texttt{means = walk}``, melakukan pengecekan ``\texttt{humanized\_from = humanized\_to}`. Jika ``\texttt{presentation != mobile}``, maka memasukkan `message\_walk\_samestreet` ke variabel `humanreadable`. Mengganti ``\%from`` yang ada di `humanreadable` dengan value ``humanized\_from``, mengganti ``\%distance`` yang ada di `humanreadable` dengan value ``distance`` yang dipresentasikan sesuai format wilayah pengguna. Lalu menghitung waktu tempuh yg dibutuhkan.
+		 \item Jika ``\texttt{means != walk}``, melakukan pencarian pada \textit{database} `tracks` gabung `tracktypes` dengan kolom nama jalur, tipe jalur yang digunakan, \textit{URL} untuk melakukan pemesanan (jika XTrans), kecepatan transportasi, dan informasi internal jalur dimana ``\texttt{trackTypeId = means}`` pada tabel `tracktypes` dan `tracks` serta ``\texttt{trackid = means\_detail}`` pada tabel `tracks`. Jika ada hasil dari pencarian \textit{database}, memasukkan hasil dengan indeks ke-nol ke `readable\_track\_name` dan memasukkan hasil dengan indeks pertama ke `track\_type\_name`. Jika ``presentation = mobile``, menambahkan data `humanized\_from` dengan  \%fromicon dan `humanized\_to` dengan  \%toicon. Memasukkan `message\_angkot` ke data `humanreadable`. Memperbarui  `humanreadable` dengan mengganti ``\%from`` yang ada di `humanreadable` dengan value ``humanized\_from``, memperbarui `humanreadable` dengan mengganti ``\%to`` yang ada di `humanreadable` dengan value ``humanized\_to``, memperbarui `humanreadable` dengan mengganti  ``\%distance`` yang ada di `humanreadable` dengan value ``distance`` yang dipresentasikan sesuai format wilayah pengguna, memperbarui `humanreadable` dengan mengganti ``\%trackname`` yang ada di `humanreadable` dengan value `readable\_track\_name`, dan memperbarui `humanreadable` dengan mengganti ``\%tracktype`` yang ada di `humanreadable` dengan value `track\_type\_name`. Membuat `speed` dengan mengambil hasil pencarian dari indeks ke-empat yang sudah dijadikan Integer, lalu menghitung waktu tempuh. Melakukan pengecekan `URL jalur` dan `extraParameter` kosong tidak. Jika tidak kosong maka menambahkan data `booking\_url` dengan menambahkan nilai `URL jalur` dan `extraParameter`. Lalu melakukan pengecekan hasil pencarian `internalinfo` dimulai dengan string ``angkotwebid:``. Jika dimulai dengan ``angkotwebid:``, maka mendapatkan \textit{array} `token` dengan memisahkan ``:`` pada `internalInfo`. Membuat `editor\_url` didapat dari awalan \textit{URL} angkotwebid, token dengan indeks pertama + akhiran \textit{URL} angkotwebid. 
+		 \item Jika ``\texttt{humanreadable != null}``, memasukkan `route\_output` dengan isi array dari `means`, `means\_detail`, `points`, `humanreadable`, `booking\_url`, dan `editor\_url`. 
+	\end{itemize}
+	\item Memasukkan routing\_result dengan indeks `steps` dengan nilai `route\_output`
+	\item Memasukkan routing\_result dengan indeks `traveltime` dengan nilai jam dan menit dari  `travel\_time`.
+	\item Memasukkan kembali `routing\_result`.
+\end{itemize}
+Setelah itu, membuat pencatatan statistik sesuai dengan `apikey` yang digunakan dan menutup koneksi ke \textit{database}. Jika ``\texttt{version != null}`` dan ``\texttt{version >= 2}``, maka print String yang sudah di \textit{encode} menjadi JSON dengan ``\texttt{status : ok}``, ``\texttt{routingresult : hasil pencarian rute}``. Jika ``\texttt{version = null}`` dan ``\texttt{version < 2}``, maka print String yang sudah di \textit{encode} menjadi JSON dengan ``\texttt{status : ok}``, ``\texttt{routingresult : langkah-langkah hasil pencarian rute}``, dan ``\texttt{traveltime : waktu tempuh}``.
+
+\subsubsection{Mode Search}
+Bagian ini terletak di baris 183-280 dari ``handle.php'' (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah memasukkan data `querystring`, `apikey`, dan `region` dengan mendapatkan \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `querystring`, `apikey`, dan `region`. Jika ``region = null``, maka isi `region` dengan ``bandung``. Melakukan pengulangan sejumlah data `regioninfos` dengan nilai yang dimasukkan ke data `value` yang berisi:
+\begin{itemize}
+	\item Mencari dalam `querystring` ada \textit{pattern} ``/searchplace/i``, dimana `searchplace` diambil dari `value` dengan indeks `searchplace\_regex` dan tampilkan pada \textit{array} `matches`. Jika terdapat pattern tersebut, maka memasukkan `region` dengan `key`, memperbarui `querystring` dengan mengambil panjang kalimat sebanyak `matches` dengan indeks nol dan pertama dari `querystring`, dan memberhentikan pengulangan.
+	\item Mengubah `querystring` menjadi format \textit{URL}.
+	\item Memasukkan `cached\_searchplace` dengan mengambil \textit{cache} dengan tipe ``searchplace`` dan \textit{key} `region`/`querystring`. Jika ``cached\_searchplace != null``, maka membuat JSON untuk \textit{output} dengan ``status : ok``, ``searchresult : mengubah JSON menjadi String dari cached\_searchplace ``,``attributions : null``. \\
+	Jika ``cached\_searchplace = null``, memasukkan data `lat`, `lon`, dan `radius` yang didapat dari `regioninfos` dengan indeks `region` dengan \textit{key} `lat`, `lon`, dan `radius`. Memasukkan `result` dengan hasil akses URL dari data `full\_url`. Jika ``result = FALSE`` atau jumlah ``result > maximum\_http\_response\_size``, maka mengeluarkan pesan kesalahan. Setelah itu, memasukkan `json\_result` dengan mengubah JSON menjadi String dari data `result`. Jika `json\_result` dengan indeks status adalah ``OK`` atau ``ZERO\_RESULTS``, maka menyiapkan array `search\_result`. Jika hasilnya ``ZERO\_RESULTS``, maka mengeluarkan catatan kesalahan dan memperbarui data `size` menjadi ``0``. Jika hasilnya ``OK``, maka mengambil angka minimal antara `result` dan `search\_maxresult`. Melakukan pengulangan dari nol sampai dengan `size` yang dinisialkan dengan `i`:
+	\begin{itemize}
+		\item Memasukkan data `current\_venue` dengan `json\_result` indeks results dengan key `i`.
+		\item Memasukkan data `search\_result` dengan indeks `i` dan key `placename` yang isinya adalah `current\_venue` dengan indeks name.
+		\item Memasukkan data `search\_result` dengan indeks `i` dan key `location` yang isinya adalah String yang sudah diformat ``\%.latlonlf\%.latlonlf`` yang nilainya diambil dari `current\_venue` dengan indeks geometry dan location dengan key lat dan lng.
+		\item Menyiapkan `json\_output` yang merupakan array dari ``status : ok``, ``searchresult : search\_result`` yang merupakan hasil pencarian rute, dan ``attributions : null``.
+		\item Mengirim catatan dengan `apikey` yang digunakan
+		\item Memasukkan ke \textit{cache} dengan tipe `cache\_searchplace`, \textit{key} ``region/querystring`` yang berisi JSON `search\_result`.
+	\end{itemize}
+	\item Mengeluarkan hasil JSON `json\_output`.
+\end{itemize}
+
+\subsubsection{Mode Reporterror}
+Bagian ini terletak di baris 282-284 dari ``handle.php'' (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah mendapatkan `errorcode` dari \textit{method} \verb!POST! dengan \textit{parameter} ``errorcode``. Mencatat kesalahan dan dimasukkan ke dalam \textit{file}. Mengeluarkan JSON dengan ``status : OK`` dan memberhentikan eksekusi program.
+
+\subsubsection{Mode Nearbytransport}
+Bagian ini terletak di baris 286-313 dari ``handle.php'' (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah mendapatkan `start` dari \textit{method} \verb!POST! dengan \textit{parameter} ``routestart``. Jika ``version >= 2``, maka membuat data `lines` dengan mendapatkan String dari `menjangan\_url` + /?start=`start`. Setelah mendapatkan string tersebut, lakukan pemisahan baris. Melakukan pengulangan sebanyak `lines` yang berisi:
+\begin{itemize}
+	\item Melakukan pemisahan dari ``\`` dari `line`, lalu mendaftarkan menjadi  `tracktypeid`, `trackid`,dan `distance`.
+	\item Membuat data `result` dengan melakukan perintah SQL,yaitu mendapatkan `trackname` dari tabel `tracks` dimana` trackid` dan `tracktypeid` sesuai dengan yang sudah didaftarkan.
+	\item Membuat data `row` dengan mengambil hasil dari data `result` dan melakukan pengulangan yang berisi:
+	\begin{itemize}
+		\item Membuat data `trackName` dengan mengambil `row` indeks nol.
+		\item Membuat data `nearby\_result` yang merupakan array dari `trackTypeId`, `trackId`, `trackName`, dan `distance`.
+	\end{itemize}
+	\item Menyortir array `nearby\_result` berdasarkan fungsi ``nearby\_result\_compare``. Fungsi ``nearby\_result\_compare`` membandingkan jarak yang diambil dari \textit{array}.
+	\item Membuat catatan dengan `apikey` yang digunakan.
+	\item Menyiapkan dan mengeluarkan`json\_output` dengan isi ``status : ok``, ``nearbytransports : nearby\_result``.
+	
+\end{itemize}
+
+\subsubsection{Fungsi humanize\_point}
+Tujuan dari fungsi ini adalah merubah lokasi dalam bentuk \textit{point} menjadi nama lokasi tempat dari \textit{point} tersebut. Fungsi ini menerima parameter `location` yang merupakan String. Fungsi ini berisi sebagai berikut:
+\begin{itemize}
+	\item Melakukan deklarasi variabel global untuk digunakan.
+	\item Melakukan pengecekan data `location`. Jika ``\texttt{location = start}`` maka mengembalikan `message\_start`. Jika ``\texttt{location = finish}``, maka mengembalikan `message\_finish`.
+	\item Jika bukan keduanya, maka memanggil fungsi mysqli\_escape\_string.
+	\item Melakukan pengecekan \textit{cache} ada atau tidak dengan key `cache\_geocoding` dan bernilai sesuai dengan parameter `location` atau tidak dan dimasukkan ke data `cached\_geocode`. Jika ada nilainya, langsung mengembalikan nilai tersebut.
+	\item Jika tidak ada, maka akan menambahkan \textit{query} pada \textit{URL} Google. Jika berhasil akses dan mendapatkan ``\texttt{status = OK}``, maka akan menambahkan lokasi sugesti pada pengguna. Jika ``\texttt{status != OK}``, maka akan menampilkan pesan kesalahan. 
+\end{itemize}
 \section{Analisis Sistem Usulan}
 \label{sec:perubahan}
 
