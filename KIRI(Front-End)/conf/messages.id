@@ -9,3 +9,12 @@ old = Versi Lama
 legal = Legal
 feedback = Masukan
 about = Tentang KIRI
+
+index_buyticket = BUY TICKET
+index_connectionerror = Gangguan koneksi
+index_fillboth = Masukkan dulu "Dari" dan "Ke"!
+index_notfound =  tidak ditemukan
+index_pleasewait = Mohon tunggu...
+index_oops = Ups
+index_order_ticket_here = pesan tiket
+index_itake = Saya naik transportasi publik dari %start% ke %finish%!

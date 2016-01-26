@@ -3,9 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
-GET     /testdb                           controllers.Application.testdb()
-GET     /id                           controllers.Application.id()
+GET        /                         controllers.Application.index()
+GET        /testdb                   controllers.Application.testdb()
+GET        /id                       controllers.Application.id()
+
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file             controllers.Assets.versioned(path="/public", file: Asset)

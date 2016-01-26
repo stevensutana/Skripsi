@@ -1,7 +1,8 @@
+@import play.i18n._
 <!DOCTYPE html>
 
 
-<html lang="en">
+<html>
 
     <head>
         <title>KIRI</title>
@@ -20,7 +21,7 @@
 
     </head>
     <body>
-        @Messages("hello")
+        @Messages.get("hello")
         <div class="row">
 
             <div id="controlpanel" class="large-3 large-push-9 columns">
@@ -47,11 +48,11 @@
                 </div>
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="startInput" class="inline">@Messages("from")</label>
+                        <label for="startInput" class="inline">@Messages.get("from")</label>
                     </div>
                     <div class="small-10 columns">
                         <input type="text" id="startInput" value=""
-                        placeholder="@Messages("ph_from")">
+                        placeholder="@Messages.get("ph_from")">
                     </div>
                 </div>
                 <div class="row">
@@ -61,11 +62,11 @@
                 </div>
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="finishInput" class="inline">@Messages("to")</label>
+                        <label for="finishInput" class="inline">@Messages.get("to")</label>
                     </div>
                     <div class="small-10 columns">
                         <input type="text" id="finishInput" value=""
-                        placeholder="@Messages("ph_to")">
+                        placeholder="@Messages.get("ph_to")">
                     </div>
                 </div>
                 <div class="row">
@@ -75,7 +76,7 @@
                 </div>
                 <div class="row">
                     <div class="small-6 columns">
-                        <a href="#" class="small button expand" id="findbutton"><strong>@Messages("find")</strong></a>
+                        <a href="#" class="small button expand" id="findbutton"><strong>@Messages.get("find")</strong></a>
                     </div>
                     <div class="small-3 columns">
                         <a href="#" class="small button secondary expand" id="swapbutton">
@@ -96,11 +97,11 @@
                 <div class="row">
                     <div class="large-12 columns">
                         <footer>
-                            <a href="http://static.kiri.travel/$locale-apps">@Messages("apps")</a> |
-                            <a href="http://classic.kiri.travel">@Messages("old")</a><br/>
-                            <a href="http://static.kiri.travel/$locale-legal">@Messages("legal")</a> |
-                            <a href="http://static.kiri.travel/$locale-feedback">@Messages("feedback")</a> |
-                            <a href="http://static.kiri.travel/$locale-about">@Messages("about")</a>
+                            <a href="http://static.kiri.travel/$locale-apps">@Messages.get("apps")</a> |
+                            <a href="http://classic.kiri.travel">@Messages.get("old")</a><br/>
+                            <a href="http://static.kiri.travel/$locale-legal">@Messages.get("legal")</a> |
+                            <a href="http://static.kiri.travel/$locale-feedback">@Messages.get("feedback")</a> |
+                            <a href="http://static.kiri.travel/$locale-about">@Messages.get("about")</a>
                         </footer>
                             &nbsp;
                     </div>
@@ -117,6 +118,52 @@
         <script src="@routes.Assets.versioned("foundation/js/vendor/fastclick.js")"></script>
         <script src="@routes.Assets.versioned("foundation/js/foundation.min.js")"></script>
         <script src="@routes.Assets.versioned("foundation/js/foundation/foundation.alert.js")"></script>
+
+        <script>
+            var input_text = [],coordinates = [];
+
+//            var endpoints = ['start','finish'];
+//            endpoints.forEach(function(endpoint){
+//                if(textual_endpoint[endpoint] == null){
+//                    input_text[endpoint] = null;
+//                }else{
+//                    input_text[endpoint] = textual_endpoint[endpoint];
+//                }
+//
+//                if(coordinate_endpoint[endpoint] == null){
+//                    coordinates[endpoint] = null;
+//                }else{
+//                    coordinates[endpoint] = coordinate_endpoint[endpoint];
+//                }
+//
+//            });
+            input_text['start'] = null;
+            coordinates['start'] = null;
+            input_text['finish'] = null;
+            coordinates['finish'] = null;
+
+            var locale='id';
+            var region='bdo';
+
+            var messageBuyTicket = '@Messages.get("index_buyticket")';
+            var messageConnectionError = '@Messages.get("index_connectionerror")';
+            var messageFillBoth = '@Messages.get("index_fillboth")';
+            var messageNotFound = '@Messages.get("index_notfound")';
+            var messageOops = '@Messages.get("index_oops")';
+            var messageOrderTicketHere = '@Messages.get("index_order_ticket_here")';
+            var messagePleaseWait = '<img src="/assets/images/loading.gif" alt="... "/>'+ '@Messages.get("index_pleasewait")';
+            var messageITake =' @Messages.get("index_itake")';
+
+            var region = 'bdo';
+            var regions = {
+                bdo: {center: '-6.91474,107.60981', zoom: 12},
+                cgk: {center: '-6.21154,106.84517', zoom: 11},
+                sub: {center: '-7.27421,112.71908', zoom: 12},
+                mlg: {center: '-7.9812985,112.6319264', zoom: 13},
+            };
+		    $(document).foundation();
+
+        </script>
 
         <script src="@routes.Assets.versioned("js/newprotocol.js")"></script>
         <script src="@routes.Assets.versioned("js/index.js")"></script>

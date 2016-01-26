@@ -9,3 +9,12 @@ old = Old Version
 legal = Legal
 feedback = Feedback
 about = About KIRI
+
+index_buyticket = BUY TICKET
+index_connectionerror = Connection problem
+index_fillboth = Fill both "From" and "To"!
+index_notfound =  not found
+index_pleasewait = Please wait...
+index_oops = Oops
+index_order_ticket_here = order ticket
+index_itake = I take public transport from %start% to %finish%!
