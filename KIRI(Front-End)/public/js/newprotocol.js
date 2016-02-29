@@ -3,7 +3,7 @@ function CicaheumLedengProtocol(apikey, errorHandler) {
 	if (!window.location.origin) {
 		window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 	}
-	var HANDLE_URL = window.location.origin + '/handle';
+	var HANDLE_URL = window.location.origin + '/handle.php';
 	this.searchPlace = function(query, region, successHandler) {
 		$.ajax({
 			url: HANDLE_URL,

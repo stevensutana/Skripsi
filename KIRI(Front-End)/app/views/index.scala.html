@@ -1,4 +1,5 @@
 @import play.i18n._
+@(locale:String)
 <!DOCTYPE html>
 
 
@@ -42,7 +43,10 @@
                     <div class="small-7 columns">
                         <select class="fullwidth" id="localeselect">
                             <option value="en">English</option>
-                            <option value="id">Bahasa Indonesia</option>
+                            @if(locale == "id"){
+
+                            <option value="id" selected>Bahasa Indonesia</option>
+                                }
                         </select>
                     </div>
                 </div>

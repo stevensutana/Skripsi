@@ -5,8 +5,7 @@
 # Home page
 GET        /                         controllers.Application.index()
 GET        /testdb                   controllers.Application.testdb()
-GET        /handle                   controllers.Application.handle()
-GET        /id                       controllers.Application.id()
+GET        /handle.php                   controllers.Application.handle()
 GET        /testing                       controllers.Application.testing()
 
 

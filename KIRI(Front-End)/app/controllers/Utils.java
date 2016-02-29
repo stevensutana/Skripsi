@@ -8,6 +8,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.Logger;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -143,7 +144,7 @@ public final class Utils extends Controller {
 //    }
 
 
-    public ObjectNode well_done(String message) {
+    public static ObjectNode well_done(String message) {
         ObjectNode obj = Json.newObject();
         obj.put(Constants.proto_status, Constants.proto_status_ok);
         if (message != null) {
@@ -160,23 +161,25 @@ public final class Utils extends Controller {
 
     public static String get_from_cache(String type,String key){
 
-        Connection connection = null;
+        java.sql.Connection connection = DB.getConnection();
         StringBuilder output = new StringBuilder();
         try {
-            connection = DB.getConnection();
+//
+//            DataSource ds = DB.getDataSource();
+//            Connection connection = ds.getConnection();
+//            connection = DB.getConnection();
             // Look for angkot.web.id refreshes
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT cacheValue FROM cache WHERE tipe = '"+type+"' AND cacheKey = '" + key + "';");
 
-            if(result.next()){
-                while (result.next()) {
+            while (result.next()) {
 
-                    output.append(result.getString(0));
+                output.append(result.getString(1));
 
 //                    output.append(result.getString("verifier") + "/" + result.getString("ipFilter") +"/" + result.getString("domainFilter"));
 
-                }
             }
+
 
             connection.close();
         } catch (Exception e) {
@@ -187,10 +190,10 @@ public final class Utils extends Controller {
     }
 
     public static void put_to_cache(String type, String key,String value){
-        Connection connection = null;
+        java.sql.Connection connection = DB.getConnection();
         StringBuilder output = new StringBuilder();
         try {
-            connection = DB.getConnection();
+
             // Look for angkot.web.id refreshes
             Statement statement = connection.createStatement();
 

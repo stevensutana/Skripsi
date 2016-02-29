@@ -50,35 +50,35 @@ public class Application extends Controller {
             ctx().setTransientLang(locale);
         }
 //
-        ObjectNode objNode = Json.newObject();
-
-        objNode.put(Constants.proto_status,Constants.proto_status_ok);
-
-        Map<String, Object> routing_result = new HashMap<String, Object>();
-
-        routing_result.put(Constants.proto_steps, "asb");
-        routing_result.put(Constants.proto_traveltime,"jkl");
-
-
-            String routingResults = "";
-            for (Map.Entry<String,Object> entry : routing_result.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                routingResults += key + " = " + value.toString() +", ";
-                // do stuff
-            }
-        Logger.debug(routingResults);
-
-        objNode.put(Constants.proto_routingresults,routingResults);
-        Logger.debug(objNode.toString());
-        return ok(index.render());
+//        ObjectNode objNode = Json.newObject();
+//
+//        objNode.put(Constants.proto_status,Constants.proto_status_ok);
+//
+//        Map<String, Object> routing_result = new HashMap<String, Object>();
+//
+//        routing_result.put(Constants.proto_steps, "asb");
+//        routing_result.put(Constants.proto_traveltime,"jkl");
+//
+//
+//            String routingResults = "";
+//            for (Map.Entry<String,Object> entry : routing_result.entrySet()) {
+//                String key = entry.getKey();
+//                Object value = entry.getValue();
+//                routingResults += key + " = " + value.toString() +", ";
+//                // do stuff
+//            }
+//        Logger.debug(routingResults);
+//
+//        objNode.put(Constants.proto_routingresults,routingResults);
+//        Logger.debug(objNode.toString());
+        return ok(index.render("id"));
     }
 
     //i18n
-    public Result id() {
-        ctx().setTransientLang("id");
-        return ok(index.render());
-    }
+//    public Result id() {
+//        ctx().setTransientLang("id");
+//        return ok(index.render());
+//    }
 
     public Result testing(){
 //        F.Promise<JsonNode> promise = WS.url("http://52.76.73.21:3000/api/users/")
@@ -143,7 +143,7 @@ public class Application extends Controller {
     }
 
     public Result testdb() {
-        Connection connection = null;
+        java.sql.Connection connection = null;
         StringBuilder output = new StringBuilder();
         String verifier = "";
         try {
@@ -244,12 +244,12 @@ public class Application extends Controller {
 
             }
 
+            double travel_time = 0;
             for (Map.Entry<String, Boolean> iterator : results.entrySet()) {
 
                 Logger.debug("for results");
 
                 Logger.debug("iterator : " + iterator.getKey());
-                int travel_time = 0;
 
                 String[] steps = iterator.getKey().split("\n");
                 for (String step: steps) {
@@ -270,6 +270,8 @@ public class Application extends Controller {
                             route_output.add(Messages.get("message_routenotfound["+ presentation +"]"));
                             route_output.add(null);
                             route_output.add(null);
+
+                            travel_time = 0;
 
 
 
@@ -324,6 +326,7 @@ public class Application extends Controller {
                         humanized_from = humanize_point(from);
                     } catch (Exception e) {
                         Utils.log_error("humanized from error :" + e.getMessage());
+                        e.printStackTrace();
                     }
 
                     try {
@@ -361,28 +364,29 @@ public class Application extends Controller {
                             humanreadable = humanreadable.replaceAll("%distance",format_distance(Double.parseDouble(distance),locale));
 
 
-                            travel_time+= Double.parseDouble(distance) / Constants.speed_walk;
                         }
 
+                        travel_time += Double.parseDouble(distance) / Constants.speed_walk;
 
                     }else
                     {
 
-                        try {
-                            means_detail = mysql_real_escape_string(DB.getConnection(),means_detail);
-                        } catch (Exception e) {
-                            Utils.log_error("Means detail fail when escape : " + e.getMessage());
-                        }
+//                        try {
+//                            means_detail = mysql_real_escape_string(DB.getConnection(),means_detail);
+//                        } catch (Exception e) {
+//                            Utils.log_error("Means detail fail when escape : " + e.getMessage());
+//                        }
 
                         Logger.debug("means detail : "+ means_detail);
 
                         String readable_track_name = null,track_type_name = null;
 
-                        int speed = 0;
-                        Connection connection = null;
+                        double speed = 0;
+                        java.sql.Connection
+                                connection = DB.getConnection();
 //                        StringBuilder output = new StringBuilder();
                         try {
-                            connection = DB.getConnection();
+//                            connection = DB.getConnection();
                             // Look for angkot.web.id refreshes
                             Statement statement = connection.createStatement();
 
@@ -394,7 +398,7 @@ public class Application extends Controller {
 
                                 readable_track_name = result2.getString(1);
                                 track_type_name = result2.getString(2);
-                                speed = result2.getInt(5);
+                                speed = result2.getDouble(5);
 
                                 if((result2.getString(3) != null && !result2.getString(3).isEmpty()) && (result2.getString(4) != null && !result2.getString(4).isEmpty()))
                                 {
@@ -464,21 +468,23 @@ public class Application extends Controller {
 
                 }
 
-                Map<String, Object> routing_result = new HashMap<String, Object>();
+            }
 
-                routing_result.put(Constants.proto_steps,route_output);
-                routing_result.put(Constants.proto_traveltime,format_traveltime(travel_time));
+            Map<String, Object> routing_result = new HashMap<String, Object>();
+
+            routing_result.put(Constants.proto_steps,route_output);
+            routing_result.put(Constants.proto_traveltime,format_traveltime(travel_time));
 
 
-                Map<String, Object> routing_results = routing_result;
+            Map<String, Object> routing_results = routing_result;
 
-                Utils.log_statistic(apikey,"FINDROUTE",start+"/"+finish+"/"+results.size());
+            Utils.log_statistic(apikey,"FINDROUTE",start+"/"+finish+"/"+results.size());
 
-                ObjectNode objectNode = Json.newObject();
-                if(version >=2)
-                {
+            ObjectNode objectNode = Json.newObject();
+            if(version >=2)
+            {
 
-                    objectNode.put(Constants.proto_status,Constants.proto_status_ok);
+                objectNode.put(Constants.proto_status,Constants.proto_status_ok);
 //                    String routingResults = "";
 //                    for (Map.Entry<String,Object> entry : routing_results.entrySet()) {
 //                        String key = entry.getKey();
@@ -487,20 +493,18 @@ public class Application extends Controller {
 //                        // do stuff
 //                    }
 
-                    objectNode.put(Constants.proto_routingresults, routing_results.toString());
+                objectNode.put(Constants.proto_routingresults, routing_results.toString());
 //                    objectNode.put(Constants.proto_routingresults, routingResults);
 
-                }else{
+            }else{
 
-                    objectNode.put(Constants.proto_status,Constants.proto_status_ok);
-                    objectNode.put(Constants.proto_routingresult,routing_results.get(Constants.proto_steps).toString());
-                    objectNode.put(Constants.proto_traveltime,routing_results.get(Constants.proto_traveltime).toString());
-                }
-
-                output.append(objectNode.toString());
-                Logger.debug("JSON: "+ objectNode.toString());
-
+                objectNode.put(Constants.proto_status,Constants.proto_status_ok);
+                objectNode.put(Constants.proto_routingresult,routing_results.get(Constants.proto_steps).toString());
+                objectNode.put(Constants.proto_traveltime,routing_results.get(Constants.proto_traveltime).toString());
             }
+
+            output.append(objectNode.toString());
+            Logger.debug("mode findroute JSON: "+ objectNode.toString());
 
 
         }else if(mode.equals(Constants.proto_mode_search))
@@ -546,15 +550,83 @@ public class Application extends Controller {
                 String full_url = Constants.places_url + "?key=" + Constants.gmaps_server_key + "&location=" + city_lat + "," + city_lon
                         + "&radius=" + city_radius + "&keyword=" + querystring + "&types=establishment|route&sensor=true";
 
+                String result = file_get_contents(full_url);
 
+                JsonNode json_result = null;
+                try{
+
+                    json_result = Json.parse(result);
+                }catch (Exception e){
+                    Utils.log_error("ERROR places url" + e.getMessage());
+                }
+
+                int size = 0;
+
+                Logger.debug(result);
+
+                ArrayNode arrayJsonResult = (ArrayNode)json_result.withArray("results");
+                if(json_result.findPath("status").textValue().equals("ok") || json_result.findPath("status").textValue().equals("ZERO_RESULTS") )
+                {
+                    if(json_result.findPath("status").textValue().equals("ZERO_RESULTS"))
+                    {
+                        Utils.log_error("Place search not found: " + querystring);
+                    }else
+                    {
+                        size = Math.min(arrayJsonResult.size(),Constants.search_maxresult);
+
+                    }
+
+                    for (int i = 0;i<size;i++){
+                        String current_venue = arrayJsonResult.get(i).textValue();
+//                        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                    }
+
+
+                    json_output.put(Constants.proto_status,"ok");
+//                    json_output.put(Constants.proto_search_result,search_result);
+
+                    json_output.put(Constants.proto_attributions,"");
+
+
+                    Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/" + size);
+//                    Utils.put_to_cache(Constants.cache_searchplace,region + "/"+querystring,search_result);
+
+
+                }else
+                {
+                    Logger.error("Place Search returned error: for this request " + full_url);
+                }
 
             }
 
+            Logger.debug("mode search json : " + json_output.toString());
 
 
+        }else if(mode.equals(Constants.proto_mode_reporterror))
+        {
+            String errorcode = retrieve_data(Constants.proto_errorcode);
+
+            Utils.log_error("Client reported error: " + errorcode);
+
+            Logger.error(Utils.well_done("").toString());
 
 
+        }else if (mode.equals(Constants.proto_mode_nearbytransports))
+        {
+            String start = retrieve_data(Constants.proto_routestart);
 
+            if(version >= 2)
+            {
+                String result_menjangan_url = file_get_contents(Constants.menjangan_url + "/?start=" + start);
+                String lines[] = result_menjangan_url.split("\n");
+
+                for(String line : lines){
+
+                }
+
+
+            }
         }
 //        output.append(mode);
         return ok(output.toString());
@@ -616,7 +688,7 @@ public class Application extends Controller {
                 );
 
 
-        long timeout = 1000l;// 1 sec might be too many for most cases!
+        long timeout = 3000l;// 1 sec might be too many for most cases!
         String result = promise.get(timeout);
         return result;
     }
@@ -671,11 +743,12 @@ public class Application extends Controller {
 
     public boolean check_apikey(String apikey){
         boolean bool = true;
-        Connection connection = null;
+        java.sql.Connection
+                connection = DB.getConnection();
         StringBuilder output = new StringBuilder();
         String ipAddr = request().remoteAddress();//ip address client
         try {
-            connection = DB.getConnection();
+//            connection = DB.getConnection();
             // Look for angkot.web.id refreshes
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT apikeys.verifier, apikeys.ipFilter FROM apikeys WHERE apikeys.verifier = '"+apikey+"';");
@@ -715,7 +788,7 @@ public class Application extends Controller {
             return Messages.get("message_finish");
 
         }else{
-            location = mysql_real_escape_string(DB.getConnection(),location);
+//            location = mysql_real_escape_string(DB.getConnection(),location);
 
             String cached_geocode = Utils.get_from_cache(Constants.cache_geocoding,location);
 
@@ -778,7 +851,7 @@ public class Application extends Controller {
         }
     }
 
-    public static String mysql_real_escape_string(Connection link, String str)
+    public static String mysql_real_escape_string(java.sql.Connection link, String str)
             throws Exception
     {
         if (str == null) {
