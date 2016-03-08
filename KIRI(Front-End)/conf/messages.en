@@ -16,8 +16,8 @@ message_walk_samestreet = Walk slightly at %street.
 message_start = your starting point
 message_finish = your destination
 message_angkot = Take %tracktype %trackname at %from, and alight at %to about %distance later.
-#message_routenotfound['mobile'] = Sorry, we can't find a public transport route for your trip.
-#message_routenotfound['desktop'] = Sorry, we can't find a public transport route for your trip.
+message_routenotfound_mobile = Sorry, we can't find a public transport route for your trip.
+message_routenotfound_desktop = Sorry, we can't find a public transport route for your trip.
 
 
 message_hour = hours

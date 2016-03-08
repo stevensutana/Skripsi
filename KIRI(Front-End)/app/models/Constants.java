@@ -18,6 +18,21 @@ public final class Constants {
     public static String cache_searchplace = "searchplace";
     public static String cache_expiry_searchplace_mysql = "1 MONTH";
 
+    public static int cookie_expiry = 3600 * 24 * 365;
+
+    /** MySQL interval for session expiry. */
+    public static String session_expiry_interval_mysql = "6 HOUR";
+    /** Unix time interval for session expiry (seconds). */
+    public static int session_expiry_interval_unix = 6 * 3600;
+    /** Major customer's timezone in seconds, currently points to Bandung (GMT+7) */
+    public static int timezone_offset = 7 * 60 * 60;
+
+    /** Number of decimal digits for lat/lon. */
+    public static int latlon_precision = 5;
+
+    /** maximum uploaded file size */
+    public static int max_filesize = 100 * 1024;
+
     public static String places_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 
     /** Maximum number of search result. */

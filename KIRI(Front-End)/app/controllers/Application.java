@@ -3,10 +3,9 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.Alternatives;
-import models.Constants;
-import models.ProtoRegion;
-import models.User;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import models.*;
 import play.*;
 import play.Logger;
 import play.cache.*;
@@ -32,6 +31,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 import java.util.logging.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Application extends Controller {
 
@@ -71,6 +72,46 @@ public class Application extends Controller {
 //
 //        objNode.put(Constants.proto_routingresults,routingResults);
 //        Logger.debug(objNode.toString());
+
+//
+//        Logger.debug(Utils.pregMatch(regex,pattern)+ " debugiasdija");
+//        ArrayList<String> arr = new ArrayList<String>();
+//        ArrayList<String> arr1 = new ArrayList<String>();
+//
+//
+//        ArrayList<ArrayList<String>> nearby_result = new ArrayList<ArrayList<String>>();
+//
+//        arr.add("a");
+//        arr.add("b");
+//        arr.add("3");
+//
+//        nearby_result.add(arr);
+//
+//
+//        arr1.add("a");
+//        arr1.add("b");
+//        arr1.add("1");
+//
+//        nearby_result.add(arr1);
+//
+//        Logger.debug(nearby_result.toString());
+//
+//
+//        Collections.sort(nearby_result, comparator);
+//
+//
+//        Logger.debug(nearby_result.toString());
+//        String presentation = "mobile";
+//        Logger.debug(Messages.get("message_routenotfound_"+presentation));
+
+
+//
+//        String str = String.format("%.5f,%.5f",2.0123123,10.12381293123);
+//        Logger.debug(str);
+
+
+
+
         return ok(index.render("id"));
     }
 
@@ -177,10 +218,13 @@ public class Application extends Controller {
 
         StringBuilder output = new StringBuilder();
 
+
         //because java cant take string as an index,use map instead
         Map<String, Boolean> results = new HashMap<String, Boolean>();
 
-        ArrayList<Object> route_output = new ArrayList<Object>();
+        Map<String, Object> routing_results = null;
+
+        ArrayList<ArrayList<Object>> route_output = new ArrayList<ArrayList<Object>>();
 
 
         String mode = retrieve_data("mode");
@@ -191,7 +235,7 @@ public class Application extends Controller {
         String apikey = retrieve_data("apikey");
         check_apikey(apikey);
 
-        if(mode.equals("findroute"))
+        if(mode.equals(Constants.proto_mode_findroute))
         {
             Logger.debug("findroute");
             String start = addSlashes(retrieve_data("start"));
@@ -203,20 +247,21 @@ public class Application extends Controller {
             String presentation = addSlashes(retrieve_data("presentation"));
 
             String result = null;
-            if(!presentation.equals("mobile") && !presentation.equals("desktop"))
+            if(!presentation.equals(Constants.proto_presentation_mobile) && !presentation.equals(Constants.proto_presentation_desktop))
             {
                 Utils.log_error("Presentation not understood: "+ presentation);
             }
 
+
             if(version>=2)
             {
                 Logger.debug("version >= 2");
-                int count = 0;
-                if(presentation.equals("mobile")){
-                    count = 1;
-                }else{
-                    count = Constants.alternatives.length;
-                }
+                int count = presentation.equals(Constants.proto_presentation_mobile)?1:Constants.alternatives.length;
+//                if(presentation.equals("mobile")){
+//                    count = 1;
+//                }else{
+//                    count = Constants.alternatives.length;
+//                }
 
                 Logger.debug("count : " + count);
 
@@ -247,6 +292,8 @@ public class Application extends Controller {
             double travel_time = 0;
             for (Map.Entry<String, Boolean> iterator : results.entrySet()) {
 
+                travel_time = 0;
+
                 Logger.debug("for results");
 
                 Logger.debug("iterator : " + iterator.getKey());
@@ -261,16 +308,31 @@ public class Application extends Controller {
 
                     if(step.equals(Constants.protokd_result_none)){
                         if(results.size() == 1){
-                            route_output.add("none");
-                            route_output.add("none");
+                            ArrayList<Object> arrRouteOutput = new ArrayList<Object>();
+                            arrRouteOutput.add("none");
+                            arrRouteOutput.add("none");
+
                             String arrStartFinish[] = new String[2];
                             arrStartFinish[0] = start;
                             arrStartFinish[1] = finish;
-                            route_output.add(arrStartFinish);
-                            route_output.add(Messages.get("message_routenotfound["+ presentation +"]"));
-                            route_output.add(null);
-                            route_output.add(null);
 
+                            arrRouteOutput.add(arrStartFinish);
+                            arrRouteOutput.add(Messages.get("message_routenotfound_"+ presentation));
+                            arrRouteOutput.add(null);
+                            arrRouteOutput.add(null);
+
+//                            route_output.add("none");
+//                            route_output.add("none");
+//                            String arrStartFinish[] = new String[2];
+//                            arrStartFinish[0] = start;
+//                            arrStartFinish[1] = finish;
+//                            route_output.add(arrStartFinish);
+//                            route_output.add(Messages.get("message_routenotfound["+ presentation +"]"));
+//                            route_output.add(null);
+//                            route_output.add(null);
+
+                            Logger.debug("ARRAY ROUTE OUTPUT: " + arrRouteOutput.toString());
+                            route_output.add(arrRouteOutput);
                             travel_time = 0;
 
 
@@ -367,6 +429,8 @@ public class Application extends Controller {
                         }
 
                         travel_time += Double.parseDouble(distance) / Constants.speed_walk;
+                        booking_url = "";
+                        editor_url = "";
 
                     }else
                     {
@@ -403,6 +467,8 @@ public class Application extends Controller {
                                 if((result2.getString(3) != null && !result2.getString(3).isEmpty()) && (result2.getString(4) != null && !result2.getString(4).isEmpty()))
                                 {
                                     booking_url = result2.getString(3) + result2.getString(4);
+                                }else{
+                                    booking_url = "";
                                 }
 
                                 if(result2.getString(6).startsWith("angkotwebid:"))
@@ -437,7 +503,7 @@ public class Application extends Controller {
                             humanreadable = humanreadable.replaceAll("%trackname",readable_track_name);
                             humanreadable = humanreadable.replaceAll("%tracktype",track_type_name);
                         }catch (Exception ex){
-
+                            ex.printStackTrace();
                         }
 
                         travel_time += Double.parseDouble(distance) / speed;
@@ -451,32 +517,49 @@ public class Application extends Controller {
 
                     if(humanreadable != null && !humanreadable.isEmpty())
                     {
-                        route_output.clear();
-                        route_output.add(means);
-                        route_output.add(means_detail);
+//                        route_output.clear();
+
+                        ArrayList<Object> arrRouteOutput = new ArrayList<Object>();
+                        arrRouteOutput.add(means);
+                        arrRouteOutput.add(means_detail);
+
                         String pointString = "";
                         for (int i = 0;i<points.length;i++){
                             pointString += points[i] + " ";
                         }
-                        route_output.add(pointString);
-                        route_output.add(humanreadable);
-                        route_output.add(booking_url);
-                        route_output.add(editor_url);
+                        arrRouteOutput.add(pointString);
+                        arrRouteOutput.add(humanreadable);
+                        arrRouteOutput.add(booking_url);
+                        arrRouteOutput.add(editor_url);
+
+//                        route_output.add(means);
+//                        route_output.add(means_detail);
+//                        String pointString = "";
+//                        for (int i = 0;i<points.length;i++){
+//                            pointString += points[i] + " ";
+//                        }
+//                        route_output.add(pointString);
+//                        route_output.add(humanreadable);
+//                        route_output.add(booking_url);
+//                        route_output.add(editor_url);
+                        route_output.add(arrRouteOutput);
                     }
 
 
 
                 }
 
+                Map<String, Object> routing_result = new HashMap<String, Object>();
+
+                routing_result.put(Constants.proto_steps,route_output.toString());
+                routing_result.put(Constants.proto_traveltime, format_traveltime(travel_time));
+
+                routing_results = routing_result;
             }
 
-            Map<String, Object> routing_result = new HashMap<String, Object>();
-
-            routing_result.put(Constants.proto_steps,route_output);
-            routing_result.put(Constants.proto_traveltime,format_traveltime(travel_time));
 
 
-            Map<String, Object> routing_results = routing_result;
+
 
             Utils.log_statistic(apikey,"FINDROUTE",start+"/"+finish+"/"+results.size());
 
@@ -518,12 +601,14 @@ public class Application extends Controller {
 
             String region = retrieve_data(Constants.proto_region);
 
-            region = region != null? region : Constants.proto_region_bandung;
+            region = region == null? Constants.proto_region_bandung : region;
 
 
             for (Map.Entry<String, ProtoRegion> iterator : Constants.regioninfos.entrySet()) {
-                if(Utils.pregMatch("/" + iterator.getValue().getSearchPlace_regex() + "i",querystring)){
+                if(Utils.pregMatch(iterator.getValue().getSearchPlace_regex(),querystring)){
                     region = iterator.getKey();
+                    int matches = Utils.indexPregMatch(iterator.getValue().getSearchPlace_regex(),querystring);
+                    querystring = querystring.substring(0,matches);
 
                     break;
                 }
@@ -532,25 +617,27 @@ public class Application extends Controller {
             String cached_searchplace = Utils.get_from_cache(Constants.cache_searchplace,region + "/" + querystring);
 
             if(cached_searchplace != null && !cached_searchplace.isEmpty()){
-                json_output.put(Constants.proto_status,"ok");
+                json_output.put(Constants.proto_status,Constants.proto_status_ok);
                 json_output.put(Constants.proto_search_result,cached_searchplace);
 
-                json_output.put(Constants.proto_attributions,"");
+                json_output.put(Constants.proto_attributions,"null");
 
 
 
 
-                Utils.log_statistic(apikey, "SEARCHPLACE",querystring + "/cache");
+                Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/cache");
             }else
             {
                 double city_lat = Constants.regioninfos.get(region).getLat();
                 double city_lon = Constants.regioninfos.get(region).getLon();
-                double city_radius = Constants.regioninfos.get(region).getRadius();
+                int city_radius = Constants.regioninfos.get(region).getRadius();
 
                 String full_url = Constants.places_url + "?key=" + Constants.gmaps_server_key + "&location=" + city_lat + "," + city_lon
                         + "&radius=" + city_radius + "&keyword=" + querystring + "&types=establishment|route&sensor=true";
 
-                String result = file_get_contents(full_url);
+                String result = getPlacesAPI(city_lat+","+city_lon,Integer.toString(city_radius),querystring);
+
+//                Logger.debug(result);
 
                 JsonNode json_result = null;
                 try{
@@ -562,35 +649,84 @@ public class Application extends Controller {
 
                 int size = 0;
 
-                Logger.debug(result);
+                Logger.debug("");
+
 
                 ArrayNode arrayJsonResult = (ArrayNode)json_result.withArray("results");
-                if(json_result.findPath("status").textValue().equals("ok") || json_result.findPath("status").textValue().equals("ZERO_RESULTS") )
+                if(json_result.findPath("status").textValue().equals("OK") || json_result.findPath("status").textValue().equals("ZERO_RESULTS") )
                 {
+
+//                    Map<Map<Integer,String>, Object> search_result = new HashMap<Map<Integer, String>, Object>();
+                    ArrayList<Map<String, Object>> search_res = new ArrayList<Map<String, Object>>();
+
                     if(json_result.findPath("status").textValue().equals("ZERO_RESULTS"))
                     {
                         Utils.log_error("Place search not found: " + querystring);
+                        size = 0;
                     }else
                     {
                         size = Math.min(arrayJsonResult.size(),Constants.search_maxresult);
 
                     }
 
+//                    ArrayNode current_venue = null;
+                    JsonNode current_venue = null;
+
                     for (int i = 0;i<size;i++){
-                        String current_venue = arrayJsonResult.get(i).textValue();
+                        current_venue = json_result.withArray("results").get(i);
+//                        search_result.p
+//                        search_result.put(i,Constants.proto_placename,current_venue.findPath("name").textValue());
+
+                        Map<String, Object> search_result = new HashMap<String, Object>();
+
+                        search_result.put(Constants.proto_placename, current_venue.get("name").textValue());
+
+                        search_res.add(i, search_result);
+                        search_result.put(Constants.proto_location, String.format("%.5f,%.5f",
+                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lat").toString()),
+                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lng").toString())));
+
+                        search_res.add(i, search_result);
+
+
+//                        Map<Integer,String> key = new HashMap<Integer,String>();
+//
+//                        key.put(i,Constants.proto_placename);
+//
+//                        search_result.put(key, current_venue.get("name").textValue());
+//
+//                        Logger.debug("1" + search_result.toString());
+//
+//                        key.put(i, Constants.proto_location);
+////
+////                        search_result.put(key, String.format("%." + Constants.latlon_precision + "f,%." + Constants.latlon_precision + "f",
+////                                current_venue.findPath("geometry").findPath("location").findPath("lat").toString(),
+////                                current_venue.findPath("geometry").findPath("location").findPath("lon").toString()));
+//
+//
+//                        search_result.put(key, String.format("%.5f,%.5f",
+//                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lat").toString()),
+//                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lng").toString())));
+
+                        Logger.debug("2" + search_result.toString());
+                        Logger.debug("3" + search_res.toString());
+
 //                        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                     }
 
+                    Logger.debug("HASIL SEARCH_RESULT:" + search_res.toString());
 
-                    json_output.put(Constants.proto_status,"ok");
-//                    json_output.put(Constants.proto_search_result,search_result);
 
-                    json_output.put(Constants.proto_attributions,"");
+                    json_output.put(Constants.proto_status, Constants.proto_status_ok);
+                    json_output.put(Constants.proto_search_result, search_res.toString());
+                    json_output.put(Constants.proto_attributions, "null");
+
+
 
 
                     Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/" + size);
-//                    Utils.put_to_cache(Constants.cache_searchplace,region + "/"+querystring,search_result);
+//                    Utils.put_to_cache(Constants.cache_searchplace,region + "/"+querystring,search_result.toString());
 
 
                 }else
@@ -601,6 +737,7 @@ public class Application extends Controller {
             }
 
             Logger.debug("mode search json : " + json_output.toString());
+            output.append(json_output.toString());
 
 
         }else if(mode.equals(Constants.proto_mode_reporterror))
@@ -618,19 +755,101 @@ public class Application extends Controller {
 
             if(version >= 2)
             {
-                String result_menjangan_url = file_get_contents(Constants.menjangan_url + "/?start=" + start);
+                String result_menjangan_url = getFromMenjangan(start);
                 String lines[] = result_menjangan_url.split("\n");
 
+                Logger.debug(result_menjangan_url);
+
+                ArrayList<ArrayList<String>> nearby_result = new ArrayList<ArrayList<String>>();
+
+
                 for(String line : lines){
+                    String[] listLine = line.split("/");
+
+                    String trackTypeId = listLine[0];
+                    String trackId = listLine[1];
+                    String distance = listLine[2];
+
+                    Connection connection = DB.getConnection();
+//                        StringBuilder output = new StringBuilder();
+                    try {
+//                            connection = DB.getConnection();
+                        // Look for angkot.web.id refreshes
+                        Statement statement = connection.createStatement();
+
+                        ResultSet result = statement.executeQuery("SELECT trackname FROM tracks WHERE trackId='"+ trackId + "' AND trackTypeId='"+trackTypeId+ "';");
+
+                        while (result.next()) {
+                            //php starts from 0,jdbc start from 1
+
+                            String trackName = result.getString(1);
+                            ArrayList<String> list = new ArrayList<String>();
+                            list.add(trackTypeId);
+                            list.add(trackId);
+                            list.add(trackName);
+                            list.add(distance);
+//                            nearby_result.add(trackTypeId);
+//                            nearby_result.add(trackId);
+//                            nearby_result.add(trackName);
+//                            nearby_result.add(distance);
+                            nearby_result.add(list);
+
+                        }
+
+
+                        connection.close();
+                    } catch (Exception e) {
+                        Utils.log_error("Can't get nearest track details:  " + e.getMessage());
+                    }
 
                 }
 
+//                usort;
+//                nearby_result.sort(new Comparator<String>() {
+//                    @Override
+//                    public int compare(String o1, String o2) {
+//                        return 0;
+//                    }
+//                });
 
+                Logger.debug(nearby_result.toString());
+                Collections.sort(nearby_result,comparator);
+
+                Utils.log_statistic(apikey,"NEARBYTRANSPORTS",start + results.size());
+
+
+                Logger.debug("after compare : " + nearby_result.toString());
+                ObjectNode json_output = Json.newObject();
+
+                json_output.put(Constants.proto_status,Constants.proto_status_ok);
+                json_output.put(Constants.proto_nearbytransports,nearby_result.toString());
+
+
+                output.append(json_output.toString());
+
+            }else
+            {
+                Utils.log_error("Nearby transit is not supported in version 1");
             }
+
+
+        }else
+        {
+            Utils.log_error("Mode not understood: "+ mode);
         }
 //        output.append(mode);
         return ok(output.toString());
     }
+
+    private static final Comparator<ArrayList<String>> comparator = new Comparator<ArrayList<String>>() {
+        @Override
+        public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+//            int a = Integer.parseInt(o1.get(3));
+//            int b = Integer.parseInt(o2.get(3));
+            return Double.compare(Double.parseDouble(o1.get(3)),Double.parseDouble(o2.get(3)));
+//            return a-b;
+        }
+    };
 
     public String getFromMenjangan(String start,String finish,double mw,double wm,double pt){
         F.Promise<String> promise = WS.url("http://newmenjangan.cloudapp.net:8000")
@@ -675,6 +894,26 @@ public class Application extends Controller {
         return result;
     }
 
+    public String getFromMenjangan(String start) {
+        F.Promise<String> promise = WS.url("http://newmenjangan.cloudapp.net:8000")
+                .setQueryParameter("start", start)
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 1000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
+    }
+
+
     public String file_get_contents(String url) {
         F.Promise<String> promise = WS.url(url)
                 .get()
@@ -692,6 +931,32 @@ public class Application extends Controller {
         String result = promise.get(timeout);
         return result;
     }
+
+
+    public String getPlacesAPI(String location,String radius,String querystring) {
+        F.Promise<String> promise = WS.url(Constants.places_url)
+                .setQueryParameter("key", Constants.gmaps_server_key)
+                .setQueryParameter("location",location)
+                .setQueryParameter("radius",radius)
+                .setQueryParameter("keyword",querystring)
+                .setQueryParameter("types","establishment|route")
+                .setQueryParameter("sensor","true")
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 3000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
+    }
+
 
     public String format_traveltime(double time){
         if(time>1){

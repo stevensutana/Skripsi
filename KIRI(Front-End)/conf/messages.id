@@ -16,8 +16,8 @@ message_walk_samestreet = Jalan sedikit di %street.
 message_start = lokasi mulai Anda
 message_finish = tujuan akhir Anda
 message_angkot = Naik %tracktype %trackname di %from, dan turun di %to kurang lebih setelah %distance.
-#message_routenotfound['mobile'] = Maaf, kami tidak dapat menemukan rute transportasi publik untuk perjalanan Anda.
-#message_routenotfound['desktop'] = Maaf, kami tidak dapat menemukan rute transportasi publik untuk perjalanan Anda.
+message_routenotfound_mobile = Maaf, kami tidak dapat menemukan rute transportasi publik untuk perjalanan Anda.
+message_routenotfound_desktop = Maaf, kami tidak dapat menemukan rute transportasi publik untuk perjalanan Anda.
 
 message_hour = jam
 message_min = menit

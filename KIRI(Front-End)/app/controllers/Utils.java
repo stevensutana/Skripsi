@@ -130,18 +130,33 @@ public final class Utils extends Controller {
     }
 
 
-    public static boolean pregMatch(String pattern, String content) {
-        return content.matches(pattern);
+    public static boolean pregMatch(String regex, String content) {
+
+
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(content);
+        // Check all occurrences
+//        while (matcher.find()) {
+//            Logger.debug("Start index: " + matcher.start());
+//            Logger.debug(" End index: " + matcher.end());
+//            Logger.debug(" Found: " + matcher.group());
+//        }
+        return matcher.find();
     }
 
-//    public static String pregMatch(String regex, String content,String match) {
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(content);
-//        if (matcher.find()) {
-//            match = matcher.group(1);   // this is almost same also, getting the first captured group
-//        }
-//        return match;
-//    }
+    public static int indexPregMatch(String regex, String content) {
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(content);
+        int index = 0;
+        while (matcher.find()) {
+            index = matcher.start();
+//
+//            Logger.debug("Start index: " + matcher.start());
+//            Logger.debug(" End index: " + matcher.end());
+//            Logger.debug(" Found: " + matcher.group());
+        }
+        return index;
+    }
 
 
     public static ObjectNode well_done(String message) {
@@ -161,7 +176,7 @@ public final class Utils extends Controller {
 
     public static String get_from_cache(String type,String key){
 
-        java.sql.Connection connection = DB.getConnection();
+        Connection connection = DB.getConnection();
         StringBuilder output = new StringBuilder();
         try {
 //
@@ -190,7 +205,7 @@ public final class Utils extends Controller {
     }
 
     public static void put_to_cache(String type, String key,String value){
-        java.sql.Connection connection = DB.getConnection();
+        Connection connection = DB.getConnection();
         StringBuilder output = new StringBuilder();
         try {
 
