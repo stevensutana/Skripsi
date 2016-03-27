@@ -1142,3 +1142,30 @@ Aktivitas-aktivitas yang ada pada KIRI dapat dijelaskan sebagai berikut:
 		\item Jika pengguna memilih rute alternatif, maka sistem menunjukkan rute alternatif dan memperbarui peta.
 	\end{itemize}
 \end{enumerate}
+
+
+\section{Analisis Class Diagram}
+\label{sec:kelasdiagram}
+Diagram kelas analisis KIRI dapat dilihat pada \ref{fig:3_classdiagram}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{Gambar/Class-Diagram-Analisis}
+	\caption{Class Diagram Analisis KIRI} 
+	\label{fig:3_classdiagram}
+\end{figure}
+
+Kelas-kelas yang ada pada KIRI dapat dijelaskan sebagai berikut:
+
+\begin{enumerate}
+	\item Controller\\
+			Kelas ini merupakan kelas yang sudah ada dalam Play Framework.
+	\item Application\\
+			Kelas ini merupakan \textit{controller} yang berfungsi untuk menghubungkan \textit{model} dengan \textit{view}.
+	\item Model\\
+			Kelas ini merupakan kelas yang sudah ada dalam Play Framework.
+	\item Alternative\\
+			Kelas untuk merepresentasikan alternatif rute yang akan dicari.
+	\item ProtoRegion\\
+			Kelas untuk merepresentasikan detail kota yang disediakan KIRI.
+\end{enumerate}

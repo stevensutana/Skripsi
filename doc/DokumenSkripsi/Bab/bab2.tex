@@ -21,6 +21,83 @@
 %	\item Sebuah definisi tempat, seperti perempatan jalan.
 %\end{itemize}
 
+
+\section{Java Database Connectivity (JDBC)}
+\label{sec:jdbc}
+JDBC API \cite{jdbc} adalah standar industri untuk konektivitas basisdata-independen antara bahasa pemrograman Java dan berbagai database. JDBC API menyediakan API untuk akses database berbasis SQL. JDBC API memungkinkan untuk melakukan tiga hal: 
+\begin{itemize}
+	\item Membangun koneksi dengan database atau mengakses sumber data.
+	\item Mengirim pernyataan SQL.
+	\item Mengolah hasil.
+\end{itemize}
+
+\subsection{Injeksi SQL}
+Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah celah keamanan yang terjadi dalam lapisan basisdata sebuah aplikasi. Celah ini terjadi ketika masukan pengguna tidak disaring secara benar dari karakter-karakter pelolos bentukan string yang diimbuhkan dalam pernyataan SQL atau masukan pengguna tidak bertipe kuat dan karenanya dijalankan tidak sesuai harapan. Ini sebenarnya adalah sebuah contoh dari sebuah kategori celah keamanan yang lebih umum yang dapat terjadi setiap kali sebuah bahasa pemrograman atau skrip ditambahkan di dalam bahasa pemrograman yang lain. Bentuk-bentuk celah keamanan injeksi SQL:
+\begin{itemize}
+	\item Karakter-karakter pelolos yang tidak disaring secara benar.\\
+	Bentuk injeksi SQL ini terjadi ketika masukan pengguna tidak disaring dari karakter-karakter pelolos dan kemudian diteruskan ke dalam sebuah pernyataan SQL. Baris kode berikut menggambarkan celah keamanan:
+	\begin{lstlisting}[language=Java]
+	pernyataan := "SELECT * FROM pengguna WHERE nama = '" + namaPengguna + "';"
+\end{lstlisting}
+	
+	Jika variabel "namaPengguna" dirangkai sedemikian rupa oleh pengguna yang bermaksud buruk, pernyataan SQL tersebut bisa melakukan lebih daripada yang pengarangnya maksudkan. Sebagai contoh, mengeset variabel "namaPengguna" sebagai:
+	\begin{lstlisting}[language=Java]
+		a' or 't'='t
+	\end{lstlisting}
+	menjadikan pernyataan SQL ini oleh bahasa yang memuatnya:
+	\begin{lstlisting}[language=Java]
+		SELECT * FROM pengguna WHERE nama = 'a' or 't'='t';
+	\end{lstlisting}
+	Jika kode ini akan digunakan dalam sebuah prosedur untuk melakukan otentikasi, maka contoh ini dapat dipakai untuk memaksakan pemilihan sebuah nama pengguna yang sah karena evaluasi 't'='t' akan selalu bernilai benar.
+	
+	 Nilai "namaPengguna" berikut ini pada pernyataan di atas akan menyebabkan dihapusnya tabel "pengguna" :
+	 
+	\begin{lstlisting}[language=Java]
+		a';DROP TABLE pengguna; SELECT * FROM data WHERE nama LIKE '%
+	\end{lstlisting}
+	
+	Masukan ini menjadikan pernyataan akhir SQL sebagai berikut:
+
+	\begin{lstlisting}[language=Java]
+		SELECT * FROM pengguna WHERE nama = 'a';DROP TABLE pengguna; 
+	\end{lstlisting}
+	\item Penanganan tipe yang tidak benar.\\
+	Bentuk injeksi SQL ini terjadi ketika sebuah unsur masukan pengguna tidak bertipe kuat atau tidak diperiksa batasan-batasan tipenya. Ini dapat terjadi ketika sebuah unsur numerik akan digunakan dalam sebuah pernyataan SQL, tetapi pemrogram tidak melakukan pemeriksaan untuk memastikan bahwa masukan pengguna adalah numerik. Sebagai contoh:
+	
+	\begin{lstlisting}[language=Java]
+		pernyataan := "SELECT * FROM data WHERE id = " + variabel_a + ";"
+	\end{lstlisting}
+	
+	Terlihat jelas dari pernyataan ini, variabel\_a menjadi sebuah nomor yang berhubungan dengan unsur "id". Namun begitu, jika pada kenyataannya itu adalah sebuah string, maka pengguna akhir dapat memanipulasi pernyataan tersebut sesukanya, dan karena itu mengabaikan kebutuhan akan karakter-karakter pelolos. Sebagai contoh, mengeset variabel\_a sebagai
+
+	\begin{lstlisting}[language=Java]
+		1;DROP TABLE pengguna
+	\end{lstlisting}
+	akan menghapus tabel "pengguna" dari basis data karena hasil akhir SQL-nya akan menjadi sebagai berikut:
+	\begin{lstlisting}[language=Java]
+		SELECT * FROM data WHERE id = 1;DROP TABLE pengguna;
+	\end{lstlisting}
+	
+	\item Celah keamanan dalam server basis data.\\
+	Terkadang celah-celah keamanan dapat berada dalam perangkat lunak server basis data itu sendiri, seperti yang terjadi pada fungsi-fungsi real\_escape\_chars() di server MySQL.
+\end{itemize}
+
+\subsection{Prepared Statement}
+Prepared Statement adalah fitur yang digunakan untuk mengeksekusi pernyataan basisdata berulang kali dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan pernyataan SQL seperti query atau update, pernyataan mengambil bentuk template yang diganti dengan nilai-nilai konstan tertentu yang diganti selama setiap eksekusi.
+
+JDBC menyediakan objek PreparedStatement untuk mendukung Prepared Statement. Alasan lain menggunakan PreparedStatement adalah untuk mengurangi waktu eksekusi. Keuntungan lainnya adalah pernyataan SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, objek PreparedStatement berisi tidak hanya sebuah pernyataan SQL, tetapi pernyataan SQL yang telah pre kompilasi. Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
+
+
+\begin{lstlisting}[caption=Contoh PreparedStatement,label = {lst_2_prepared},language=Java]
+		java.sql.PreparedStatement stmt = connection.prepareStatement(
+               "SELECT * FROM users WHERE USERNAME = ? AND ROOM = ?");
+		stmt.setString(1, username);
+		stmt.setInt(2, roomNumber);
+		stmt.executeQuery();
+\end{lstlisting}
+
+
+
 \section{Play Framework}
 \label{sec:play}
 \subsection{Struktur Play Framework}
@@ -114,19 +191,69 @@ Beberapa alternatif hasil Results, yaitu:
 	Method yang berfungsi untuk mengembalikan Result untuk mengalihkan halaman.
 \end{enumerate}
 
-\subsection{Body Parsers}
-\textit{Body parsers} bertugas untuk melakukan pemetaan \textit{request body} menjadi objek. Setiap \textit{action method} POST dan PUT mengandung \textit{body}. Jumlah \textit{body} dapat satu atau banyak, dan dapat berupa XML, JSON, data biner, atau dapat berupa apapun sesuai Content-Type pada \textit{header request}. \textit{Body parsers} akan menguraikan \textit{body} menjadi objek Java. \textit{Body parsers} mengubah \textit{request} menjadi objek yang dapat digunakan oleh komponen Play. Karena \textit{body} JSON dan \textit{body} XML berbeda penguraiannya, Play menggunakan \textit{body parsers} yang berbeda pula implementasinya. Berbeda Content-Type pada \textit{header request}, \textit{body parsers} spesifik dapat mengubah data yang masuk menjadi sesuatu yang dapat dimengerti oleh Play. Ilustrasi dapat dilihat pada gambar \ref{fig:2_play_bodyparsers}.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.7]{Gambar/play-bodyparsers}
-	\caption{Interaksi \textit{Body Parsers} dengan \textit{Request}} 
-	\label{fig:2_play_bodyparsers}
-\end{figure}
+%\subsection{Body Parsers}
+%\textit{Body parsers} bertugas untuk melakukan pemetaan \textit{request body} menjadi objek. Setiap \textit{action method} POST dan PUT mengandung \textit{body}. Jumlah \textit{body} dapat satu atau banyak, dan dapat berupa XML, JSON, data biner, atau dapat berupa apapun sesuai Content-Type pada \textit{header request}. \textit{Body parsers} akan menguraikan \textit{body} menjadi objek Java. \textit{Body parsers} mengubah \textit{request} menjadi objek yang dapat digunakan oleh komponen Play. Karena \textit{body} JSON dan \textit{body} XML berbeda penguraiannya, Play menggunakan \textit{body parsers} yang berbeda pula implementasinya. Berbeda Content-Type pada \textit{header request}, \textit{body parsers} spesifik dapat mengubah data yang masuk menjadi sesuatu yang dapat dimengerti oleh Play. Ilustrasi dapat dilihat pada gambar \ref{fig:2_play_bodyparsers}.
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[scale=0.7]{Gambar/play-bodyparsers}
+%	\caption{Interaksi \textit{Body Parsers} dengan \textit{Request}} 
+%	\label{fig:2_play_bodyparsers}
+%\end{figure}
 
 %\section{Kode KIRI (PHP)}
 %\label{sec:kodeKIRI}
 
+\subsection{Web Service}
+\play menyediakan \textit{library} untuk memanggil layanan HTTP dari luar aplikasi Play yang disebut \textit{library} WS. Library WS memanggil layanan HTTP secara \textit{asynchronous}. Tahap penting yang dilakukan Library WS adalah:
+\begin{enumerate}
+	\item Melakukan permintaan, dan
+	\item Memproses respon yang didapat.
+\end{enumerate}
+
+Pertama menentukan hasil respon yang ingin didapat memiliki tipe data apa, seperti String atau JSON. Setelah itu, menentukan URL halaman web yang ingin diproses. Lalu dapat menambahkan query parameter (jika ada). Query parameter menerima dua input, yaitu key dan value. Terakhir menerima respon dengan melakukan pemetaan dari F.Promise menjadi WSResponse. Kelas F merupakan kumpulan fungsi pembantu dalam Play.
+
+\subsection{JSON}
+Dalam aplikasi KIRI, data yang disediakan maupun data yang didapat dari Web Service berupa JSON. Play menggunakan Jackson, sebuah library JSON yang mengubah objek ke atau dari JSON.
+
+\subsubsection{Menulis JSON}
+Untuk menulis keluaran JSON, Play menggunakan ObjectNode. ObjectNode dapat menulis JSON dengan menerima dua parameter, yaitu key dan value. Contoh dapat dilihat pada kode listing \ref{lst_2_jsonnode_nulis}.
+
+\begin{lstlisting}[caption=Contoh menulis JSON menggunakan ObjectNode,label = {lst_2_jsonnode_nulis},language=Java]
+	
+      ObjectNode objectNode = Json.newObject();
+      objectNode.put(Constants.proto_status,Constants.proto_status_ok);
+\end{lstlisting}
+
+ 
+
+\subsubsection{Mendapatkan JSON}
+Untuk mendapatkan JSON, pertama menguraikan String menjadi JsonNode, lalu mendapatkan value dari keynya dengan memanggil method get(index) atau findPath(index) dimana index tersebut adalah key yang ingin dicari. Contoh dapat dilihat pada kode listing \ref{lst_2_jsonnode_baca}.
+
+\begin{lstlisting}[caption=Contoh mendapatkan JSON menggunakan JsonNode,label = {lst_2_jsonnode_baca},language=Java]
+	
+      JsonNode json_result = Json.parse(result);
+      json_result.findPath("status").textValue();
+\end{lstlisting} 
+
+\subsection{Konfigurasi JDBC}
+\play mempunyai konfigurasi untuk menghubungkan basisdata dengan JDBC. Pertama menambahkan javaJdbc dan "mysql" \% "mysql-connector-java" \% "5.1.37" pada libraryDependencies pada file build.sbt. Lalu menambahkan:
+\begin{enumerate}
+	\item db.default.driver=com.mysql.jdbc.Driver\\
+			Merupakan driver basisdata yang digunakan.
+	\item db.default.url="jdbc:mysql://localhost/Skripsi"\\
+			Merupakan url dari basisdata yang digunakan dengan tabel Skripsi.
+	\item db.default.username="root"\\
+			Username yang digunakan pada basisdata.
+	\item db.default.password="root"\\
+			Password yang digunakan pada basisdata.
+\end{enumerate}
+
+Untuk mendapatkan konektivitas JDBC dapat dilakukan dengan cara:
+
+\begin{lstlisting}[caption=Contoh mendapatkan konektivitas JDBC,label = {lst_2_konek_jdbc},language=Java]
+	Connection connection = DB.getConnection();
+\end{lstlisting} 
 
 \subsection{Internationalization}
 Pengguna aplikasi mungkin berasal dari beda negara dan bahasa, juga punya format yang berbeda untuk tanggal, angka, dan waktu. Kombinasi dari bahasa aturan format disebut \textit{locale}. Adaptasi program untuk berbeda \textit{locale} disebut \textit{internationalization (i18n)} atau \textit{localization (l10n)}. Perbedaan \textit{internationalization} dan \textit{localization} adalah \textit{internationalization} melakukan \textit{refactor} untuk menghapus kode lokal dari aplikasi, sedangkan \textit{localization} membuat versi lokal dari aplikasi. Program yang sudah diproses Internationalization mempunyai karakteristik:
@@ -167,9 +294,15 @@ Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file 
 	...
 \end{lstlisting}
 
+\subsection{Logging}
+Logging dapat membantu dalam pengerjaan aplikasi KIRI. Kita dapat memonitor, melihat kesalahan program, dan memperbaiki program. Play menyediakan API untuk logging yang dapat diakses melalui objek Logger. Contoh logging dapat dilihat pada kode listing \ref{lst_2_logging}.
 
+\begin{lstlisting}[caption=Contoh logging menggunakan objek Logger,label = {lst_2_logging},language=Java]
+	 Logger.debug("mode search json : " + json_output.toString());
+\end{lstlisting} 
 	
-	
+
+
 \section{OpenLayers}
 \label{sec:openlayers}
 OpenLayers \cite{openlayersbook} merupakan \textit{library} yang memiliki performa tinggi dan fitur yang dikemas untuk kebutuhan menampilkan peta menggunakan JavaScript. Dalam pengembangan aplikasi yang menggunakan fitur peta, tugas yang paling penting dan utama adalah membuat peta tersebut. Peta menjadi inti untuk menambahkan dan menampilkan data. Fitur yang terdapat pada OpenLayers adalah:
