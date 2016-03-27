@@ -1,18 +1,14 @@
-package controllers;
+package models.helpers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.Constants;
-import play.api.*;
 import play.db.DB;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.Logger;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,16 +51,23 @@ public final class Utils extends Controller {
         try {
             connection = DB.getConnection();
             // Look for angkot.web.id refreshes
-            Statement statement = connection.createStatement();
 
-            statement.executeUpdate("INSERT INTO statistics (verifier, tipe, additionalInfo) VALUES ("+verifier+","+type+","+additional_info+")");
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "INSERT INTO statistics (verifier, type, additionalInfo) VALUES ?,?,?");
+            stmt.setString(1,verifier);
+            stmt.setString(2,type);
+            stmt.setString(3,additional_info);
+            stmt.executeUpdate();
+//            Statement statement = connection.createStatement();
+//
+//            statement.executeUpdate("INSERT INTO statistics (verifier, tipe, additionalInfo) VALUES ("+verifier+","+type+","+additional_info+")");
             connection.close();
         } catch (Exception e) {
         }
     }
 
 
-    public ObjectNode die_nice(String message) {
+    public static ObjectNode die_nice(String message) {
         ObjectNode obj = Json.newObject();
         obj.put(Constants.proto_status, Constants.proto_status_error);
         obj.put(Constants.proto_message, message);
@@ -184,8 +187,16 @@ public final class Utils extends Controller {
 //            Connection connection = ds.getConnection();
 //            connection = DB.getConnection();
             // Look for angkot.web.id refreshes
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT cacheValue FROM cache WHERE tipe = '"+type+"' AND cacheKey = '" + key + "';");
+
+
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT cacheValue FROM cache WHERE type = ? AND cacheKey = ?");
+            stmt.setString(1,type);
+            stmt.setString(2,key);
+
+            ResultSet result = stmt.executeQuery();
+//            Statement statement = connection.createStatement();
+//            ResultSet result = statement.executeQuery("SELECT cacheValue FROM cache WHERE tipe = '"+type+"' AND cacheKey = '" + key + "';");
 
             while (result.next()) {
 
@@ -210,9 +221,18 @@ public final class Utils extends Controller {
         try {
 
             // Look for angkot.web.id refreshes
+
             Statement statement = connection.createStatement();
 
-            statement.executeUpdate("INSERT INTO cache(tipe, cacheKey, cacheValue) VALUES ('"+type+"','"+key+"','"+value+"');");
+            statement.executeUpdate("INSERT INTO cache(type, cacheKey, cacheValue) VALUES ('"+type+"','"+key+"','"+value+"');");
+
+//            java.sql.PreparedStatement stmt = connection.prepareStatement(
+//                    "INSERT INTO cache(type, cacheKey, cacheValue) VALUES ?,?,(?)");
+//            stmt.setString(1,type);
+//            stmt.setString(2, key);
+//
+//            stmt.setString(3, String.valueOf(value));
+//            stmt.executeUpdate();
             connection.close();
         } catch (Exception e) {
             log_error("Warning: Can't store cache "+e.getMessage());
@@ -247,6 +267,27 @@ public final class Utils extends Controller {
 
         Logger.error(message);
     }
+
+    public static String validateLocale(String locale){
+
+        if(locale.equals(Constants.proto_locale_indonesia)){
+
+            return locale;
+        }else{
+            return Constants.proto_locale_english;
+        }
+    }
+
+    public static String validateRegion(String region){
+
+        if(Constants.regioninfos.get(region) != null){
+
+            return region;
+        }else{
+            return Constants.proto_region_bandung;
+        }
+    }
+
 
 
 

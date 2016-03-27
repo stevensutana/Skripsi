@@ -1,5 +1,5 @@
 @import play.i18n._
-@(locale:String)
+@(locale:String = "id",regioninfos:Map[String, models.ProtoRegion],message:String,region:String)
 <!DOCTYPE html>
 
 
@@ -33,20 +33,36 @@
                 <div class="row">
                     <div class="small-5 columns">
                         <select class="fullwidth" id="regionselect">
-                            <option value="bdg">Bandung</option>
-                            <option value="jkt">Jakarta</option>
-                            <option value="sby">Surabaya</option>
-                            <option value="mlg">Malang</option>
+                            @for(regioninfo <- regioninfos) {
+                                <option value=@regioninfo._1
+                                @if(regioninfo._1 == region){
+                                    selected
+                                }
+                                >@regioninfo._2.getName</option>
+                            }
+
+                            @*<option value="bdg">Bandung</option>*@
+                            @*<option value="jkt">Jakarta</option>*@
+                            @*<option value="sby">Surabaya</option>*@
+                            @*<option value="mlg">Malang</option>*@
                         </select>
 
                     </div>
                     <div class="small-7 columns">
                         <select class="fullwidth" id="localeselect">
                             <option value="en">English</option>
+                            <option value="id"
                             @if(locale == "id"){
+                                selected
+                            }
+                            >Bahasa Indonesia</option>
+                            @*{*@
 
-                            <option value="id" selected>Bahasa Indonesia</option>
-                                }
+                            @*}else{*@
+
+                                @*<option value="id">Bahasa Indonesia</option>*@
+                                @*<option value="en" selected>English</option>*@
+                            @*}*@
                         </select>
                     </div>
                 </div>
@@ -122,56 +138,53 @@
         <script src="@routes.Assets.versioned("foundation/js/vendor/fastclick.js")"></script>
         <script src="@routes.Assets.versioned("foundation/js/foundation.min.js")"></script>
         <script src="@routes.Assets.versioned("foundation/js/foundation/foundation.alert.js")"></script>
+        @*<script>*@
+            @*var input_text = [],coordinates = [];*@
 
+            @*input_text['start'] = null;*@
+            @*coordinates['start'] = null;*@
+            @*input_text['finish'] = null;*@
+            @*coordinates['finish'] = null;*@
+
+            @*var locale='id';*@
+            @*var region='bdo';*@
+
+            @*var messageBuyTicket = '@Messages.get("index_buyticket")';*@
+            @*var messageConnectionError = '@Messages.get("index_connectionerror")';*@
+            @*var messageFillBoth = '@Messages.get("index_fillboth")';*@
+            @*var messageNotFound = '@Messages.get("index_notfound")';*@
+            @*var messageOops = '@Messages.get("index_oops")';*@
+            @*var messageOrderTicketHere = '@Messages.get("index_order_ticket_here")';*@
+            @*var messagePleaseWait = '<img src="/assets/images/loading.gif" alt="... "/>'+ '@Messages.get("index_pleasewait")';*@
+            @*var messageITake =' @Messages.get("index_itake")';*@
+
+            @*var region = 'bdo';*@
+            @*var regions = {*@
+                @*bdo: {center: '-6.91474,107.60981', zoom: 12},*@
+                @*cgk: {center: '-6.21154,106.84517', zoom: 11},*@
+                @*sub: {center: '-7.27421,112.71908', zoom: 12},*@
+                @*mlg: {center: '-7.9812985,112.6319264', zoom: 13},*@
+            @*};*@
+		    @*$(document).foundation();*@
+
+        @*</script>*@
         <script>
-            var input_text = [],coordinates = [];
-
-//            var endpoints = ['start','finish'];
-//            endpoints.forEach(function(endpoint){
-//                if(textual_endpoint[endpoint] == null){
-//                    input_text[endpoint] = null;
-//                }else{
-//                    input_text[endpoint] = textual_endpoint[endpoint];
-//                }
-//
-//                if(coordinate_endpoint[endpoint] == null){
-//                    coordinates[endpoint] = null;
-//                }else{
-//                    coordinates[endpoint] = coordinate_endpoint[endpoint];
-//                }
-//
-//            });
-            input_text['start'] = null;
-            coordinates['start'] = null;
-            input_text['finish'] = null;
-            coordinates['finish'] = null;
-
-            var locale='id';
-            var region='bdo';
-
-            var messageBuyTicket = '@Messages.get("index_buyticket")';
-            var messageConnectionError = '@Messages.get("index_connectionerror")';
-            var messageFillBoth = '@Messages.get("index_fillboth")';
-            var messageNotFound = '@Messages.get("index_notfound")';
-            var messageOops = '@Messages.get("index_oops")';
-            var messageOrderTicketHere = '@Messages.get("index_order_ticket_here")';
-            var messagePleaseWait = '<img src="/assets/images/loading.gif" alt="... "/>'+ '@Messages.get("index_pleasewait")';
-            var messageITake =' @Messages.get("index_itake")';
-
-            var region = 'bdo';
-            var regions = {
-                bdo: {center: '-6.91474,107.60981', zoom: 12},
-                cgk: {center: '-6.21154,106.84517', zoom: 11},
-                sub: {center: '-7.27421,112.71908', zoom: 12},
-                mlg: {center: '-7.9812985,112.6319264', zoom: 13},
-            };
-		    $(document).foundation();
-
+            @Html(message)
         </script>
 
         <script src="@routes.Assets.versioned("js/newprotocol.js")"></script>
         <script src="@routes.Assets.versioned("js/index.js")"></script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+          ga('create', 'UA-36656575-2', 'kiri.travel');
+          ga('require', 'displayfeatures');
+          ga('send', 'pageview');
+
+	    </script>
 
     </body>
 </html>

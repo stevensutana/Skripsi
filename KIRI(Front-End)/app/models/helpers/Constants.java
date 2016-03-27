@@ -1,4 +1,7 @@
-package models;
+package models.helpers;
+
+import models.Alternative;
+import models.ProtoRegion;
 
 import java.util.*;
 
@@ -7,9 +10,9 @@ import java.util.*;
  */
 public final class Constants {
 
-    public static Alternatives[] alternatives;
+    public static Alternative[] alternatives;
 
-    public static Map<String,ProtoRegion> regioninfos;
+    public static Map<String, ProtoRegion> regioninfos;
 
 
     // Cache types and expiry
@@ -47,7 +50,7 @@ public final class Constants {
 
 
     public static int speed_walk = 5;
-    public static String menjangan_url;
+    public static String menjangan_url = "http://newmenjangan.cloudapp.net:8000";
 
     public static String proto_address = "address";
     public static String proto_apikey = "apikey";
@@ -154,12 +157,11 @@ public final class Constants {
     public static String protokd_penaltytransfer = "pt";
 
     static{
-        menjangan_url = "http://newmenjangan.cloudapp.net:8000";
 
-        alternatives = new Alternatives[3];
-        alternatives[0] = new Alternatives(0.75,1,0.15);
-        alternatives[1] = new Alternatives(1,0.75,0.15);
-        alternatives[2] = new Alternatives(0.75,1,0.45);
+        alternatives = new Alternative[3];
+        alternatives[0] = new Alternative(0.75,1,0.15);
+        alternatives[1] = new Alternative(1,0.75,0.15);
+        alternatives[2] = new Alternative(0.75,1,0.45);
 
         regioninfos = new HashMap<String, ProtoRegion>();
 

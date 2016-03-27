@@ -3,13 +3,12 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import models.*;
-import play.*;
+import models.helpers.Constants;
+import models.helpers.Utils;
 import play.Logger;
-import play.cache.*;
-import play.api.libs.ws.WSAuthScheme;
+import play.api.mvc.Request;
+import play.cache.CacheApi;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.DB;
@@ -18,38 +17,75 @@ import play.libs.F;
 import play.libs.Json;
 import play.libs.ws.WS;
 import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 import play.mvc.*;
 
 import views.html.*;
 
 import javax.inject.Inject;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
-import java.util.logging.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Application extends Controller {
 
-    Form<User> userForm = Form.form(User.class);
-    DynamicForm dynamicForm;
+//    Form<User> userForm = Form.form(User.class);
+    private DynamicForm dynamicForm;
+
+
+
+    @Inject private WSClient ws;
     @Inject
     CacheApi cache;
 
+    private static final Comparator<ArrayList<String>> comparator = new Comparator<ArrayList<String>>() {
+        @Override
+        public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+//            int a = Integer.parseInt(o1.get(3));
+//            int b = Integer.parseInt(o2.get(3));
+            return Double.compare(Double.parseDouble(o1.get(3)),Double.parseDouble(o2.get(3)));
+//            return a-b;
+        }
+    };
 
-
-    @Inject WSClient ws;
 
     public Result index() {
-        String locale = retrieve_data("locale");
-        if(locale!=null){
-            ctx().setTransientLang(locale);
+        String locale = retrieve_data(Constants.proto_locale);
+
+        Http.Cookie cookieLocale = request().cookie(Constants.proto_locale);
+        if(locale==null){
+            if(cookieLocale!=null){
+                locale = Utils.validateLocale(cookieLocale.value());
+            }else{
+                locale = Constants.proto_locale_english;
+            }
+        }else{//set default id
+
+            locale = Utils.validateLocale(locale);
+            response().setCookie(Constants.proto_locale,locale);
         }
+
+        //i18n
+        ctx().setTransientLang(locale);
+
+        String region = retrieve_data(Constants.proto_region);
+//        String cookieRegion = request().cookie(Constants.proto_region).value();
+        Http.Cookie cookieRegion = request().cookie(Constants.proto_region);
+
+        if(region==null){
+            if(cookieRegion!=null){
+                region = Utils.validateRegion(cookieRegion.value());
+            }else{
+                region = Constants.proto_region_bandung;
+            }
+        }else{//set default id
+
+            region = Utils.validateLocale(region);
+            response().setCookie(Constants.proto_region,region);
+        }
+
+        Logger.debug("locale: "+locale+" ,region: "+region);
 //
 //        ObjectNode objNode = Json.newObject();
 //
@@ -111,8 +147,46 @@ public class Application extends Controller {
 
 
 
+//        String message = "<script>" +
+//                "var region = 'sby';" +
+//                "var input_text = [],coordinates = [];\n" +
+//                "\n" +
+//                "            input_text['start'] = null;\n" +
+//                "            coordinates['start'] = null;\n" +
+//                "            input_text['finish'] = null;\n" +
+//                "            coordinates['finish'] = null;\n" +
+//                "\n" +
+//                "            var locale='id';\n" +
+//                "            var region='bdo';\n" +
+//                "</script>";
 
-        return ok(index.render("id"));
+        String regions = new String();
+        for (Map.Entry<String, ProtoRegion> iterator : Constants.regioninfos.entrySet()) {
+            regions+= iterator.getKey()+ ": {center: '"+  iterator.getValue().getLat() + ","+ iterator.getValue().getLon() + "', zoom: "+ iterator.getValue().getZoom() +"},";
+        }
+        String message =
+                "var input_text = [],coordinates = [];\n" +
+                "input_text['start'] = null;\n" +
+                "coordinates['start'] = null;\n" +
+                "input_text['finish'] = null;\n" +
+                "coordinates['finish'] = null;\n"+
+
+                "var locale='"+ locale+"';\n" +
+                "var region='"+region+"';\n" +
+                "var messageBuyTicket = '"+Messages.get("index_buyticket")+"';\n" +
+                "var messageConnectionError = '"+Messages.get("index_connectionerror")+"';\n" +
+                "var messageFillBoth = '"+Messages.get("index_fillboth")+"';\n" +
+                "var messageNotFound = '"+Messages.get("index_notfound")+"';\n" +
+                "var messageOops = '"+Messages.get("index_oops")+"';\n" +
+                "var messageOrderTicketHere = '"+Messages.get("index_order_ticket_here")+"';\n" +
+                "var messagePleaseWait = '<img src=\"/assets/images/loading.gif\" alt=\"... \"/>'+ '"+Messages.get("index_pleasewait")+"';\n" +
+                "var messageITake = '"+Messages.get("index_itake")+"';\n" +
+                "var region='"+region+"';\n" +
+                "var regions = {\n" +
+                regions +
+                "};\n" +
+                "$(document).foundation();";
+        return ok(index.render(locale,Constants.regioninfos,message,region));
     }
 
     //i18n
@@ -173,10 +247,11 @@ public class Application extends Controller {
 //        //end request
 
 
-        Alternatives alternatives[] = new Alternatives[3];
-        alternatives[0] = new Alternatives(0.75,1,0.15);
-        alternatives[1] = new Alternatives(1,0.75,0.15);
-        alternatives[2] = new Alternatives(0.75,1,0.45);
+        Utils.put_to_cache(Constants.cache_searchplace, "bdo/aa", "[{location=-6.91642,107.60111, placename=AA Taksi}");
+        Alternative alternatives[] = new Alternative[3];
+        alternatives[0] = new Alternative(0.75,1,0.15);
+        alternatives[1] = new Alternative(1,0.75,0.15);
+        alternatives[2] = new Alternative(0.75,1,0.45);
         String result = ""+alternatives[0].getMw()+alternatives[1].getMw()+"ASD"+alternatives[2].getMw();
 
 
@@ -190,9 +265,14 @@ public class Application extends Controller {
         try {
             connection = DB.getConnection();
             // Look for angkot.web.id refreshes
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT verifier, ipFilter, domainFilter FROM apikeys WHERE verifier = '02428203D4526448';");
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT verifier, ipFilter, domainFilter FROM apikeys WHERE verifier = ?");
 
+            stmt.setString(1, "02428203D4526448");
+//            Statement statement = connection.createStatement();
+//            ResultSet result = statement.executeQuery("SELECT verifier, ipFilter, domainFilter FROM apikeys WHERE verifier = '02428203D4526448';");
+
+            ResultSet result = stmt.executeQuery();
             while (result.next()) {
 //                verifier = result.getString("verifier");
                 if(result.getString("verifier").equals("02428203D4526448")){
@@ -222,7 +302,9 @@ public class Application extends Controller {
         //because java cant take string as an index,use map instead
         Map<String, Boolean> results = new HashMap<String, Boolean>();
 
-        Map<String, Object> routing_results = null;
+//        Map<String, Object> routing_results = null;
+
+        ArrayList<Map<String,Object>> routing_results = new ArrayList<Map<String,Object>>();
 
         ArrayList<ArrayList<Object>> route_output = new ArrayList<ArrayList<Object>>();
 
@@ -233,14 +315,28 @@ public class Application extends Controller {
             version = 1;
         }
         String apikey = retrieve_data("apikey");
-        check_apikey(apikey);
+//        return ok(check_apikey(apikey));
+        if(!check_apikey(apikey).equals("{}")){
+
+            return ok(check_apikey(apikey));
+        }
+        Logger.debug("check apikey:"+check_apikey(apikey));
+
 
         if(mode.equals(Constants.proto_mode_findroute))
         {
             Logger.debug("findroute");
-            String start = addSlashes(retrieve_data("start"));
-            String finish = addSlashes(retrieve_data("finish"));
-            String locale = addSlashes(retrieve_data("locale"));
+//            String start = addSlashes(retrieve_data("start"));
+//            String finish = addSlashes(retrieve_data("finish"));
+//            String locale = addSlashes(retrieve_data("locale"));
+
+
+            String start = retrieve_data("start");
+            String finish = retrieve_data("finish");
+            String locale = retrieve_data("locale");
+
+
+            ctx().setTransientLang(locale);
 
             Logger.debug(start + " finish : "+ finish);
 
@@ -554,7 +650,10 @@ public class Application extends Controller {
                 routing_result.put(Constants.proto_steps,route_output.toString());
                 routing_result.put(Constants.proto_traveltime, format_traveltime(travel_time));
 
-                routing_results = routing_result;
+//                routing_results = routing_result;
+                routing_results = new ArrayList<Map<String,Object>>();
+                routing_results.add(routing_result);
+
             }
 
 
@@ -582,8 +681,8 @@ public class Application extends Controller {
             }else{
 
                 objectNode.put(Constants.proto_status,Constants.proto_status_ok);
-                objectNode.put(Constants.proto_routingresult,routing_results.get(Constants.proto_steps).toString());
-                objectNode.put(Constants.proto_traveltime,routing_results.get(Constants.proto_traveltime).toString());
+                objectNode.put(Constants.proto_routingresult, routing_results.get(0).get(Constants.proto_steps).toString());
+                objectNode.put(Constants.proto_traveltime, routing_results.get(0).get(Constants.proto_traveltime).toString());
             }
 
             output.append(objectNode.toString());
@@ -616,8 +715,13 @@ public class Application extends Controller {
 
             String cached_searchplace = Utils.get_from_cache(Constants.cache_searchplace,region + "/" + querystring);
 
+            Logger.debug(region+"/"+querystring);
+            Logger.debug("cache_searchplace: " + cached_searchplace);
             if(cached_searchplace != null && !cached_searchplace.isEmpty()){
+                cached_searchplace = cached_searchplace.replace("/","");
+                Logger.debug("cache_searchplace!=null");
                 json_output.put(Constants.proto_status,Constants.proto_status_ok);
+
                 json_output.put(Constants.proto_search_result,cached_searchplace);
 
                 json_output.put(Constants.proto_attributions,"null");
@@ -632,8 +736,8 @@ public class Application extends Controller {
                 double city_lon = Constants.regioninfos.get(region).getLon();
                 int city_radius = Constants.regioninfos.get(region).getRadius();
 
-                String full_url = Constants.places_url + "?key=" + Constants.gmaps_server_key + "&location=" + city_lat + "," + city_lon
-                        + "&radius=" + city_radius + "&keyword=" + querystring + "&types=establishment|route&sensor=true";
+//                String full_url = Constants.places_url + "?key=" + Constants.gmaps_server_key + "&location=" + city_lat + "," + city_lon
+//                        + "&radius=" + city_radius + "&keyword=" + querystring + "&types=establishment|route&sensor=true";
 
                 String result = getPlacesAPI(city_lat+","+city_lon,Integer.toString(city_radius),querystring);
 
@@ -643,14 +747,12 @@ public class Application extends Controller {
                 try{
 
                     json_result = Json.parse(result);
+
                 }catch (Exception e){
                     Utils.log_error("ERROR places url" + e.getMessage());
                 }
 
                 int size = 0;
-
-                Logger.debug("");
-
 
                 ArrayNode arrayJsonResult = (ArrayNode)json_result.withArray("results");
                 if(json_result.findPath("status").textValue().equals("OK") || json_result.findPath("status").textValue().equals("ZERO_RESULTS") )
@@ -679,12 +781,15 @@ public class Application extends Controller {
 
                         Map<String, Object> search_result = new HashMap<String, Object>();
 
-                        search_result.put(Constants.proto_placename, current_venue.get("name").textValue());
 
-                        search_res.add(i, search_result);
+
                         search_result.put(Constants.proto_location, String.format("%.5f,%.5f",
                                 Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lat").toString()),
                                 Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lng").toString())));
+
+                        search_res.add(i, search_result);
+
+                        search_result.put(Constants.proto_placename, current_venue.get("name").textValue());
 
                         search_res.add(i, search_result);
 
@@ -726,15 +831,18 @@ public class Application extends Controller {
 
 
                     Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/" + size);
-//                    Utils.put_to_cache(Constants.cache_searchplace,region + "/"+querystring,search_result.toString());
+                    Utils.put_to_cache(Constants.cache_searchplace, region + "/" + querystring, search_res.toString());
 
 
                 }else
                 {
-                    Logger.error("Place Search returned error: for this request " + full_url);
+//                    Logger.error("Place Search returned error: for this request " + full_url);
                 }
 
             }
+
+
+//            Logger.debug("sebelom : " + search_res.get(0).toString());
 
             Logger.debug("mode search json : " + json_output.toString());
             output.append(json_output.toString());
@@ -746,7 +854,9 @@ public class Application extends Controller {
 
             Utils.log_error("Client reported error: " + errorcode);
 
-            Logger.error(Utils.well_done("").toString());
+            Logger.debug("reporterror:"+Utils.well_done("").toString());
+
+            output.append(Utils.well_done("").toString());
 
 
         }else if (mode.equals(Constants.proto_mode_nearbytransports))
@@ -775,10 +885,18 @@ public class Application extends Controller {
                     try {
 //                            connection = DB.getConnection();
                         // Look for angkot.web.id refreshes
-                        Statement statement = connection.createStatement();
 
-                        ResultSet result = statement.executeQuery("SELECT trackname FROM tracks WHERE trackId='"+ trackId + "' AND trackTypeId='"+trackTypeId+ "';");
 
+                        java.sql.PreparedStatement stmt = connection.prepareStatement(
+                                "SELECT trackname FROM tracks WHERE trackId = ? AND trackTypeId = ?");
+                        stmt.setString(1, trackId);
+                        stmt.setString(2,trackTypeId);
+
+//                        Statement statement = connection.createStatement();
+//
+//                        ResultSet result = statement.executeQuery("SELECT trackname FROM tracks WHERE trackId='"+ trackId + "' AND trackTypeId='"+trackTypeId+ "';");
+
+                        ResultSet result = stmt.executeQuery();
                         while (result.next()) {
                             //php starts from 0,jdbc start from 1
 
@@ -813,9 +931,9 @@ public class Application extends Controller {
 //                });
 
                 Logger.debug(nearby_result.toString());
-                Collections.sort(nearby_result,comparator);
+                Collections.sort(nearby_result, comparator);
 
-                Utils.log_statistic(apikey,"NEARBYTRANSPORTS",start + results.size());
+                Utils.log_statistic(apikey, "NEARBYTRANSPORTS", start + results.size());
 
 
                 Logger.debug("after compare : " + nearby_result.toString());
@@ -841,18 +959,10 @@ public class Application extends Controller {
         return ok(output.toString());
     }
 
-    private static final Comparator<ArrayList<String>> comparator = new Comparator<ArrayList<String>>() {
-        @Override
-        public int compare(ArrayList<String> o1, ArrayList<String> o2) {
-//            int a = Integer.parseInt(o1.get(3));
-//            int b = Integer.parseInt(o2.get(3));
-            return Double.compare(Double.parseDouble(o1.get(3)),Double.parseDouble(o2.get(3)));
-//            return a-b;
-        }
-    };
+
 
     public String getFromMenjangan(String start,String finish,double mw,double wm,double pt){
-        F.Promise<String> promise = WS.url("http://newmenjangan.cloudapp.net:8000")
+        F.Promise<String> promise = WS.url(Constants.menjangan_url)
                 .setQueryParameter("start", start)
                 .setQueryParameter("finish", finish)
                 .setQueryParameter("mw", Double.toString(mw))
@@ -875,7 +985,7 @@ public class Application extends Controller {
     }
 
     public String getFromMenjangan(String start,String finish) {
-        F.Promise<String> promise = WS.url("http://newmenjangan.cloudapp.net:8000")
+        F.Promise<String> promise = WS.url(Constants.menjangan_url)
                 .setQueryParameter("start", start)
                 .setQueryParameter("finish", finish)
                 .get()
@@ -895,7 +1005,7 @@ public class Application extends Controller {
     }
 
     public String getFromMenjangan(String start) {
-        F.Promise<String> promise = WS.url("http://newmenjangan.cloudapp.net:8000")
+        F.Promise<String> promise = WS.url(Constants.menjangan_url)
                 .setQueryParameter("start", start)
                 .get()
                 .map(
@@ -1006,24 +1116,31 @@ public class Application extends Controller {
 
 
 
-    public boolean check_apikey(String apikey){
+    public String check_apikey(String apikey){
         boolean bool = true;
-        java.sql.Connection
-                connection = DB.getConnection();
+        Connection connection = DB.getConnection();
         StringBuilder output = new StringBuilder();
         String ipAddr = request().remoteAddress();//ip address client
+//        ObjectNode objectNode = Json.newObject();
+        ObjectNode objectNode = Json.newObject();
         try {
 //            connection = DB.getConnection();
             // Look for angkot.web.id refreshes
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT apikeys.verifier, apikeys.ipFilter FROM apikeys WHERE apikeys.verifier = '"+apikey+"';");
 
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT apikeys.verifier, apikeys.ipFilter FROM apikeys WHERE apikeys.verifier = ?");
+            stmt.setString(1, apikey);
+
+//            Statement statement = connection.createStatement();
+//            ResultSet result = statement.executeQuery("SELECT apikeys.verifier, apikeys.ipFilter FROM apikeys WHERE apikeys.verifier = '"+apikey+"';");
+
+            ResultSet result = stmt.executeQuery();
             if(result.next()){
                 while (result.next()) {
 
                     if(!ipAddr.equals(result.getString("ipFilter")) && !result.getString("ipFilter").isEmpty()){
                         bool = false;
-                        Utils.log_error("IP address is not accepted for this API key.");
+                        objectNode = Utils.die_nice("IP address is not accepted for this API key.");
                     }
 
 //                    output.append(result.getString("verifier") + "/" + result.getString("ipFilter") +"/" + result.getString("domainFilter"));
@@ -1031,14 +1148,16 @@ public class Application extends Controller {
                 }
             }else{
                 bool = false;
-                Utils.log_error("API key is not recognized: "+apikey);
+                objectNode = Utils.die_nice("API key is not recognized: " + apikey);
             }
 
             connection.close();
         } catch (Exception e) {
-            Utils.log_error("failed to execute query on Apikey check.");
+            objectNode = Utils.die_nice("failed to execute query on Apikey check." + e.getMessage());
         }
-        return bool;
+
+        output.append(objectNode.toString());
+        return output.toString();
     }
 
 
@@ -1116,44 +1235,45 @@ public class Application extends Controller {
         }
     }
 
-    public static String mysql_real_escape_string(java.sql.Connection link, String str)
-            throws Exception
-    {
-        if (str == null) {
-            return null;
-        }
-
-        if (str.replaceAll("[a-zA-Z0-9_!@#$%^&*()-=+~.;:,\\Q[\\E\\Q]\\E<>{}\\/? ]","").length() < 1) {
-            return str;
-        }
-
-        String clean_string = str;
-        clean_string = clean_string.replaceAll("\\\\", "\\\\\\\\");
-        clean_string = clean_string.replaceAll("\\n","\\\\n");
-        clean_string = clean_string.replaceAll("\\r", "\\\\r");
-        clean_string = clean_string.replaceAll("\\t", "\\\\t");
-        clean_string = clean_string.replaceAll("\\00", "\\\\0");
-        clean_string = clean_string.replaceAll("'", "\\\\'");
-        clean_string = clean_string.replaceAll("\\\"", "\\\\\"");
-
-        if (clean_string.replaceAll("[a-zA-Z0-9_!@#$%^&*()-=+~.;:,\\Q[\\E\\Q]\\E<>{}\\/?\\\\\"' ]"
-                ,"").length() < 1)
-        {
-            return clean_string;
-        }
-
-        java.sql.Statement stmt = link.createStatement();
-        String qry = "SELECT QUOTE('"+clean_string+"')";
-
-        stmt.executeQuery(qry);
-        java.sql.ResultSet resultSet = stmt.getResultSet();
-        resultSet.first();
-        String r = resultSet.getString(1);
-        return r.substring(1,r.length() - 1);
-
-    }
+//    public static String mysql_real_escape_string(java.sql.Connection link, String str)
+//            throws Exception
+//    {
+//        if (str == null) {
+//            return null;
+//        }
+//
+//        if (str.replaceAll("[a-zA-Z0-9_!@#$%^&*()-=+~.;:,\\Q[\\E\\Q]\\E<>{}\\/? ]","").length() < 1) {
+//            return str;
+//        }
+//
+//        String clean_string = str;
+//        clean_string = clean_string.replaceAll("\\\\", "\\\\\\\\");
+//        clean_string = clean_string.replaceAll("\\n","\\\\n");
+//        clean_string = clean_string.replaceAll("\\r", "\\\\r");
+//        clean_string = clean_string.replaceAll("\\t", "\\\\t");
+//        clean_string = clean_string.replaceAll("\\00", "\\\\0");
+//        clean_string = clean_string.replaceAll("'", "\\\\'");
+//        clean_string = clean_string.replaceAll("\\\"", "\\\\\"");
+//
+//        if (clean_string.replaceAll("[a-zA-Z0-9_!@#$%^&*()-=+~.;:,\\Q[\\E\\Q]\\E<>{}\\/?\\\\\"' ]"
+//                ,"").length() < 1)
+//        {
+//            return clean_string;
+//        }
+//
+//        java.sql.Statement stmt = link.createStatement();
+//        String qry = "SELECT QUOTE('"+clean_string+"')";
+//
+//        stmt.executeQuery(qry);
+//        java.sql.ResultSet resultSet = stmt.getResultSet();
+//        resultSet.first();
+//        String r = resultSet.getString(1);
+//        return r.substring(1,r.length() - 1);
+//
+//    }
 
     public String format_distance(double distance,String locale){
+
 
         if(distance<1.0){
             return Math.floor(distance*1000.0) + " meter";
