@@ -1,9 +1,9 @@
 package models.helpers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.db.DB;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.Logger;
 
 import java.sql.Connection;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Node8 on 21/2/16.
  */
-public final class Utils extends Controller {
+public final class Utils {
 
     public void update_trackversion(){
         Connection connection = null;
@@ -74,41 +74,41 @@ public final class Utils extends Controller {
         return obj;
     }
 
-    public boolean check_apikey_validity(String apikey){
-        boolean bool = true;
-        Connection connection = null;
-        StringBuilder output = new StringBuilder();
-        String ipAddr = request().remoteAddress();//ip address client
-        String refererUrl = request().getHeader("referer");
-        try {
-            connection = DB.getConnection();
-            // Look for angkot.web.id refreshes
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT verifier, ipFilter, domainFilter FROM apikeys WHERE verifier = '"+apikey+"';");
-
-            if(result.next()){
-                while (result.next()) {
-                    if(!ipAddr.equals(result.getString("ipFilter")) && !result.getString("ipFilter").isEmpty()){
-                        bool = false;
-                    }
-
-                    if(domain_matches(refererUrl,result.getString("domainFilter"))){
-                        bool = false;
-                    }
-
-
-//                    output.append(result.getString("verifier") + "/" + result.getString("ipFilter") +"/" + result.getString("domainFilter"));
-
-                }
-            }else{
-                bool = false;
-            }
-
-            connection.close();
-        } catch (Exception e) {
-        }
-        return bool;
-    }
+//    public boolean check_apikey_validity(String apikey){
+//        boolean bool = true;
+//        Connection connection = null;
+//        StringBuilder output = new StringBuilder();
+//        String ipAddr = request().remoteAddress();//ip address client
+//        String refererUrl = request().getHeader("referer");
+//        try {
+//            connection = DB.getConnection();
+//            // Look for angkot.web.id refreshes
+//            Statement statement = connection.createStatement();
+//            ResultSet result = statement.executeQuery("SELECT verifier, ipFilter, domainFilter FROM apikeys WHERE verifier = '"+apikey+"';");
+//
+//            if(result.next()){
+//                while (result.next()) {
+//                    if(!ipAddr.equals(result.getString("ipFilter")) && !result.getString("ipFilter").isEmpty()){
+//                        bool = false;
+//                    }
+//
+//                    if(domain_matches(refererUrl,result.getString("domainFilter"))){
+//                        bool = false;
+//                    }
+//
+//
+////                    output.append(result.getString("verifier") + "/" + result.getString("ipFilter") +"/" + result.getString("domainFilter"));
+//
+//                }
+//            }else{
+//                bool = false;
+//            }
+//
+//            connection.close();
+//        } catch (Exception e) {
+//        }
+//        return bool;
+//    }
 
 
 
@@ -150,7 +150,7 @@ public final class Utils extends Controller {
     public static int indexPregMatch(String regex, String content) {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(content);
-        int index = 0;
+        int index = -1;
         while (matcher.find()) {
             index = matcher.start();
 //
@@ -171,11 +171,11 @@ public final class Utils extends Controller {
         return obj;
     }
 
-    public void start_working(){
-        response().setContentType("application/json");
-        response().setHeader("Cache-control", "no-cache");
-        response().setHeader("Pragma","no-cache");
-    }
+//    public void start_working(){
+//        response().setContentType("application/json");
+//        response().setHeader("Cache-control", "no-cache");
+//        response().setHeader("Pragma","no-cache");
+//    }
 
     public static String get_from_cache(String type,String key){
 
@@ -222,17 +222,17 @@ public final class Utils extends Controller {
 
             // Look for angkot.web.id refreshes
 
-            Statement statement = connection.createStatement();
-
-            statement.executeUpdate("INSERT INTO cache(type, cacheKey, cacheValue) VALUES ('"+type+"','"+key+"','"+value+"');");
-
-//            java.sql.PreparedStatement stmt = connection.prepareStatement(
-//                    "INSERT INTO cache(type, cacheKey, cacheValue) VALUES ?,?,(?)");
-//            stmt.setString(1,type);
-//            stmt.setString(2, key);
+//            Statement statement = connection.createStatement();
 //
-//            stmt.setString(3, String.valueOf(value));
-//            stmt.executeUpdate();
+//            statement.executeUpdate("INSERT INTO cache(type, cacheKey, cacheValue) VALUES ('"+type+"','"+key+"','"+value+"');");
+
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "INSERT INTO cache(type, cacheKey, cacheValue) VALUES (?,?,?)");
+            stmt.setString(1,type);
+            stmt.setString(2, key);
+
+            stmt.setString(3, String.valueOf(value));
+            stmt.executeUpdate();
             connection.close();
         } catch (Exception e) {
             log_error("Warning: Can't store cache "+e.getMessage());
@@ -240,6 +240,7 @@ public final class Utils extends Controller {
 
 
     }
+    
 
 
     public static double compute_distance(double lat1,double lon1,double lat2,double lon2){

@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.*;
 import models.helpers.Constants;
@@ -20,6 +21,7 @@ import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 import play.mvc.*;
 
+import scala.util.parsing.json.JSONObject;
 import views.html.*;
 
 import javax.inject.Inject;
@@ -30,7 +32,7 @@ import java.util.*;
 
 public class Application extends Controller {
 
-//    Form<User> userForm = Form.form(User.class);
+    //    Form<User> userForm = Form.form(User.class);
     private DynamicForm dynamicForm;
 
 
@@ -166,26 +168,26 @@ public class Application extends Controller {
         }
         String message =
                 "var input_text = [],coordinates = [];\n" +
-                "input_text['start'] = null;\n" +
-                "coordinates['start'] = null;\n" +
-                "input_text['finish'] = null;\n" +
-                "coordinates['finish'] = null;\n"+
+                        "input_text['start'] = null;\n" +
+                        "coordinates['start'] = null;\n" +
+                        "input_text['finish'] = null;\n" +
+                        "coordinates['finish'] = null;\n"+
 
-                "var locale='"+ locale+"';\n" +
-                "var region='"+region+"';\n" +
-                "var messageBuyTicket = '"+Messages.get("index_buyticket")+"';\n" +
-                "var messageConnectionError = '"+Messages.get("index_connectionerror")+"';\n" +
-                "var messageFillBoth = '"+Messages.get("index_fillboth")+"';\n" +
-                "var messageNotFound = '"+Messages.get("index_notfound")+"';\n" +
-                "var messageOops = '"+Messages.get("index_oops")+"';\n" +
-                "var messageOrderTicketHere = '"+Messages.get("index_order_ticket_here")+"';\n" +
-                "var messagePleaseWait = '<img src=\"/assets/images/loading.gif\" alt=\"... \"/>'+ '"+Messages.get("index_pleasewait")+"';\n" +
-                "var messageITake = '"+Messages.get("index_itake")+"';\n" +
-                "var region='"+region+"';\n" +
-                "var regions = {\n" +
-                regions +
-                "};\n" +
-                "$(document).foundation();";
+                        "var locale='"+ locale+"';\n" +
+                        "var region='"+region+"';\n" +
+                        "var messageBuyTicket = '"+Messages.get("index_buyticket")+"';\n" +
+                        "var messageConnectionError = '"+Messages.get("index_connectionerror")+"';\n" +
+                        "var messageFillBoth = '"+Messages.get("index_fillboth")+"';\n" +
+                        "var messageNotFound = '"+Messages.get("index_notfound")+"';\n" +
+                        "var messageOops = '"+Messages.get("index_oops")+"';\n" +
+                        "var messageOrderTicketHere = '"+Messages.get("index_order_ticket_here")+"';\n" +
+                        "var messagePleaseWait = '<img src=\"/assets/images/loading.gif\" alt=\"... \"/>'+ '"+Messages.get("index_pleasewait")+"';\n" +
+                        "var messageITake = '"+Messages.get("index_itake")+"';\n" +
+                        "var region='"+region+"';\n" +
+                        "var regions = {\n" +
+                        regions +
+                        "};\n" +
+                        "$(document).foundation();";
         return ok(index.render(locale,Constants.regioninfos,message,region));
     }
 
@@ -247,15 +249,25 @@ public class Application extends Controller {
 //        //end request
 
 
-        Utils.put_to_cache(Constants.cache_searchplace, "bdo/aa", "[{location=-6.91642,107.60111, placename=AA Taksi}");
-        Alternative alternatives[] = new Alternative[3];
-        alternatives[0] = new Alternative(0.75,1,0.15);
-        alternatives[1] = new Alternative(1,0.75,0.15);
-        alternatives[2] = new Alternative(0.75,1,0.45);
-        String result = ""+alternatives[0].getMw()+alternatives[1].getMw()+"ASD"+alternatives[2].getMw();
+//        Utils.put_to_cache(Constants.cache_searchplace, "bdo/aa", "[{location=-6.91642,107.60111, placename=AA Taksi}");
+//        Alternative alternatives[] = new Alternative[3];
+//        alternatives[0] = new Alternative(0.75,1,0.15);
+//        alternatives[1] = new Alternative(1,0.75,0.15);
+//        alternatives[2] = new Alternative(0.75,1,0.45);
+//        String result = ""+alternatives[0].getMw()+alternatives[1].getMw()+"ASD"+alternatives[2].getMw();
+
+        ArrayList<Map<String,JsonNode>> routing_results = new ArrayList<Map<String,JsonNode>>();
+        for (int i = 0; i < 3; i++) {
+
+            Map<String, JsonNode> routing_result = new HashMap<String, JsonNode>();
+            routing_result.put(Constants.proto_steps,Json.toJson(i));
+            routing_result.put(Constants.proto_traveltime, Json.toJson(format_traveltime(100 + i)));
+            routing_results.add(routing_result);
+
+        }
 
 
-        return ok(alternatives[0].print());
+        return ok(routing_results.toString());
     }
 
     public Result testdb() {
@@ -304,7 +316,8 @@ public class Application extends Controller {
 
 //        Map<String, Object> routing_results = null;
 
-        ArrayList<Map<String,Object>> routing_results = new ArrayList<Map<String,Object>>();
+//        Map<String, JsonNode> routing_result = new HashMap<String, JsonNode>();
+        ArrayList<Map<String,JsonNode>> routing_results = new ArrayList<Map<String,JsonNode>>();
 
         ArrayList<ArrayList<Object>> route_output = new ArrayList<ArrayList<Object>>();
 
@@ -326,9 +339,6 @@ public class Application extends Controller {
         if(mode.equals(Constants.proto_mode_findroute))
         {
             Logger.debug("findroute");
-//            String start = addSlashes(retrieve_data("start"));
-//            String finish = addSlashes(retrieve_data("finish"));
-//            String locale = addSlashes(retrieve_data("locale"));
 
 
             String start = retrieve_data("start");
@@ -338,9 +348,7 @@ public class Application extends Controller {
 
             ctx().setTransientLang(locale);
 
-            Logger.debug(start + " finish : "+ finish);
-
-            String presentation = addSlashes(retrieve_data("presentation"));
+            String presentation = retrieve_data("presentation");
 
             String result = null;
             if(!presentation.equals(Constants.proto_presentation_mobile) && !presentation.equals(Constants.proto_presentation_desktop))
@@ -365,12 +373,15 @@ public class Application extends Controller {
                     result = getFromMenjangan(start,finish,Constants.alternatives[i].getMw(),Constants.alternatives[i].getWm(),Constants.alternatives[i].getPt());
 
 
-                    results.put(result,true);
+                    results.put(result, true);
 
 
 
-//                    Logger.debug("result 0" + result);
                 }
+
+                Logger.debug("results" + results.toString());
+
+
 
             }else//version <2
             {
@@ -417,15 +428,6 @@ public class Application extends Controller {
                             arrRouteOutput.add(null);
                             arrRouteOutput.add(null);
 
-//                            route_output.add("none");
-//                            route_output.add("none");
-//                            String arrStartFinish[] = new String[2];
-//                            arrStartFinish[0] = start;
-//                            arrStartFinish[1] = finish;
-//                            route_output.add(arrStartFinish);
-//                            route_output.add(Messages.get("message_routenotfound["+ presentation +"]"));
-//                            route_output.add(null);
-//                            route_output.add(null);
 
                             Logger.debug("ARRAY ROUTE OUTPUT: " + arrRouteOutput.toString());
                             route_output.add(arrRouteOutput);
@@ -446,7 +448,12 @@ public class Application extends Controller {
                     String route = stepSplit[2];
                     String distance = stepSplit[3];
                     Logger.debug("distance: " + distance);
-//                    String nearbyplaceids = stepSplit[4];
+                    try{
+
+                        String nearbyplaceids = stepSplit[4];
+                    }catch (Exception ex){
+                        Logger.error(ex.getMessage());
+                    }
 
                     if(means.isEmpty() || route.isEmpty() || distance.isEmpty()){
                         //die_nice
@@ -482,6 +489,7 @@ public class Application extends Controller {
                     String humanized_from = "",humanized_to = "";
                     try {
                         humanized_from = humanize_point(from);
+//                        Logger.debug("humanize from"+humanized_from);
                     } catch (Exception e) {
                         Utils.log_error("humanized from error :" + e.getMessage());
                         e.printStackTrace();
@@ -489,11 +497,12 @@ public class Application extends Controller {
 
                     try {
                         humanized_to = humanize_point(to);
+//                        Logger.debug("humanize to"+humanized_to);
                     } catch (Exception e) {
                         Utils.log_error("humanized to error :" + e.getMessage());
                     }
 
-                    String humanreadable = "";
+                    String humanreadable = null;
 
                     Logger.debug("means : " + means);
                     if(means.equals(Constants.protokd_transitmode_walk))
@@ -525,10 +534,10 @@ public class Application extends Controller {
                         }
 
                         travel_time += Double.parseDouble(distance) / Constants.speed_walk;
-                        booking_url = "";
-                        editor_url = "";
+                        booking_url = null;
+                        editor_url = null;
 
-                    }else
+                    }   else
                     {
 
 //                        try {
@@ -564,13 +573,15 @@ public class Application extends Controller {
                                 {
                                     booking_url = result2.getString(3) + result2.getString(4);
                                 }else{
-                                    booking_url = "";
+                                    booking_url = null;
                                 }
 
                                 if(result2.getString(6).startsWith("angkotwebid:"))
                                 {
                                     String[] token = result2.getString(6).split(":");
                                     editor_url = Constants.angkotwebid_url_prefix + token[1] + Constants.angkotwebid_url_suffix;
+                                }else{
+                                    editor_url = null;
                                 }
 
 //                    output.append(result.getString("verifier") + "/" + result.getString("ipFilter") +"/" + result.getString("domainFilter"));
@@ -590,7 +601,6 @@ public class Application extends Controller {
                         }
 
                         humanreadable = Messages.get("message_angkot");
-                        Logger.debug("humanreadable" + humanreadable);
                         try{
 
                             humanreadable = humanreadable.replaceAll("%from",humanized_from);
@@ -610,6 +620,7 @@ public class Application extends Controller {
                         }
 
                     }
+                    Logger.debug("humanreadable : "+humanreadable);
 
                     if(humanreadable != null && !humanreadable.isEmpty())
                     {
@@ -623,44 +634,44 @@ public class Application extends Controller {
                         for (int i = 0;i<points.length;i++){
                             pointString += points[i] + " ";
                         }
-                        arrRouteOutput.add(pointString);
+                        arrRouteOutput.add(points);
                         arrRouteOutput.add(humanreadable);
-                        arrRouteOutput.add(booking_url);
-                        arrRouteOutput.add(editor_url);
+                        arrRouteOutput.add(booking_url==null? NullNode.getInstance():booking_url);
+                        arrRouteOutput.add(editor_url==null?NullNode.getInstance():editor_url);
 
-//                        route_output.add(means);
-//                        route_output.add(means_detail);
-//                        String pointString = "";
-//                        for (int i = 0;i<points.length;i++){
-//                            pointString += points[i] + " ";
-//                        }
-//                        route_output.add(pointString);
-//                        route_output.add(humanreadable);
-//                        route_output.add(booking_url);
-//                        route_output.add(editor_url);
                         route_output.add(arrRouteOutput);
                     }
+//                    Logger.debug("route outut: "+route_output.toString());done
 
 
 
                 }
 
-                Map<String, Object> routing_result = new HashMap<String, Object>();
 
-                routing_result.put(Constants.proto_steps,route_output.toString());
-                routing_result.put(Constants.proto_traveltime, format_traveltime(travel_time));
+                Map<String, JsonNode> routing_result = new HashMap<String, JsonNode>();
+
+                routing_result.put(Constants.proto_steps,Json.toJson(route_output));
+                routing_result.put(Constants.proto_traveltime, Json.toJson(format_traveltime(travel_time)));
+
+                Logger.debug("routing_result: "+routing_result.toString());
 
 //                routing_results = routing_result;
-                routing_results = new ArrayList<Map<String,Object>>();
+//                routing_results = new ArrayList<Map<String,JsonNode>>();
                 routing_results.add(routing_result);
 
+//                ArrayList<Map<String,JsonNode>> testarr = new ArrayList<Map<String,JsonNode>>();
+//                testarr.add(routing_result);
+//
+//                Logger.debug("testarr: " + testarr.toString());
+
             }
+            Logger.debug("routing results : "+routing_results.toString()+ routing_results.size());
 
 
 
 
 
-            Utils.log_statistic(apikey,"FINDROUTE",start+"/"+finish+"/"+results.size());
+            Utils.log_statistic(apikey, "FINDROUTE", start + "/" + finish + "/" + results.size());
 
             ObjectNode objectNode = Json.newObject();
             if(version >=2)
@@ -675,17 +686,18 @@ public class Application extends Controller {
 //                        // do stuff
 //                    }
 
-                objectNode.put(Constants.proto_routingresults, routing_results.toString());
+                objectNode.put(Constants.proto_routingresults, Json.toJson(routing_results));
 //                    objectNode.put(Constants.proto_routingresults, routingResults);
 
             }else{
 
                 objectNode.put(Constants.proto_status,Constants.proto_status_ok);
-                objectNode.put(Constants.proto_routingresult, routing_results.get(0).get(Constants.proto_steps).toString());
-                objectNode.put(Constants.proto_traveltime, routing_results.get(0).get(Constants.proto_traveltime).toString());
+                objectNode.put(Constants.proto_routingresult, Json.toJson(routing_results.get(0).get(Constants.proto_steps)));
+                objectNode.put(Constants.proto_traveltime, Json.toJson(routing_results.get(0).get(Constants.proto_traveltime)));
             }
 
-            output.append(objectNode.toString());
+            String str = Json.stringify(objectNode);
+            output.append(str);
             Logger.debug("mode findroute JSON: "+ objectNode.toString());
 
 
@@ -704,7 +716,7 @@ public class Application extends Controller {
 
 
             for (Map.Entry<String, ProtoRegion> iterator : Constants.regioninfos.entrySet()) {
-                if(Utils.pregMatch(iterator.getValue().getSearchPlace_regex(),querystring)){
+                if(Utils.indexPregMatch(iterator.getValue().getSearchPlace_regex(),querystring)!=-1){
                     region = iterator.getKey();
                     int matches = Utils.indexPregMatch(iterator.getValue().getSearchPlace_regex(),querystring);
                     querystring = querystring.substring(0,matches);
@@ -716,15 +728,14 @@ public class Application extends Controller {
             String cached_searchplace = Utils.get_from_cache(Constants.cache_searchplace,region + "/" + querystring);
 
             Logger.debug(region+"/"+querystring);
-            Logger.debug("cache_searchplace: " + cached_searchplace);
+            Logger.debug("cache_searchplace: json" + cached_searchplace);
             if(cached_searchplace != null && !cached_searchplace.isEmpty()){
-                cached_searchplace = cached_searchplace.replace("/","");
-                Logger.debug("cache_searchplace!=null");
+                Logger.debug("cache_searchplace!=null&: " );
                 json_output.put(Constants.proto_status,Constants.proto_status_ok);
 
-                json_output.put(Constants.proto_search_result,cached_searchplace);
+                json_output.put(Constants.proto_search_result,Json.toJson(Json.parse(cached_searchplace)));
 
-                json_output.put(Constants.proto_attributions,"null");
+                json_output.put(Constants.proto_attributions,Json.toJson(NullNode.getInstance()));
 
 
 
@@ -759,7 +770,7 @@ public class Application extends Controller {
                 {
 
 //                    Map<Map<Integer,String>, Object> search_result = new HashMap<Map<Integer, String>, Object>();
-                    ArrayList<Map<String, Object>> search_res = new ArrayList<Map<String, Object>>();
+                    ArrayList<Map<String, JsonNode>> search_res = new ArrayList<Map<String, JsonNode>>();
 
                     if(json_result.findPath("status").textValue().equals("ZERO_RESULTS"))
                     {
@@ -779,17 +790,15 @@ public class Application extends Controller {
 //                        search_result.p
 //                        search_result.put(i,Constants.proto_placename,current_venue.findPath("name").textValue());
 
-                        Map<String, Object> search_result = new HashMap<String, Object>();
+                        Map<String, JsonNode> search_result = new HashMap<String, JsonNode>();
 
 
 
-                        search_result.put(Constants.proto_location, String.format("%.5f,%.5f",
+                        search_result.put(Constants.proto_location, Json.toJson(String.format("%.5f,%.5f",
                                 Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lat").toString()),
-                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lng").toString())));
+                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lng").toString()))));
 
-                        search_res.add(i, search_result);
-
-                        search_result.put(Constants.proto_placename, current_venue.get("name").textValue());
+                        search_result.put(Constants.proto_placename, Json.toJson(current_venue.get("name").textValue()));
 
                         search_res.add(i, search_result);
 
@@ -824,14 +833,16 @@ public class Application extends Controller {
 
 
                     json_output.put(Constants.proto_status, Constants.proto_status_ok);
-                    json_output.put(Constants.proto_search_result, search_res.toString());
-                    json_output.put(Constants.proto_attributions, "null");
+                    json_output.put(Constants.proto_search_result, Json.toJson(search_res));
+                    json_output.put(Constants.proto_attributions, Json.toJson(NullNode.getInstance()));
 
 
 
 
                     Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/" + size);
-                    Utils.put_to_cache(Constants.cache_searchplace, region + "/" + querystring, search_res.toString());
+                    String str = Json.stringify(Json.toJson(search_res));
+                    Logger.debug("inserting: "+ str);
+                    Utils.put_to_cache(Constants.cache_searchplace, region + "/" + querystring, str);
 
 
                 }else
@@ -844,8 +855,9 @@ public class Application extends Controller {
 
 //            Logger.debug("sebelom : " + search_res.get(0).toString());
 
+            String str = Json.stringify(json_output);
             Logger.debug("mode search json : " + json_output.toString());
-            output.append(json_output.toString());
+            output.append(str);
 
 
         }else if(mode.equals(Constants.proto_mode_reporterror))
@@ -940,7 +952,7 @@ public class Application extends Controller {
                 ObjectNode json_output = Json.newObject();
 
                 json_output.put(Constants.proto_status,Constants.proto_status_ok);
-                json_output.put(Constants.proto_nearbytransports,nearby_result.toString());
+                json_output.put(Constants.proto_nearbytransports,Json.toJson(nearby_result));
 
 
                 output.append(json_output.toString());
@@ -1070,10 +1082,10 @@ public class Application extends Controller {
 
     public String format_traveltime(double time){
         if(time>1){
-            return Math.round(time) + Messages.get("message_hour");
+            return Math.round(time) + " "+Messages.get("message_hour");
         }else{
 
-            return 5 * Math.ceil(time * 60 / 5) + Messages.get("message_min");
+            return (int) (5 * Math.ceil(time * 60.0 / 5)) + " " +Messages.get("message_min");
         }
     }
 
@@ -1276,11 +1288,11 @@ public class Application extends Controller {
 
 
         if(distance<1.0){
-            return Math.floor(distance*1000.0) + " meter";
+            return (int) (Math.floor(distance*1000.0)) + " meter";
         }else{
             char decimal = locale == "id"?',':'.';
             double fdist = Math.floor(distance);
-            return fdist + decimal + Math.floor((distance - fdist) * 10) + " kilometer";
+            return (int) (fdist + decimal + Math.floor((distance - fdist) * 10)) + " kilometer";
         }
 
     }
