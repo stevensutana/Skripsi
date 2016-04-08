@@ -333,19 +333,20 @@ public class Application extends Controller {
 
             return ok(check_apikey(apikey));
         }
-        Logger.debug("check apikey:"+check_apikey(apikey));
+//        Logger.debug("check apikey:"+check_apikey(apikey));
 
 
         if(mode.equals(Constants.proto_mode_findroute))
         {
-            Logger.debug("findroute");
-
+//            Logger.debug("findroute");
+            results = new HashMap<String, Boolean>();
 
             String start = retrieve_data("start");
             String finish = retrieve_data("finish");
             String locale = retrieve_data("locale");
 
 
+            //localization
             ctx().setTransientLang(locale);
 
             String presentation = retrieve_data("presentation");
@@ -359,7 +360,7 @@ public class Application extends Controller {
 
             if(version>=2)
             {
-                Logger.debug("version >= 2");
+//                Logger.debug("version >= 2");
                 int count = presentation.equals(Constants.proto_presentation_mobile)?1:Constants.alternatives.length;
 //                if(presentation.equals("mobile")){
 //                    count = 1;
@@ -367,7 +368,7 @@ public class Application extends Controller {
 //                    count = Constants.alternatives.length;
 //                }
 
-                Logger.debug("count : " + count);
+//                Logger.debug("count : " + count);
 
                 for (int i = 0;i<count;i++){
                     result = getFromMenjangan(start,finish,Constants.alternatives[i].getMw(),Constants.alternatives[i].getWm(),Constants.alternatives[i].getPt());
@@ -398,7 +399,7 @@ public class Application extends Controller {
 
             double travel_time = 0;
             for (Map.Entry<String, Boolean> iterator : results.entrySet()) {
-
+                route_output = new ArrayList<ArrayList<Object>>();
                 travel_time = 0;
 
                 Logger.debug("for results");
@@ -630,10 +631,10 @@ public class Application extends Controller {
                         arrRouteOutput.add(means);
                         arrRouteOutput.add(means_detail);
 
-                        String pointString = "";
-                        for (int i = 0;i<points.length;i++){
-                            pointString += points[i] + " ";
-                        }
+//                        String pointString = "";
+//                        for (int i = 0;i<points.length;i++){
+//                            pointString += points[i] + " ";
+//                        }
                         arrRouteOutput.add(points);
                         arrRouteOutput.add(humanreadable);
                         arrRouteOutput.add(booking_url==null? NullNode.getInstance():booking_url);
