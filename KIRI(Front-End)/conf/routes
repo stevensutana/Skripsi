@@ -4,9 +4,7 @@
 
 # Home page
 GET        /                         controllers.Application.index()
-GET        /testdb                   controllers.Application.testdb()
 GET        /handle.php                   controllers.Application.handle()
-GET        /testing                       controllers.Application.testing()
 
 
 # Map static resources from the /public folder to the /assets URL path

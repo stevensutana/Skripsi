@@ -8,8 +8,6 @@
     <head>
         <title>KIRI</title>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.ico")">
-
-        @*<link rel="stylesheet" href="@routes.Assets.versioned("openlayers/ol.css")" type="text/css">*@
         <link rel="stylesheet" href="@routes.Assets.versioned("foundation/css/foundation.min.css")" type="text/css">
         <link rel="stylesheet" href="@routes.Assets.versioned("css/styleIndex.css")" type="text/css">
 
@@ -17,8 +15,6 @@
 
         <link rel="stylesheet" href="http://openlayers.org/en/v3.11.1/css/ol.css" type="text/css">
         <script src="http://openlayers.org/en/v3.11.1/build/ol.js" type="text/javascript"></script>
-        @*<script src="@routes.Assets.versioned("openlayers/ol.js")"></script>*@
-        @*<script src="http://openlayers.org/en/v3.10.1/build/ol.js" type="text/javascript"></script>*@
 
     </head>
     <body>
@@ -40,11 +36,6 @@
                                 }
                                 >@regioninfo._2.getName</option>
                             }
-
-                            @*<option value="bdg">Bandung</option>*@
-                            @*<option value="jkt">Jakarta</option>*@
-                            @*<option value="sby">Surabaya</option>*@
-                            @*<option value="mlg">Malang</option>*@
                         </select>
 
                     </div>
@@ -56,13 +47,6 @@
                                 selected
                             }
                             >Bahasa Indonesia</option>
-                            @*{*@
-
-                            @*}else{*@
-
-                                @*<option value="id">Bahasa Indonesia</option>*@
-                                @*<option value="en" selected>English</option>*@
-                            @*}*@
                         </select>
                     </div>
                 </div>
@@ -138,36 +122,6 @@
         <script src="@routes.Assets.versioned("foundation/js/vendor/fastclick.js")"></script>
         <script src="@routes.Assets.versioned("foundation/js/foundation.min.js")"></script>
         <script src="@routes.Assets.versioned("foundation/js/foundation/foundation.alert.js")"></script>
-        @*<script>*@
-            @*var input_text = [],coordinates = [];*@
-
-            @*input_text['start'] = null;*@
-            @*coordinates['start'] = null;*@
-            @*input_text['finish'] = null;*@
-            @*coordinates['finish'] = null;*@
-
-            @*var locale='id';*@
-            @*var region='bdo';*@
-
-            @*var messageBuyTicket = '@Messages.get("index_buyticket")';*@
-            @*var messageConnectionError = '@Messages.get("index_connectionerror")';*@
-            @*var messageFillBoth = '@Messages.get("index_fillboth")';*@
-            @*var messageNotFound = '@Messages.get("index_notfound")';*@
-            @*var messageOops = '@Messages.get("index_oops")';*@
-            @*var messageOrderTicketHere = '@Messages.get("index_order_ticket_here")';*@
-            @*var messagePleaseWait = '<img src="/assets/images/loading.gif" alt="... "/>'+ '@Messages.get("index_pleasewait")';*@
-            @*var messageITake =' @Messages.get("index_itake")';*@
-
-            @*var region = 'bdo';*@
-            @*var regions = {*@
-                @*bdo: {center: '-6.91474,107.60981', zoom: 12},*@
-                @*cgk: {center: '-6.21154,106.84517', zoom: 11},*@
-                @*sub: {center: '-7.27421,112.71908', zoom: 12},*@
-                @*mlg: {center: '-7.9812985,112.6319264', zoom: 13},*@
-            @*};*@
-		    @*$(document).foundation();*@
-
-        @*</script>*@
         <script>
             @Html(message)
         </script>

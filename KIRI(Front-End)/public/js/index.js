@@ -405,18 +405,18 @@ $(document).ready(function() {
             var resultHTML2 = '<div id="panel1-' + (resultIndex + 1)+'"';
             resultHTML2 += resultIndex === 0 ? ' class="content active"><table>' : ' class="content"><table>';
             $.each(result.steps, function (stepIndex, step) {
-                resultHTML2 += '<tr><td><img src="../images/means/' + step[0]+ '/' + step[1] + '.png" alt="' + step[1] + '"/></td><td>' + step[3];
+                resultHTML2 += '<tr><td><img src="assets/images/means/' + step[0]+ '/' + step[1] + '.png" alt="' + step[1] + '"/></td><td>' + step[3];
                 if (step[4] != null) {
                     resultHTML2 += ' <a class="ticket" href="' + step[4] + '" target="_blank">' + messageBuyTicket + '</a></td></tr>';
                 }
                 if (step[5] != null) {
-                    resultHTML2 += ' <a href="' + step[5] + '" target="_blank"><img src="images/edit.png" class="fontsize" alt="edit"/></a></td></tr>';
+                    resultHTML2 += ' <a href="' + step[5] + '" target="_blank"><img src="assets/images/edit.png" class="fontsize" alt="edit"/></a></td></tr>';
                 }
                 resultHTML2 += '</td></tr>';
             });
             resultHTML2 += "<tr><td class=\"center\" colspan=\"2\">";
-            resultHTML2 += "<a target=\"_blank\" href=\"https://www.facebook.com/sharer/sharer.php?u=" + kiriURL + "\"><img alt=\"Share to Facebook\" src=\"images/fb-large.png\"/></a> &nbsp; &nbsp; ";
-            resultHTML2 += "<a target=\"_blank\" href=\"https://twitter.com/intent/tweet?via=kiriupdate&text=" + kiriMessage + "+" + kiriURL + "\"><img alt=\"Tweet\" src=\"images/twitter-large.png\"/></a>";
+            resultHTML2 += "<a target=\"_blank\" href=\"https://www.facebook.com/sharer/sharer.php?u=" + kiriURL + "\"><img alt=\"Share to Facebook\" src=\"assets/images/fb-large.png\"/></a> &nbsp; &nbsp; ";
+            resultHTML2 += "<a target=\"_blank\" href=\"https://twitter.com/intent/tweet?via=kiriupdate&text=" + kiriMessage + "+" + kiriURL + "\"><img alt=\"Tweet\" src=\"assets/images/twitter-large.png\"/></a>";
             resultHTML2 += "</td></tr>\n";
             resultHTML2 += '</table></div>';
             temp1.append(resultHTML1);
@@ -459,7 +459,7 @@ $(document).ready(function() {
                 })
                 pointFeature.setStyle(new ol.style.Style({
                     image: new ol.style.Icon({
-                        src: 'images/start.png',
+                        src: 'assets/images/start.png',
                         anchor: [1.0, 1.0]
                     })
                 }));
@@ -472,7 +472,7 @@ $(document).ready(function() {
                     })
                     pointFeature.setStyle(new ol.style.Style({
                         image: new ol.style.Icon({
-                            src: '../images/means/' + step[0] + '/baloon/' + step[1] + '.png',
+                            src: 'assets/images/means/' + step[0] + '/baloon/' + step[1] + '.png',
                             anchor: [0.0, 1.0]
                         })
                     }));
@@ -483,7 +483,7 @@ $(document).ready(function() {
                     })
                     pointFeature.setStyle(new ol.style.Style({
                         image: new ol.style.Icon({
-                            src: 'images/means/walk/baloon/walk.png',
+                            src: 'assets/images/means/walk/baloon/walk.png',
                             anchor: [1.0, 1.0]
                         })
                     }));
@@ -498,7 +498,7 @@ $(document).ready(function() {
                 })
                 pointFeature.setStyle(new ol.style.Style({
                     image: new ol.style.Icon({
-                        src: 'images/finish.png',
+                        src: 'assets/images/finish.png',
                         anchor: [0.0, 1.0]
                     })
                 }));
