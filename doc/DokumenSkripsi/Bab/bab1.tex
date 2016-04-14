@@ -4,7 +4,6 @@
 \section{Latar Belakang}
 \label{sec:latarbelakang}
 
-%Pemanasan global, padatnya lalu lintas, dan tingginya harga bahan bakar merupakan masalah umum yang sering dijumpai pada kehidupan sehari-hari. Masalah ini dapat dipecahkan dengan menggunakan kendaraan umum. Tetapi masih banyak orang yang enggan untuk menggunakan kendaraan umum karena susahnya penggunaan kendaraan umum.
 KIRI \cite{statickiri} adalah sebuah aplikasi yang membantu pengguna dalam mengggunakan kendaraan umum. Peran KIRI sangat sederhana, yaitu memberitahu dimana lokasi sekarang dan kemana lokasi tujuan, lalu KIRI akan memberitahu bagaimana cara sampai ke lokasi tujuan dengan menggunakan kendaraan umum. 
 
 Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} merupakan bahasa \textit{scripting} yang cocok untuk pengembangan halaman \textit{web}. Tetapi menurut peneliti, bahasa PHP tidak cocok untuk proyek besar. Masalah yang sering dijumpai pada bahasa PHP adalah tidak ada \textit{type safety}. 
@@ -17,32 +16,27 @@ Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} mer
 
 Pengembangan yang akan dilakukan adalah melakukan \textit{porting} kode KIRI (PHP) menjadi \play agar struktur kode KIRI menjadi rapih dan bahasa yang digunakan adalah bahasa Java. Dengan demikian, penulis bermaksud membuat proyek tugas akhir dengan judul ``Porting PHP menjadi \play (Studi Kasus: KIRI \textit{Front-End})``
 
-%
-%ambil dari referensi kiri.travel,jgn sendiri
-%KIRI (http://kiri.travel) merupakan aplikasi website yang membantu pengguna bepergian baik dalam kota maupun luar kota. Jika dalam kota, KIRI akan menentukan angkutan kota yang tersedia di kota tersebut, jika luar kota, maka KIRI menentukan travel yang tersedia ke kota yang akan dituju serta angkutan kota menuju tempat tujuan. Saat ini, KIRI tersedia dalam berbagai kota, yaitu Bandung, Depok, Jakarta, Surabaya, dan Malang. KIRI menyediakan berbagai rute alternatif yang dapat dipilih oleh pengguna. KIRI juga dapat membimbing pengguna langkah demi langkah untuk mencapai lokasi tujuan. 
-%
-%php bahasa populer<<< ga ada hubungan dengan alasan skripsi ini
-%Dalam pengembangan website, kita sering menjumpai bahasa yang dipakai adalah bahasa PHP. PHP tersebut kurang cocok dengan proyek besar. Masalah yang sering dijumpai seperti tidak ada deklarasi variabel, tidak ada tipe variabel. Dalam pengembangan website terdapat berbagai macam framework. Framework adalah kerangka yang membantu pengguna untuk menyelesaikan website. 
-%
-%langsung ke play framework & referensi.
-%Dari berbagai framework yang dapat digunakan, dipilih Play Framework. Play Framework merupakan framework untuk membuat website dengan bahasa pemrograman Java. Play Framework menerapkan konsep MVC, yaitu Model, View, dan Controller. Dalam penelitian ini, Play Framework dipakai karena Play Framework terstruktur dan umum. 
-
 \section{Rumusan Masalah}
 \label{rumusanMasalah}
-\begin{itemize}
+Rumusan masalah yang akan dibahas pada skripsi ini adalah:
+\begin{enumerate}
 	\item Bagaimana memahami dan menganalisis kode KIRI yang sudah ada?
 	\item Bagaimana melakukan porting kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java) ?
-\end{itemize}
+	\item Bagaimana perbandingan performa KIRI (PHP) dengan KIRI (Java)?
+\end{enumerate}
 
 \section{Tujuan}
 \label{sec:tujuan}
-\begin{itemize}
+Tujuan dengan membahas skripsi ini adalah:
+\begin{enumerate}
 	\item Memahami dan menganalisis kode KIRI.
 	\item Menjadikan kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java).
-\end{itemize}
+	\item Membandingkan performa KIRI (PHP) dengan KIRI (Java).
+\end{enumerate}
 
 \section{Batasan Masalah}
 \label{sec:batasanMasalah}
+Beberapa batasan dengan skripsi ini adalah:
 \begin{enumerate}
 	\item Play Framework yang digunakan adalah versi 2.4.3.
 	\item Kode KIRI yang sudah ada diambil dari Github pascalalfadian\cite{githubkiri}.
