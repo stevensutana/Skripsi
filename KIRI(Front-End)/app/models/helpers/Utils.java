@@ -7,13 +7,9 @@ import play.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Node8 on 21/2/16.
- */
 public final class Utils {
 
     public static void log_statistic(String verifier,String type,String additional_info){

@@ -1,8 +1,5 @@
 package models;
 
-/**
- * Created by Node8 on 3/2/16.
- */
 public class Alternative {
     private double mw,wm,pt;
 
@@ -27,7 +24,4 @@ public class Alternative {
         return mw;
     }
 
-    public String print(){
-        return this.mw+" "+this.wm +" "+this.pt;
-    }
 }

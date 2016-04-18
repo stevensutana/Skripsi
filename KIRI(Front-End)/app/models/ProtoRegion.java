@@ -1,8 +1,5 @@
 package models;
 
-/**
- * Created by Node8 on 1/12/15.
- */
 public class ProtoRegion {
 
     private double lat,lon;

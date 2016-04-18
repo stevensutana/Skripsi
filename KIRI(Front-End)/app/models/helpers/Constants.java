@@ -5,74 +5,72 @@ import models.ProtoRegion;
 
 import java.util.*;
 
-/**
- * Created by Node8 on 1/12/15.
- */
 public final class Constants {
 
-    public static Alternative[] ALTERNATIVES;
 
-    public static Map<String, ProtoRegion> REGIONINFOS;
+    public static final Alternative[] ALTERNATIVES;
+
+    public static final Map<String, ProtoRegion> REGIONINFOS;
 
 
     // Cache types and expiry
-    public static String CACHE_GEOCODING = "geocoding";
-    public static String CACHE_SEARCHPLACE = "searchplace";
+    public static final String CACHE_GEOCODING = "geocoding";
+    public static final String CACHE_SEARCHPLACE = "searchplace";
 
-    public static String PLACES_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+    public static final String PLACES_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 
     /** Maximum number of search result. */
-    public static int SEARCH_MAXRESULT = 10;
+    public static final int SEARCH_MAXRESULT = 10;
     /** API key for server side apps. */
-    public static String GMAPS_SERVER_KEY = "AIzaSyBa1bNBVkchvxSFd8U_Cn7HsHux6M-DIk4";
+    public static final String GMAPS_SERVER_KEY = "AIzaSyBa1bNBVkchvxSFd8U_Cn7HsHux6M-DIk4";
     /** URL for Google Maps" Reverse geocoding web service. */
-    public static String GMAPS_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+    public static final String GMAPS_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
 
-    public static String ANGKOTWEBID_URL_PREFIX = "https://angkot.web.id/go/route/";
-    public static String ANGKOTWEBID_URL_SUFFIX = "?ref=kiri";
+    public static final String ANGKOTWEBID_URL_PREFIX = "https://angkot.web.id/go/route/";
+    public static final String ANGKOTWEBID_URL_SUFFIX = "?ref=kiri";
 
 
-    public static int SPEED_WALK = 5;
-    public static String MENJANGAN_URL = "http://newmenjangan.cloudapp.net:8000";
+    public static final int SPEED_WALK = 5;
+    public static final String MENJANGAN_URL = "http://newmenjangan.cloudapp.net:8000";
 
-    public static String PROTO_ATTRIBUTIONS = "attributions";
+    public static final String PROTO_ATTRIBUTIONS = "attributions";
 
-    public static String PROTO_ERRORCODE = "errorcode";
+    public static final String PROTO_ERRORCODE = "errorcode";
 
-    public static String PROTO_LOCALE = "locale";
-    public static String PROTO_LOCALE_INDONESIA = "id";
-    public static String PROTO_LOCALE_ENGLISH = "en";
-    public static String PROTO_LOCATION = "location";
-    public static String PROTO_MESSAGE = "message";
+    public static final String PROTO_LOCALE = "locale";
+    public static final String PROTO_LOCALE_INDONESIA = "id";
+    public static final String PROTO_LOCALE_ENGLISH = "en";
+    public static final String PROTO_LOCATION = "location";
+    public static final String PROTO_MESSAGE = "message";
 
-    public static String PROTO_MODE_FINDROUTE = "findroute";
-    public static String PROTO_MODE_REPORTERROR = "reporterror";
-    public static String PROTO_MODE_SEARCH = "searchplace";
-    public static String PROTO_MODE_NEARBYTRANSPORTS = "nearbytransports";
-    public static String PROTO_NEARBYTRANSPORTS = "nearbytransports";
-    public static String PROTO_PLACENAME = "placename";
-    public static String PROTO_PRESENTATION_DESKTOP = "desktop";
-    public static String PROTO_PRESENTATION_MOBILE = "mobile";
-    public static String PROTO_REGION = "region";
-    public static String PROTO_REGION_BANDUNG = "bdo";
-    public static String PROTO_REGION_JAKARTA = "cgk";
-    public static String PROTO_REGION_SURABAYA = "sub";
-    public static String PROTO_REGION_MALANG = "mlg";
-    public static String PROTO_ROUTESTART = "start";
-    public static String PROTO_ROUTINGRESULT = "routingresult";
-    public static String PROTO_ROUTINGRESULTS = "routingresults";
-    public static String PROTO_SEARCH_QUERYSTRING = "querystring";
-    public static String PROTO_SEARCH_RESULT = "searchresult";
-    public static String PROTO_STATUS = "status";
-    public static String PROTO_STATUS_ERROR = "error";
-    public static String PROTO_STATUS_OK = "ok";
-    public static String PROTO_STEPS = "steps";
-    public static String PROTO_TRAVELTIME = "traveltime";
+    public static final String PROTO_MODE_FINDROUTE = "findroute";
+    public static final String PROTO_MODE_REPORTERROR = "reporterror";
+    public static final String PROTO_MODE_SEARCH = "searchplace";
+    public static final String PROTO_MODE_NEARBYTRANSPORTS = "nearbytransports";
+    public static final String PROTO_NEARBYTRANSPORTS = "nearbytransports";
+    public static final String PROTO_PLACENAME = "placename";
+    public static final String PROTO_PRESENTATION_DESKTOP = "desktop";
+    public static final String PROTO_PRESENTATION_MOBILE = "mobile";
+    public static final String PROTO_REGION = "region";
+    public static final String PROTO_REGION_BANDUNG = "bdo";
+    public static final String PROTO_REGION_JAKARTA = "cgk";
+    public static final String PROTO_REGION_SURABAYA = "sub";
+    public static final String PROTO_REGION_MALANG = "mlg";
+    public static final String PROTO_ROUTESTART = "start";
+    public static final String PROTO_ROUTINGRESULT = "routingresult";
+    public static final String PROTO_ROUTINGRESULTS = "routingresults";
+    public static final String PROTO_SEARCH_QUERYSTRING = "querystring";
+    public static final String PROTO_SEARCH_RESULT = "searchresult";
+    public static final String PROTO_STATUS = "status";
+    public static final String PROTO_STATUS_ERROR = "error";
+    public static final String PROTO_STATUS_OK = "ok";
+    public static final String PROTO_STEPS = "steps";
+    public static final String PROTO_TRAVELTIME = "traveltime";
     // KalapaDago protocol constants
-    public static String PROTOKD_POINT_FINISH = "finish";
-    public static String PROTOKD_POINT_START = "start";
-    public static String PROTOKD_RESULT_NONE = "none";
-    public static String PROTOKD_TRANSITMODE_WALK = "walk";
+    public static final String PROTOKD_POINT_FINISH = "finish";
+    public static final String PROTOKD_POINT_START = "start";
+    public static final String PROTOKD_RESULT_NONE = "none";
+    public static final String PROTOKD_TRANSITMODE_WALK = "walk";
 
     static{
 
