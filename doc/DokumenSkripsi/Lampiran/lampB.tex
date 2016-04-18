@@ -1,4 +1,4 @@
-\chapter{The Source Code}
+\chapter{Kode Program \textit{Controller}}
 \label{app:B}
 
 %selalu gunakan single spacing untuk source code !!!!!
@@ -10,63 +10,838 @@
 % terdapat beberapa pilihan : tiny, scriptsize, footnotesize, dll
 %
 % caption : nama yang akan ditampilkan di dokumen akhir, lihat contoh
-\begin{lstlisting}[language=Java,basicstyle=\tiny,caption=MyFurSet.java]
+\begin{lstlisting}[language=Java,basicstyle=\tiny,caption=Application.java]
+package controllers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.*;
+import models.helpers.Constants;
+import models.helpers.Utils;
+import play.cache.CacheApi;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.db.DB;
+import play.i18n.Messages;
+import play.libs.F;
+import play.libs.Json;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+import play.mvc.*;
 
-/**
- *
- * @author Lionov
- */
+import views.html.*;
 
-//class for set of vertices close to furthest edge
-public class MyFurSet {
-    protected int id;                                  //id of the set
-    protected MyEdge FurthestEdge;                     //the furthest edge
-    protected HashSet<MyVertex> set;                   //set of vertices close to furthest edge
-    protected ArrayList<ArrayList<Integer>> ordered;   //list of all vertices in the set for each trajectory
-    protected ArrayList<Integer> closeID;              //store the ID of all vertices
-    protected ArrayList<Double> closeDist;             //store the distance of all vertices
-    protected int totaltrj;                            //total trajectories in the set
+import javax.inject.Inject;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.*;
 
-    /**
-     * Constructor
-     * @param id : id of the set
-     * @param totaltrj : total number of trajectories in the set
-     * @param FurthestEdge : the furthest edge
-     */
-    public MyFurSet(int id,int totaltrj,MyEdge FurthestEdge) {
-        this.id = id;
-        this.totaltrj = totaltrj;
-        this.FurthestEdge = FurthestEdge;
-        set = new HashSet<MyVertex>();
-        ordered = new ArrayList<ArrayList<Integer>>();
-        for (int i=0;i<totaltrj;i++) ordered.add(new ArrayList<Integer>());
-        closeID = new ArrayList<Integer>(totaltrj);
-        closeDist = new ArrayList<Double>(totaltrj);
-        for (int i = 0;i <totaltrj;i++) {
-            closeID.add(-1);
-            closeDist.add(Double.MAX_VALUE);
+public class Application extends Controller {
+
+    private DynamicForm dynamicForm;
+    @Inject
+    CacheApi cache;
+
+    private static final Comparator<ArrayList<String>> comparator = new Comparator<ArrayList<String>>() {
+        @Override
+        public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+            //membandingkan array dengan indeks ke 3,yaitu jarak
+            return Double.compare(Double.parseDouble(o1.get(3)),Double.parseDouble(o2.get(3)));
+        }
+    };
+
+
+    public Result index() {
+        String locale = retrieve_data(Constants.PROTO_LOCALE);
+
+        Http.Cookie cookieLocale = request().cookie(Constants.PROTO_LOCALE);
+        if(locale==null){
+            if(cookieLocale!=null){
+                locale = Utils.validateLocale(cookieLocale.value());
+            }else{
+                locale = Constants.PROTO_LOCALE_ENGLISH;
+            }
+        }else{
+            //set default id
+            locale = Utils.validateLocale(locale);
+            response().setCookie(Constants.PROTO_LOCALE,locale);
+        }
+
+        //i18n
+        ctx().setTransientLang(locale);
+
+        String region = retrieve_data(Constants.PROTO_REGION);
+
+        Http.Cookie cookieRegion = request().cookie(Constants.PROTO_REGION);
+
+        if(region==null){
+            if(cookieRegion!=null){
+                region = Utils.validateRegion(cookieRegion.value());
+            }else{
+                region = Constants.PROTO_REGION_BANDUNG;
+            }
+        }else{//set default id
+
+            region = Utils.validateLocale(region);
+            response().setCookie(Constants.PROTO_REGION,region);
+        }
+
+        String regions = new String();
+
+        for (Map.Entry<String, ProtoRegion> iterator : Constants.REGIONINFOS.entrySet()) {
+            regions+= iterator.getKey()+ ": {center: '"+  iterator.getValue().getLat() + ","+ iterator.getValue().getLon() + "', zoom: "+ iterator.getValue().getZoom() +"},";
+        }
+
+        String message =
+                "var input_text = [],coordinates = [];\n" +
+                        "input_text['start'] = null;\n" +
+                        "coordinates['start'] = null;\n" +
+                        "input_text['finish'] = null;\n" +
+                        "coordinates['finish'] = null;\n"+
+
+                        "var locale='"+ locale+"';\n" +
+                        "var region='"+region+"';\n" +
+                        "var messageBuyTicket = '"+Messages.get("index_buyticket")+"';\n" +
+                        "var messageConnectionError = '"+Messages.get("index_connectionerror")+"';\n" +
+                        "var messageFillBoth = '"+Messages.get("index_fillboth")+"';\n" +
+                        "var messageNotFound = '"+Messages.get("index_notfound")+"';\n" +
+                        "var messageOops = '"+Messages.get("index_oops")+"';\n" +
+                        "var messageOrderTicketHere = '"+Messages.get("index_order_ticket_here")+"';\n" +
+                        "var messagePleaseWait = '<img src=\"/assets/images/loading.gif\" alt=\"... \"/>'+ '"+Messages.get("index_pleasewait")+"';\n" +
+                        "var messageITake = '"+Messages.get("index_itake")+"';\n" +
+                        "var region='"+region+"';\n" +
+                        "var regions = {\n" +
+                        regions +
+                        "};\n" +
+                        "$(document).foundation();";
+
+        return ok(index.render(locale,Constants.REGIONINFOS,message,region));
+    }
+
+    public Result handle()
+    {
+
+        response().setContentType("application/json");
+        response().setHeader("Cache-control", "no-cache");
+        response().setHeader("Pragma","no-cache");
+        //initialize
+        try{
+
+        StringBuilder output = new StringBuilder();
+
+        //because java cant take string as an index,use map instead
+
+        Map<String, Boolean> results = new HashMap<String, Boolean>();
+
+        ArrayList<Map<String,JsonNode>> routing_results = new ArrayList<Map<String,JsonNode>>();
+
+        ArrayList<ArrayList<Object>> route_output = new ArrayList<ArrayList<Object>>();
+
+
+        String mode = retrieve_data("mode");
+        int version = Integer.parseInt(retrieve_data("version"));
+        if(version == 0){
+            version = 1;
+        }
+        String apikey = retrieve_data("apikey");
+
+        if(!check_apikey(apikey).equals("{}")){
+
+            return ok(check_apikey(apikey));
+        }
+
+        if(mode.equals(Constants.PROTO_MODE_FINDROUTE))
+        {
+            results = new HashMap<String, Boolean>();
+
+            String start = retrieve_data("start");
+            String finish = retrieve_data("finish");
+            String locale = retrieve_data("locale");
+
+
+            //localization
+            ctx().setTransientLang(locale);
+
+            String presentation = retrieve_data("presentation");
+
+            String result = null;
+            if(!presentation.equals(Constants.PROTO_PRESENTATION_MOBILE) && !presentation.equals(Constants.PROTO_PRESENTATION_DESKTOP))
+            {
+                Utils.log_error("Presentation not understood: "+ presentation);
+            }
+
+            if(version>=2)
+            {
+                int count = presentation.equals(Constants.PROTO_PRESENTATION_MOBILE)?1:Constants.ALTERNATIVES.length;
+
+                for (int i = 0;i<count;i++){
+                    result = getFromMenjangan(start,finish,Constants.ALTERNATIVES[i].getMw(),Constants.ALTERNATIVES[i].getWm(),Constants.ALTERNATIVES[i].getPt());
+                    results.put(result, true);
+                }
+
+            }else//version <2
+            {
+                result = getFromMenjangan(start,finish);
+
+                results.put(result,true);
+
+            }
+
+            double travel_time = 0;
+            for (Map.Entry<String, Boolean> iterator : results.entrySet()) {
+                route_output = new ArrayList<ArrayList<Object>>();
+                travel_time = 0;
+
+                String[] steps = iterator.getKey().split("\n");
+                for (String step: steps) {
+
+                    step = step.trim();
+                    if(step.equals("")){
+                        continue;
+                    }
+
+                    if(step.equals(Constants.PROTOKD_RESULT_NONE)){
+                        if(results.size() == 1){
+                            ArrayList<Object> arrRouteOutput = new ArrayList<Object>();
+                            arrRouteOutput.add("none");
+                            arrRouteOutput.add("none");
+
+                            String arrStartFinish[] = new String[2];
+                            arrStartFinish[0] = start;
+                            arrStartFinish[1] = finish;
+
+                            arrRouteOutput.add(arrStartFinish);
+                            arrRouteOutput.add(Messages.get("message_routenotfound_"+ presentation));
+                            arrRouteOutput.add(null);
+                            arrRouteOutput.add(null);
+
+                            route_output.add(arrRouteOutput);
+                            travel_time = 0;
+                            break;
+                        }else{
+                            continue;
+                        }
+                    }
+
+                    String[] stepSplit = step.split("/");
+                    String means = stepSplit[0];
+                    String means_detail = stepSplit[1];
+                    String route = stepSplit[2];
+                    String distance = stepSplit[3];
+
+                    if(means.isEmpty() || route.isEmpty() || distance.isEmpty()){
+                        //die_nice
+                        Utils.log_error("Incomplete response in this line: ");
+                    }
+
+                    String[] points = route.split(" ");
+
+                    String from = points[0];
+
+                    String to = points[points.length-1];
+
+                    String booking_url = null, editor_url = null;
+
+                    for (int i = 0; i< points.length; i++)
+                    {
+
+                        if(points[i].equals(Constants.PROTOKD_POINT_START))
+                        {
+                            points[i] = start;
+                        }
+
+                        if(points[i].equals(Constants.PROTOKD_POINT_FINISH))
+                        {
+                            points[i] = finish;
+                        }
+
+                    }
+
+                    String humanized_from = "",humanized_to = "";
+                    try {
+                        humanized_from = humanize_point(from);
+                    } catch (Exception e) {
+                        Utils.log_error("humanized from error :" + e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        humanized_to = humanize_point(to);
+                    } catch (Exception e) {
+                        Utils.log_error("humanized to error :" + e.getMessage());
+                    }
+
+                    String humanreadable = null;
+                    if(means.equals(Constants.PROTOKD_TRANSITMODE_WALK))
+                    {
+                        if(humanized_from.equals(humanized_to))
+                        {
+                            if(!presentation.equals(Constants.PROTO_PRESENTATION_MOBILE))
+                            {
+                                humanreadable = Messages.get("message_walk_samestreet");
+                                humanreadable = humanreadable.replaceAll("%street",humanized_from);
+                                humanreadable = humanreadable.replaceAll("%distance",format_distance(Double.parseDouble(distance),locale));
+
+                            }
+                        }else
+                        {
+
+                            if(presentation.equals(Constants.PROTO_PRESENTATION_MOBILE))
+                            {
+                                humanized_from += "";
+                                humanized_to += " %toicon";
+                            }
+
+                            humanreadable = Messages.get("message_walk");
+                            humanreadable = humanreadable.replaceAll("%from",humanized_from);
+                            humanreadable = humanreadable.replaceAll("%to",humanized_to);
+                            humanreadable = humanreadable.replaceAll("%distance",format_distance(Double.parseDouble(distance),locale));
+
+                        }
+
+                        travel_time += Double.parseDouble(distance) / Constants.SPEED_WALK;
+                        booking_url = null;
+                        editor_url = null;
+                    }   else
+                    {
+
+                        String readable_track_name = null,track_type_name = null;
+
+                        double speed = 0;
+                        java.sql.Connection
+                                connection = DB.getConnection();
+                        try {
+                            Statement statement = connection.createStatement();
+
+                            ResultSet result2 = statement.executeQuery("SELECT tracks.trackname, tracktypes.name, tracktypes.url, tracks.extraParameters, tracktypes.speed, tracks.internalInfo FROM tracks JOIN tracktypes ON tracktypes.trackTypeId='" +
+                                    means + "' AND tracks.trackTypeId='" + means + "' AND tracks.trackid='"+ means_detail + "';");
+
+                            while (result2.next()) {
+                                //php starts from 0,jdbc start from 1
+
+                                readable_track_name = result2.getString(1);
+                                track_type_name = result2.getString(2);
+                                speed = result2.getDouble(5);
+
+                                if((result2.getString(3) != null && !result2.getString(3).isEmpty()) && (result2.getString(4) != null && !result2.getString(4).isEmpty()))
+                                {
+                                    booking_url = result2.getString(3) + result2.getString(4);
+                                }else{
+                                    booking_url = null;
+                                }
+
+                                if(result2.getString(6).startsWith("angkotwebid:"))
+                                {
+                                    String[] token = result2.getString(6).split(":");
+                                    editor_url = Constants.ANGKOTWEBID_URL_PREFIX + token[1] + Constants.ANGKOTWEBID_URL_SUFFIX;
+                                }else{
+                                    editor_url = null;
+                                }
+                            }
+
+
+                            connection.close();
+                        } catch (Exception e) {
+                            Utils.log_error("Can't retrieve the track name from database: " + e.getMessage());
+                        }
+
+                        if(presentation.equals(Constants.PROTO_PRESENTATION_MOBILE))
+                        {
+                            humanized_from += " %fromicon";
+                            humanized_to += " %toicon";
+                        }
+
+                        humanreadable = Messages.get("message_angkot");
+                        try{
+
+                            humanreadable = humanreadable.replaceAll("%from",humanized_from);
+                            humanreadable = humanreadable.replaceAll("%to",humanized_to);
+                            humanreadable = humanreadable.replaceAll("%distance",format_distance(Double.parseDouble(distance),locale));
+                            humanreadable = humanreadable.replaceAll("%trackname",readable_track_name);
+                            humanreadable = humanreadable.replaceAll("%tracktype",track_type_name);
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                        travel_time += Double.parseDouble(distance) / speed;
+
+                        if(means.equals("bdo_angkot") && version < 3)
+                        {
+                            means = "angkot";
+                        }
+
+                    }
+                    if(humanreadable != null && !humanreadable.isEmpty())
+                    {
+
+                        ArrayList<Object> arrRouteOutput = new ArrayList<Object>();
+                        arrRouteOutput.add(means);
+                        arrRouteOutput.add(means_detail);
+                        arrRouteOutput.add(points);
+                        arrRouteOutput.add(humanreadable);
+                        arrRouteOutput.add(booking_url==null? NullNode.getInstance():booking_url);
+                        arrRouteOutput.add(editor_url==null?NullNode.getInstance():editor_url);
+
+                        route_output.add(arrRouteOutput);
+                    }
+
+                }
+
+                Map<String, JsonNode> routing_result = new HashMap<String, JsonNode>();
+
+                routing_result.put(Constants.PROTO_STEPS,Json.toJson(route_output));
+                routing_result.put(Constants.PROTO_TRAVELTIME, Json.toJson(format_traveltime(travel_time)));
+
+                routing_results.add(routing_result);
+            }
+
+            Utils.log_statistic(apikey, "FINDROUTE", start + "/" + finish + "/" + results.size());
+
+            ObjectNode objectNode = Json.newObject();
+            if(version >=2)
+            {
+                objectNode.put(Constants.PROTO_STATUS,Constants.PROTO_STATUS_OK);
+                objectNode.put(Constants.PROTO_ROUTINGRESULTS, Json.toJson(routing_results));
+
+            }else{
+                objectNode.put(Constants.PROTO_STATUS,Constants.PROTO_STATUS_OK);
+                objectNode.put(Constants.PROTO_ROUTINGRESULT, Json.toJson(routing_results.get(0).get(Constants.PROTO_STEPS)));
+                objectNode.put(Constants.PROTO_TRAVELTIME, Json.toJson(routing_results.get(0).get(Constants.PROTO_TRAVELTIME)));
+            }
+
+            String str = Json.stringify(objectNode);
+            output.append(str);
+
+        }else if(mode.equals(Constants.PROTO_MODE_SEARCH))
+        {
+
+            ObjectNode json_output = Json.newObject();
+
+            String querystring = retrieve_data(Constants.PROTO_SEARCH_QUERYSTRING);
+
+            String region = retrieve_data(Constants.PROTO_REGION);
+
+            region = region == null? Constants.PROTO_REGION_BANDUNG : region;
+
+
+            for (Map.Entry<String, ProtoRegion> iterator : Constants.REGIONINFOS.entrySet()) {
+                if(Utils.indexPregMatch(iterator.getValue().getSearchPlace_regex(),querystring)!=-1){
+                    region = iterator.getKey();
+                    int matches = Utils.indexPregMatch(iterator.getValue().getSearchPlace_regex(),querystring);
+                    querystring = querystring.substring(0,matches);
+
+                    break;
+                }
+            }
+
+            String cached_searchplace = Utils.get_from_cache(Constants.CACHE_SEARCHPLACE,region + "/" + querystring);
+
+            if(cached_searchplace != null && !cached_searchplace.isEmpty()){
+                json_output.put(Constants.PROTO_STATUS,Constants.PROTO_STATUS_OK);
+                json_output.put(Constants.PROTO_SEARCH_RESULT,Json.toJson(Json.parse(cached_searchplace)));
+                json_output.put(Constants.PROTO_ATTRIBUTIONS,Json.toJson(NullNode.getInstance()));
+
+                Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/cache");
+            }else
+            {
+                double city_lat = Constants.REGIONINFOS.get(region).getLat();
+                double city_lon = Constants.REGIONINFOS.get(region).getLon();
+                int city_radius = Constants.REGIONINFOS.get(region).getRadius();
+
+                String result = getPlacesAPI(city_lat+","+city_lon,Integer.toString(city_radius),querystring);
+
+                JsonNode json_result = null;
+                try{
+
+                    json_result = Json.parse(result);
+
+                }catch (Exception e){
+                    Utils.log_error("ERROR places url" + e.getMessage());
+                }
+
+                int size = 0;
+
+                ArrayNode arrayJsonResult = (ArrayNode)json_result.withArray("results");
+                if(json_result.findPath("status").textValue().equals("OK") || json_result.findPath("status").textValue().equals("ZERO_RESULTS") )
+                {
+                    ArrayList<Map<String, JsonNode>> search_res = new ArrayList<Map<String, JsonNode>>();
+
+                    if(json_result.findPath("status").textValue().equals("ZERO_RESULTS"))
+                    {
+                        Utils.log_error("Place search not found: " + querystring);
+                        size = 0;
+                    }else
+                    {
+                        size = Math.min(arrayJsonResult.size(),Constants.SEARCH_MAXRESULT);
+
+                    }
+
+                    JsonNode current_venue = null;
+
+                    for (int i = 0;i<size;i++){
+                        current_venue = json_result.withArray("results").get(i);
+
+                        Map<String, JsonNode> search_result = new HashMap<String, JsonNode>();
+                        search_result.put(Constants.PROTO_LOCATION, Json.toJson(String.format("%.5f,%.5f",
+                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lat").toString()),
+                                Double.parseDouble(current_venue.findPath("geometry").findPath("location").findPath("lng").toString()))));
+
+                        search_result.put(Constants.PROTO_PLACENAME, Json.toJson(current_venue.get("name").textValue()));
+
+                        search_res.add(i, search_result);
+
+                    }
+
+                    json_output.put(Constants.PROTO_STATUS, Constants.PROTO_STATUS_OK);
+                    json_output.put(Constants.PROTO_SEARCH_RESULT, Json.toJson(search_res));
+                    json_output.put(Constants.PROTO_ATTRIBUTIONS, Json.toJson(NullNode.getInstance()));
+
+                    Utils.log_statistic(apikey, "SEARCHPLACE", querystring + "/" + size);
+                    String str = Json.stringify(Json.toJson(search_res));
+
+                    Utils.put_to_cache(Constants.CACHE_SEARCHPLACE, region + "/" + querystring, str);
+
+
+                }
+            }
+
+            String str = Json.stringify(json_output);
+            output.append(str);
+
+
+        }else if(mode.equals(Constants.PROTO_MODE_REPORTERROR))
+        {
+            String errorcode = retrieve_data(Constants.PROTO_ERRORCODE);
+
+            Utils.log_error("Client reported error: " + errorcode);
+
+            output.append(Utils.well_done("").toString());
+
+
+        }else if (mode.equals(Constants.PROTO_MODE_NEARBYTRANSPORTS))
+        {
+            String start = retrieve_data(Constants.PROTO_ROUTESTART);
+
+            if(version >= 2)
+            {
+                String result_menjangan_url = getFromMenjangan(start);
+                String lines[] = result_menjangan_url.split("\n");
+
+                ArrayList<ArrayList<String>> nearby_result = new ArrayList<ArrayList<String>>();
+
+
+                for(String line : lines){
+                    String[] listLine = line.split("/");
+
+                    String trackTypeId = listLine[0];
+                    String trackId = listLine[1];
+                    String distance = listLine[2];
+
+                    Connection connection = DB.getConnection();
+                    try {
+                        java.sql.PreparedStatement stmt = connection.prepareStatement(
+                                "SELECT trackname FROM tracks WHERE trackId = ? AND trackTypeId = ?");
+                        stmt.setString(1, trackId);
+                        stmt.setString(2,trackTypeId);
+                        ResultSet result = stmt.executeQuery();
+                        while (result.next()) {
+                            //php starts from 0,jdbc start from 1
+
+                            String trackName = result.getString(1);
+                            ArrayList<String> list = new ArrayList<String>();
+                            list.add(trackTypeId);
+                            list.add(trackId);
+                            list.add(trackName);
+                            list.add(distance);
+                            nearby_result.add(list);
+
+                        }
+
+
+                        connection.close();
+                    } catch (Exception e) {
+                        Utils.log_error("Can't get nearest track details:  " + e.getMessage());
+                    }
+
+                }
+                Collections.sort(nearby_result, comparator);
+
+                Utils.log_statistic(apikey, "NEARBYTRANSPORTS", start + results.size());
+
+                ObjectNode json_output = Json.newObject();
+
+                json_output.put(Constants.PROTO_STATUS,Constants.PROTO_STATUS_OK);
+                json_output.put(Constants.PROTO_NEARBYTRANSPORTS,Json.toJson(nearby_result));
+
+
+                output.append(json_output.toString());
+
+            }else
+            {
+                Utils.log_error("Nearby transit is not supported in version 1");
+            }
+
+
+        }else
+        {
+            Utils.log_error("Mode not understood: "+ mode);
+        }
+
+        return ok(output.toString());
+        }catch(Exception e){
+            ObjectNode json_output = Json.newObject();
+
+            json_output.put(Constants.PROTO_STATUS,Constants.PROTO_STATUS_ERROR);
+            json_output.put(Constants.PROTO_MESSAGE,e.getMessage());
+
+            return internalServerError(Json.stringify(json_output));
+
         }
     }
 
-    /**
-     * set a vertex into the set
-     * @param v : vertex to be added to the set
-     */
-    public void add(MyVertex v) {
-        set.add(v);
+
+
+    public String getFromMenjangan(String start,String finish,double mw,double wm,double pt){
+        F.Promise<String> promise = WS.url(Constants.MENJANGAN_URL)
+                .setQueryParameter("start", start)
+                .setQueryParameter("finish", finish)
+                .setQueryParameter("mw", Double.toString(mw))
+                .setQueryParameter("wm",Double.toString(wm))
+                .setQueryParameter("pt",Double.toString(pt))
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 512000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
     }
 
-    /**
-     * check whether vertex v is a member of the set
-     * @param v : vertex to be checked
-     * @return true if v is a member of the set, false otherwise
-     */
-    public boolean contains(MyVertex v) {
-        return this.set.contains(v);
+    public String getFromMenjangan(String start,String finish) {
+        F.Promise<String> promise = WS.url(Constants.MENJANGAN_URL)
+                .setQueryParameter("start", start)
+                .setQueryParameter("finish", finish)
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 1000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
     }
+
+    public String getFromMenjangan(String start) {
+        F.Promise<String> promise = WS.url(Constants.MENJANGAN_URL)
+                .setQueryParameter("start", start)
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 1000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
+    }
+
+
+    public String file_get_contents(String url) {
+        F.Promise<String> promise = WS.url(url)
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 3000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
+    }
+
+
+    public String getPlacesAPI(String location,String radius,String querystring) {
+        F.Promise<String> promise = WS.url(Constants.PLACES_URL)
+                .setQueryParameter("key", Constants.GMAPS_SERVER_KEY)
+                .setQueryParameter("location",location)
+                .setQueryParameter("radius",radius)
+                .setQueryParameter("keyword",querystring)
+                .setQueryParameter("types","establishment|route")
+                .setQueryParameter("sensor","true")
+                .get()
+                .map(
+                        new F.Function<WSResponse, String>() {
+                            public String apply(WSResponse response) {
+                                String result = response.getBody();
+                                return result;
+                            }
+                        }
+                );
+
+
+        long timeout = 30000l;// 1 sec might be too many for most cases!
+        String result = promise.get(timeout);
+        return result;
+    }
+
+
+    public String format_traveltime(double time){
+        if(time>1){
+            return Math.round(time) + " "+Messages.get("message_hour");
+        }else{
+
+            return (int) (5 * Math.ceil(time * 60.0 / 5)) + " " +Messages.get("message_min");
+        }
+    }
+
+    public String retrieve_data(String param){
+        this.dynamicForm = Form.form().bindFromRequest();
+        String str = this.dynamicForm.get(param);
+        return str;
+    }
+
+
+
+
+
+
+    public String check_apikey(String apikey){
+        Connection connection = DB.getConnection();
+        StringBuilder output = new StringBuilder();
+        String ipAddr = request().remoteAddress();//ip address client
+        ObjectNode objectNode = Json.newObject();
+        try {
+//            connection = DB.getConnection();
+            // Look for angkot.web.id refreshes
+
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT apikeys.verifier, apikeys.ipFilter FROM apikeys WHERE apikeys.verifier = ?");
+            stmt.setString(1, apikey);
+            ResultSet result = stmt.executeQuery();
+            if(result.next()){
+                while (result.next()) {
+
+                    if(!ipAddr.equals(result.getString("ipFilter")) && !result.getString("ipFilter").isEmpty()){
+                        objectNode = Utils.die_nice("IP address is not accepted for this API key.");
+                    }
+
+                }
+            }else{
+                objectNode = Utils.die_nice("API key is not recognized: " + apikey);
+            }
+
+            connection.close();
+        } catch (Exception e) {
+            objectNode = Utils.die_nice("failed to execute query on Apikey check." + e.getMessage());
+        }
+
+        output.append(objectNode.toString());
+        return output.toString();
+    }
+
+
+
+    public String humanize_point(String location) throws Exception {
+        if(location.equals(Constants.PROTOKD_POINT_START)){
+            return Messages.get("message_start");
+        }else if(location.equals(Constants.PROTOKD_POINT_FINISH)){
+
+            return Messages.get("message_finish");
+
+        }else{
+
+            String cached_geocode = Utils.get_from_cache(Constants.CACHE_GEOCODING,location);
+
+            if(cached_geocode != null && !cached_geocode.isEmpty()){
+                return cached_geocode;
+            }else{
+                String full_url = Constants.GMAPS_GEOCODE_URL + "?key="+ Constants.GMAPS_SERVER_KEY + "&latlng=" + location+ "&sensor=false";
+                String result = file_get_contents(full_url);
+                JsonNode json_response = null;
+                try{
+
+                    json_response = Json.parse(result);
+                }catch (Exception e){
+                    Utils.log_error("ERROR HUMANIZE POINT :" + e.getMessage());
+                }
+
+                if(json_response.findPath("status").textValue().equals("OK")){
+                    String bestguess = location;
+                    ArrayNode arrayNode = (ArrayNode)json_response.withArray("results");
+                    String[] arr = {"transit_station","route"};
+                    for (int i = 0;i<arrayNode.size();i++)
+                    {
+                        for (JsonNode component : json_response.findPath("results").get(0).get("address_components"))
+                        {
+                            if(Json.stringify(component.findPath("types")).contains("transit_station") || Json.stringify(component.findPath("types")).contains("route"))
+                            {
+                                Utils.put_to_cache(Constants.CACHE_GEOCODING,location,component.findPath("long_name").textValue());
+                                return component.findPath("long_name").textValue();
+                            }
+                            bestguess = component.findPath("long_name").textValue();
+                        }
+
+                    }
+
+                    Utils.log_error("Warning: can't find street name, use bestguess " + bestguess + " for " + location);
+                    Utils.put_to_cache(Constants.CACHE_GEOCODING, location, bestguess);
+                    return bestguess;
+
+                }else if(json_response.get("status").equals("ZERO_RESULTS")){
+
+                    Utils.log_error("Warning: can't find coordinate for" + location);
+                    return location;
+                }else{
+                    Utils.log_error("Problem while geocoding from Google reverse geocoding: ");
+
+                    return "";
+                }
+
+            }
+
+
+        }
+    }
+
+    public String format_distance(double distance,String locale){
+
+
+        if(distance<1.0){
+            return (int) (Math.floor(distance*1000.0)) + " meter";
+        }else{
+            char decimal = locale == "id"?',':'.';
+            double fdist = Math.floor(distance);
+            return (int) (fdist + decimal + Math.floor((distance - fdist) * 10)) + " kilometer";
+        }
+
+    }
+
 }
+
 \end{lstlisting}

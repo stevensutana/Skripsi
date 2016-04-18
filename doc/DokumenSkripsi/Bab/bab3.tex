@@ -567,26 +567,26 @@ Untuk menentukan file mana yang akan digunakan dalam proses i18n, jangan lupa un
 Pencarian rute pada KIRI dilakukan di \textit{server side}, yaitu pada \textit{file} handle.php. Langkah awal pada handle.php dapat dijelaskan sebagai berikut:
 \begin{enumerate}
 	\item Memuat \textit{file} constants.php untuk menyiapkan data yang akan dipakai pada halaman \textit{web}.
-	\item Memuat utils.php untuk fungsi manipulasi data, koneksi \textit{database}, mengirimkan pencatatan, dan melakukan validasi.
+	\item Memuat utils.php untuk fungsi manipulasi data, koneksi basisdata, mengirimkan pencatatan, dan melakukan validasi.
 	\begin{itemize}
-		\item Fungsi \verb!init_mysql! untuk memuat koneksi \textit{database} dengan memasukkan \textit{host, username, password}, dan \textit{database} yang digunakan pada MySQL.
-		\item Fungsi \verb!log_statistic! untuk pencatatan data pada \textit{database}.
+		\item Fungsi \verb!init_mysql! untuk memuat koneksi basisdata dengan memasukkan \textit{host, username, password}, dan basisdata yang digunakan pada MySQL.
+		\item Fungsi \verb!log_statistic! untuk pencatatan data pada basisdata.
 		\item Fungsi \verb!die_nice! untuk mengirimkan pesan kesalahan.
 		\item Fungsi \verb!check_apikey_validity! untuk pengecekan apikey yang digunakan ada atau tidak.
 		\item Fungsi \verb!retrieve_from_post! untuk mengambil data pada URL dengan memanggil method \verb!\$_POST! dengan parameter \textit{key} yang digunakan.
 		\item Fungsi \verb!retrieve_from_get! untuk mengambil data pada URL dengan memanggil method \verb!\$_GET! dengan parameter \textit{key} yang digunakan.
-		\item Fungsi \verb!retrieve_from_cache! untuk mengambil data pada \textit{database} \textit{cache} dengan parameter `type' dan `cacheKey'.
-		\item Fungsi \verb!put_to_cache! untuk memasukkan data pada \textit{database} \textit{cache} dengan parameter `type' , `cacheKey', dan `cacheValue'.
+		\item Fungsi \verb!retrieve_from_cache! untuk mengambil data pada basisdata \textit{cache} dengan parameter `type' dan `cacheKey'.
+		\item Fungsi \verb!put_to_cache! untuk memasukkan data pada basisdata \textit{cache} dengan parameter `type' , `cacheKey', dan `cacheValue'.
 	\end{itemize}
 	\item \verb!start_working! untuk menyiapkan header pada PHP.
 	\begin{itemize}
 		\item Fungsi \verb!header('Content-Type: application/json')! untuk menghasilkan \textit{output} berupa JSON.
 		\item Fungsi \verb!header('Cache-control: no-cache')! digunakan pada HTTP/1.1 dan fungsi \verb!header('Pragma: no-cache')! digunakan pada HTTP/1.0. Keduanya berfungsi untuk mencegah pengguna menyimpan \textit{cache response}.
 	\end{itemize}
-	\item \verb!init_mysql! untuk koneksi pada database menggunakan MySQL. 
+	\item \verb!init_mysql! untuk koneksi pada basisdata menggunakan MySQL. 
 	\item Mendapatkan data \verb!mode!, \verb!version!, dan \verb!apikey! dari \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `mode', `version', dan `apikey'.
 	\item Jika data \verb!version! sama dengan  \verb!null!, maka isi data \verb!version! dengan 1. 
-	\item Melakukan pengecekan \verb!apikey! apakah ada di \textit{database} atau tidak. Jika ada, cek lagi apakah ada pengecualian IP komputer pada database.
+	\item Melakukan pengecekan \verb!apikey! apakah ada di basisdata atau tidak. Jika ada, cek lagi apakah ada pengecualian IP komputer pada basisdata.
 \end{enumerate}
 
 \subsubsection{Mode Findroute}
@@ -615,12 +615,12 @@ Langkah selanjutnya adalah pengulangan sejumlah data \verb!results! menjadi \ver
 		\item Jika nilai data \verb!points! ada yang sama dengan \verb!`start'!, maka mengganti data \verb!points! tersebut dengan data \verb!start!. Jika nilai data \verb!points! ada yang sama dengan \verb!`finish'!, maka mengganti data \verb!points! tersebut dengan data \verb!finish!.
 		 \item Memasukkan data \verb!humanized_from! dengan memanggil fungsi \verb!humanize_point! dengan \textit{parameter} \verb!from! dan \verb!humanized_to! dengan memanggil fungsi \verb!humanize_point! dengan \textit{parameter} \verb!to!.
 		 \item Jika \verb!means! sama dengan \verb!`walk'!, melakukan pengecekan apakah  \verb!humanized_from! sama dengan \verb!humanized_to!. Jika \verb!presentation! tidak sama dengan \verb!mobile!, maka memasukkan \verb!message_walk_samestreet! ke variabel \verb!humanreadable!. Mengganti \verb!from! yang ada di \verb!humanreadable! dengan nilai \verb!humanized_from!, mengganti \verb!distance! yang ada di \verb!humanreadable! dengan nilai \verb!distance! yang dipresentasikan sesuai format wilayah pengguna. Lalu menghitung waktu tempuh yg dibutuhkan.
-		 \item Jika \verb!means! tidak sama dengan \verb!`walk'!, melakukan pencarian pada \textit{database} \verb!tracks! digabung dengan \verb!tracktypes! dengan kolom nama jalur, tipe jalur yang digunakan, \textit{URL} untuk melakukan pemesanan (jika XTrans), kecepatan transportasi, dan informasi internal jalur dengan syarat:
+		 \item Jika \verb!means! tidak sama dengan \verb!`walk'!, melakukan pencarian pada basisdata \verb!tracks! digabung dengan \verb!tracktypes! dengan kolom nama jalur, tipe jalur yang digunakan, \textit{URL} untuk melakukan pemesanan (jika XTrans), kecepatan transportasi, dan informasi internal jalur dengan syarat:
 				\begin{enumerate}
 					\item \verb!trackTypeId! sama dengan \verb!means! pada tabel \verb!tracktypes! dan \verb!tracks!.
 					\item \verb!trackid! sama dengan \verb!means_detail! pada tabel \verb!tracks!.
 				\end{enumerate}						 
-		  Jika ada hasil dari pencarian \textit{database}, maka: 
+		  Jika ada hasil dari pencarian basisdata, maka: 
 		  \begin{enumerate}
 		  		\item Memasukkan nilai \verb!trackname! dari tabel \verb!tracks! ke \verb!readable_track_name!.
 		  		\item Memasukkan nilai \verb!nama! dari tabel \verb!tracktypes! ke \verb!track_type_name!.
@@ -649,7 +649,7 @@ Setelah itu, memasukkan data ke tabel statistik dengan \textit{parameter}:
 		\item \verb!FINDROUTE! merupakan tipe statistik yang dimasukkan.
 		\item \verb!$start/$finish/sizeof($results)! merupakan keterangan statistik dimana \verb!$start! adalah titik koordinat tempat asal, \verb!$finish! adalah titik koordinat tempat tujuan, dan jumlah dari data \verb!$results!.
 	\end{itemize}
-Lalu menutup koneksi ke \textit{database}. Jika \verb!version! tidak sama dengan \verb!null! dan \verb!version! lebih besar sama dengan 2, maka print hasil yang sudah di \textit{encode} menjadi JSON, yaitu:
+Lalu menutup koneksi ke basisdata. Jika \verb!version! tidak sama dengan \verb!null! dan \verb!version! lebih besar sama dengan 2, maka print hasil yang sudah di \textit{encode} menjadi JSON, yaitu:
 	\begin{itemize}
 		\item \verb!status! dengan nilai \verb!`ok'!
 		\item \verb!routingresults! dengan nilai \verb!routing_results! yang merupakan hasil pencarian rute.

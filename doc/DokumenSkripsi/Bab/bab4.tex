@@ -14,15 +14,14 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 	Kelas ini merupakan kelas yang sudah disediakan \play dan merupakan kelas Controller pada aplikasi KIRI. Atribut yang dimiliki kelas Application adalah:
 	\begin{itemize}
 		\item \textbf{DynamicForm dynamicForm:} objek DynamicForm yang berperan dalam mengambil query pada URL. 
-		\item \textbf{WSClient ws:} objek WSClient yang berperan dalam memanggil layanan HTTP dari luar aplikasi KIRI.
-		\item \textbf{Comparator<ArrayList<String>> comparator:} objek Comparator yang berperan dalam fungsi untuk membandingkan String dalam ArrayList.
+		\item \textbf{Comparator<ArrayList<String\textgreater \textgreater comparator:} objek Comparator yang berperan dalam fungsi untuk membandingkan String dalam ArrayList.
 		\item \textbf{CacheApi cache:} objek CacheApi yang berperan dalam mengambil data \textit{cache} yang telah dibuat oleh aplikasi KIRI.
 		
 	\end{itemize}
 	\textit{Method-method} yang dimiliki kelas ini merupakan \textit{action method} dengan rincian sebagai berikut:
 	\begin{itemize}
 		\item \textbf{public Result index()}\\
-		Berfungsi untuk mengarahkan pengguna ke halaman utama KIRI.\\
+		Berfungsi untuk validasi \textit{cache} \verb!locale! dan \verb!region! serta mengarahkan pengguna ke halaman utama KIRI.\\
 		\textbf{Kembalian:}  Halaman utama KIRI.
 		
 		\item \textbf{public Result handle()}\\
@@ -100,13 +99,13 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		\textbf{Kembalian:}  Data pada query URL.
 		
 		\item \textbf{public boolean check\_apikey(String apikey)}\\
-		Berfungsi untuk melakukan format waktu.\\
+		Berfungsi untuk validasi \verb!apikey! yang digunakan valid atau apikey yang digunakan ada batasan alamat IP.\\
 		\textbf{Parameter:}
 				\begin{itemize}
 					\item \textbf{apikey} Apikey yang ingin dicek.
 				\end{itemize}.
 				
-		\textbf{Kembalian:}  Hasil pengecekan apikey layak dipakai atau tidak.
+		\textbf{Kembalian:}  Hasil pengecekan apikey dapat dipakai atau tidak. Jika tidak dapat dipakai, akan mengembalikan hasil pesan kesalahan.
 		
 		\item \textbf{public String humanize\_point(String location)}\\
 		Berfungsi untuk mendapatkan nama lokasi tempat dari titik koordinat lokasi.\\
@@ -117,66 +116,70 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 				
 		\textbf{Kembalian:}  Nama lokasi tempat.
 		
-		\item \textbf{public String format\_distanceltime(double time,String locale)}\\
-		Berfungsi untuk melakukan format waktu berdasarkan lokalisasi.\\
+		\item \textbf{public String format\_distance(double distance,String locale)}\\
+		Berfungsi untuk melakukan format jarak berdasarkan lokalisasi.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{time} Waktu yang ingin diubah formatnya.
+					\item \textbf{distance} Jarak yang ingin diubah formatnya.
 					\item \textbf{locale} Lokalisasi bahasa.
 				\end{itemize}.
 				
-		\textbf{Kembalian:}  Hasil waktu yang sudah diformat sesuai lokalisasi.
+		\textbf{Kembalian:}  Hasil distance yang sudah diformat sesuai lokalisasi.
 	\end{itemize}
 	\item Constants\\
 	Kelas untuk mengisi variabel dengan konstanta dan berfungsi agar tidak menuliskan konstanta berulang kali dan membantu pengembangan aplikasi KIRI. Atribut yang dimiliki kelas Constants adalah:
 	\begin{itemize}
-		\item \textbf{Alternative[] alternatives:} Alternative dalam array.
-		\item \textbf{Map<String,ProtoRegion> regioninfos:} Map yang terdiri dari kunci berupa String dan berisi objek ProtoRegion.
-		\item \textbf{String cache\_geocoding:} Untuk mencari / menyimpan pada basisdata cache dengan type geocoding.
-		\item \textbf{String cache\_searchplace:} Untuk mencari / menyimpan pada basisdata cache dengan type searchplace.
-		\item \textbf{String places\_url:} URL googleapis untuk mencari nama lokasi tempat.
-		\item \textbf{int search\_maxresult} Angka untuk perbandingan hasil pencarian.
-		\item \textbf{String gmaps\_server\_key:} Kunci agar dapat akses googleapis.
-		\item \textbf{String gmaps\_geocode\_url:} URL googleapis untuk mencari geokode lokasi tempat.
-		\item \textbf{String angkotwebid\_url\_prefix:} Awalan URL untuk angkot.web.id.
-		\item \textbf{String angkotwebid\_url\_suffix:} Akhiran URL untuk angkot.web.id.
-		\item \textbf{int speed\_walk:} Kecepatan jalan kaki.
-		\item \textbf{String proto\_attributions:} Untuk menampilkan JSON dengan kunci attributions. 
-		\item \textbf{String proto\_errorcode:} Untuk mendapatkan query URL errorcode.
-		\item \textbf{String proto\_location:} Untuk menyimpan pada HashMap dengan kunci location.
-		\item \textbf{String proto\_message:} Untuk menampilkan JSON dengan kunci message.
-		\item \textbf{String proto\_mode\_findroute:} Untuk mendapatkan query URL mode.
-		\item \textbf{String proto\_mode\_reporterror:} Untuk mendapatkan query URL mode.
-		\item \textbf{String proto\_mode\_search:} Untuk mendapatkan query URL mode.
-		\item \textbf{String proto\_mode\_nearbytransports:} Untuk mendapatkan query URL mode.
-		\item \textbf{String proto\_nearbytransports:} Untuk menampilkan JSON dengan kunci nearbytransports.
-		\item \textbf{String proto\_placename:} Untuk menampilkan JSON dengan kunci placename.
-		\item \textbf{String proto\_presentation\_desktop:} Untuk mengetahui apakah dibuka di desktop atau tidak.
-		\item \textbf{String proto\_presentation\_mobile:} Untuk mengetahui apakah dibuka di mobile atau tidak.
-		\item \textbf{String proto\_region:} Untuk mendapatkan query URL region.
-		\item \textbf{String proto\_region\_bandung:} Region bandung dengan kode bdo.
-		\item \textbf{String proto\_region\_jakarta:} Region bandung dengan kode jkt.
-		\item \textbf{String proto\_region\_surabaya:} Region bandung dengan kode sby.
-		\item \textbf{String proto\_region\_malang:} Region bandung dengan kode mlg.
-		\item \textbf{String proto\_routestart:} Untuk mendapatkan query URL start.
-		\item \textbf{String proto\_routingresult:} Untuk menampilkan JSON dengan kunci routingresult.
-		\item \textbf{String proto\_routingresults:} Untuk menampilkan JSON dengan kunci routingresults.
-		\item \textbf{String proto\_search\_querystring:} Untuk mendapatkan query URL querystring.
-		\item \textbf{String proto\_search\_result:} Untuk menampilkan JSON dengan kunci searchresult.
-		\item \textbf{String proto\_status:} Untuk menampilkan JSON dengan kunci status.
-		\item \textbf{String proto\_status\_error:} Untuk menampilkan JSON dengan nilai error.
-		\item \textbf{String proto\_status\_ok:} Untuk menampilkan JSON dengan nilai ok.
-		\item \textbf{String proto\_steps:} Untuk menampilkan JSON dengan kunci steps.
-		\item \textbf{String proto\_traveltime:} Untuk menampilkan JSON dengan kunci traveltime.
-		\item \textbf{String protokd\_point\_finish:} Untuk pengecekan bila hasil dari menjangan ada kata finish.
-		\item \textbf{String protokd\_point\_start:} Untuk pengecekan bila hasil dari menjangan ada kata start.
-		\item \textbf{String protokd\_point\_finish:} Untuk pengecekan bila hasil dari menjangan ada kata finish.
-		\item \textbf{String protokd\_transitmode\_walk:} Untuk pengecekan bila hasil dari menjangan ada kata walk.
+		\item \textbf{Alternative[] ALTERNATIVES:} Objek \verb!Alternative! dalam \textit{array}.
+		\item \textbf{Map<String,ProtoRegion> REGIONINFOS:} HashMap yang terdiri dari kunci berupa String dan berisi objek ProtoRegion.
+		\item \textbf{String CACHE\_GEOCODING:} Untuk mencari atau menyimpan pada basisdata cache dengan type geocoding.
+		\item \textbf{String CACHE\_SEARCHPLACE:} Untuk mencari atau menyimpan pada basisdata cache dengan type searchplace.
+		\item \textbf{String PLACES\_URL:} URL Google API untuk mencari nama lokasi tempat.
+		\item \textbf{int SEARCH\_MAXRESULT} Angka untuk menentukan batas maksimal hasil pencarian.
+		\item \textbf{String GMAPS\_SERVER\_KEY:} Kunci agar dapat akses Google API.
+		\item \textbf{String GMAPS\_GEOCODE\_URL:} URL Google API untuk mencari geokode lokasi tempat.
+		\item \textbf{String ANGKOTWEBID\_URL\_PREFIX:} Awalan URL untuk \url{http://angkot.web.id}.
+		\item \textbf{String ANGKOTWEBID\_URL\_SUFFIX:} Akhiran URL untuk \url{http://angkot.web.id}.
+		\item \textbf{int SPEED\_WALK:} Kecepatan jalan kaki.
+		\item \textbf{String MENJANGAN\_URL:} URL untuk mengakses \url{http://newmenjangan.cloudapp.net:8000}.
+		\item \textbf{String PROTO\_ATTRIBUTIONS:} Untuk menampilkan JSON dengan \textit{key} \verb!attributions!. 
+		\item \textbf{String PROTO\_ERRORCODE:} Untuk mendapatkan nilai dari \textit{query} \verb!errorcode! pada protokol.
+		\item \textbf{String PROTO\_LOCALE:} Untuk mendapatkan nilai dari \textit{query} \verb!locale! pada URL.
+		\item \textbf{String PROTO\_LOCALE\_INDONESIA:} Nilai dari \textit{query} \verb!locale! dengan isi \verb!`id'!.
+		\item \textbf{String PROTO\_LOCALE\_ENGLISH:} Nilai dari \textit{query} \verb!locale! dengan isi \verb!`en'!.
+		\item \textbf{String PROTO\_LOCATION:} Untuk menyimpan pada HashMap dengan \textit{key} location.
+		\item \textbf{String PROTO\_MESSAGE:} Untuk menampilkan JSON dengan \textit{key} message.
+		\item \textbf{String PROTO\_MODE\_FINDROUTE:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_MODE\_REPORTERROR:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_MODE\_SEARCH:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_MODE\_NEARBYTRANSPORTS:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_NEARBYTRANSPORTS:} Untuk menampilkan JSON dengan \textit{key} \verb!nearbytransports!.
+		\item \textbf{String PROTO\_PLACENAME:} Untuk menampilkan JSON dengan \textit{key} \verb!placename!.
+		\item \textbf{String PROTO\_PRESENTATION\_DESKTOP:} Untuk mengetahui apakah aplikasi dibuka di \textit{desktop} atau tidak.
+		\item \textbf{String PROTO\_PRESENTATION\_MOBILE:} Untuk mengetahui apakah aplikasi dibuka di \textit{mobile} atau tidak.
+		\item \textbf{String PROTO\_REGION:} Untuk mendapatkan nilai dari \textit{query} URL \verb!region!.
+		\item \textbf{String PROTO\_REGION\_BANDUNG:} Region Bandung dengan kode \verb!`bdo'!.
+		\item \textbf{String PROTO\_REGION\_JAKARTA:} Region Jakarta dengan kode \verb!`jkt'!.
+		\item \textbf{String PROTO\_REGION\_SURABAYA:} Region Surabaya dengan kode \verb!`sby'!.
+		\item \textbf{String PROTO\_REGION\_MALANG:} Region Malang dengan kode \verb!`mlg'!.
+		\item \textbf{String PROTO\_ROUTESTART:} Untuk mendapatkan nilai dari \textit{query} URL \verb!start!.
+		\item \textbf{String PROTO\_ROUTINGRESULT:} Untuk menampilkan JSON dengan \textit{key} \verb!routingresult!.
+		\item \textbf{String PROTO\_ROUTINGRESULTS:} Untuk menampilkan JSON dengan \textit{key} \verb!routingresults!.
+		\item \textbf{String PROTO\_SEARCH\_QUERYSTRING:} Untuk mendapatkan nilai dari \textit{query} URL \verb!querystring!.
+		\item \textbf{String PROTO\_SEARCH\_RESULT:} Untuk menampilkan JSON dengan \textit{key} \verb!searchresult!.
+		\item \textbf{String PROTO\_STATUS:} Untuk menampilkan JSON dengan \textit{key} \verb!status!.
+		\item \textbf{String PROTO\_STATUS\_ERROR:} Untuk menampilkan JSON dengan nilai \verb!`error'!.
+		\item \textbf{String PROTO\_STATUS\_OK:} Untuk menampilkan JSON dengan nilai \verb!`ok'!.
+		\item \textbf{String PROTO\_STEPS:} Untuk menampilkan JSON dengan \textit{key} \verb!steps!.
+		\item \textbf{String PROTO\_TRAVELTIME:} Untuk menampilkan JSON dengan \textit{key} \verb!traveltime!.
+		\item \textbf{String PROTOKD\_POINT\_FINISH:} Untuk pengecekan \textit{array} \verb!point! yang didapat dari URL \url{http://newmenjangan.cloudapp.net:8000} terdapat kata kunci \verb!`finish'!.
+		\item \textbf{String PROTOKD\_POINT\_START:} Untuk pengecekan \textit{array} \verb!point! yang didapat dari URL \url{http://newmenjangan.cloudapp.net:8000} terdapat kata kunci \verb!`start'!.
+		\item \textbf{String PROTOKD\_RESULT\_NONE:} Untuk pengecekan \textit{array} \verb!point! yang didapat dari URL \url{http://newmenjangan.cloudapp.net:8000} terdapat kata kunci \verb!`none'!.
+		\item \textbf{String PROTOKD\_TRANSITMODE\_WALK:} Untuk pengecekan \textit{array} \verb!point! yang didapat dari URL \url{http://newmenjangan.cloudapp.net:8000} terdapat kata kunci \verb!`walk'!.
 	\end{itemize}
 	
 	
 	\item Alternative\\
-	Kelas yang merupakan turunan dari kelas yang sudah disediakan \play, yaitu Models. Kelas ini untuk merepresentasikan alternatif dalam pencarian rute pada URL \textit{http://newmenjangan.cloudapp.net:8000}. Kelas Alternative mempunyai atribut antara lain:
+	Kelas yang berada pada \textit{package} Models. Kelas ini untuk merepresentasikan alternatif dalam pencarian rute pada URL \textit{http://newmenjangan.cloudapp.net:8000}. Kelas Alternative mempunyai atribut antara lain:
 	\begin{itemize}
 		\item \textbf{double mw:} Maximumwalk dari alternatif.
 		\item \textbf{double wm:} Walkingmultiplier dari alternatif.
@@ -199,7 +202,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 	\end{itemize}
 	
 	\item ProtoRegion\\
-	Kelas yang merupakan turunan dari kelas yang sudah disediakan \play, yaitu Models. Kelas ini untuk merepresentasikan kota dengan masing-masing mempunyai atribut sendiri. Kelas ProtoRegion mempunyai atribut antara lain:
+	Kelas yang berada pada \textit{package} Models. Kelas ini untuk merepresentasikan kota dengan masing-masing mempunyai atribut sendiri. Kelas ProtoRegion mempunyai atribut antara lain:
 	\begin{itemize}
 		\item \textbf{double lat:} Titik lintang dari kota tertentu.
 		\item \textbf{double lon:} Titik bujur dari kota tertentu.
@@ -259,14 +262,14 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 				\end{itemize}.
 		\textbf{Kembalian:}  \texttt{true} jika URL sama dengan filter, \texttt{false} jika tidak sama.
 	
-		\item \textbf{public static boolean pregMatch(String regex, String content)}\\
-		Berfungsi untuk pengecekan apakah dalam suatu kalimat mengandung kata tertentu.\\
-		\textbf{Parameter:}
-				\begin{itemize}
-					\item \textbf{regex} Kata yang ingin dicari.
-					\item \textbf{content} Kalimat yang ingin dicari.
-				\end{itemize}.
-		\textbf{Kembalian:}  \texttt{true} jika terdapat kata dalam kalimat, \texttt{false} jika tidak ada.
+%		\item \textbf{public static boolean pregMatch(String regex, String content)}\\
+%		Berfungsi untuk pengecekan apakah dalam suatu kalimat mengandung kata tertentu.\\
+%		\textbf{Parameter:}
+%				\begin{itemize}
+%					\item \textbf{regex} Kata yang ingin dicari.
+%					\item \textbf{content} Kalimat yang ingin dicari.
+%				\end{itemize}.
+%		\textbf{Kembalian:}  \texttt{true} jika terdapat kata dalam kalimat, \texttt{false} jika tidak ada.
 		
 		\item \textbf{public static int indexPregMatch(String regex, String content)}\\
 		Berfungsi untuk mengambil indeks kata tertentu dalam suatu kalimat jika ada.\\
@@ -275,7 +278,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 					\item \textbf{regex} Kata yang ingin dicari.
 					\item \textbf{content} Kalimat yang ingin dicari.
 				\end{itemize}.
-		\textbf{Kembalian:}  Index kata tersebut dalam kalimat.
+		\textbf{Kembalian:}  Index kata tersebut dalam kalimat. Jika tidak ada akan mengembalikan -1.
 		
 		\item \textbf{public static ObjectNode die\_nice(String message)}\\
 		Berfungsi untuk mengembalikan JSON dengan status error dan message.\\
@@ -311,13 +314,13 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 				\end{itemize}.
 		\textbf{Kembalian:}  Tidak ada.
 	
-		\item \textbf{public static double deg2rad(double deg)}\\
-		Berfungsi untuk mengubah angka dalam satuan derajat dengan satuan radian.\\
-		\textbf{Parameter:}
-				\begin{itemize}
-					\item \textbf{deg} Angka dalam satuan derajat yang ingin diubah.
-				\end{itemize}.
-		\textbf{Kembalian:}  Angka dalam satuan radian.
+%		\item \textbf{public static double deg2rad(double deg)}\\
+%		Berfungsi untuk mengubah angka dalam satuan derajat dengan satuan radian.\\
+%		\textbf{Parameter:}
+%				\begin{itemize}
+%					\item \textbf{deg} Angka dalam satuan derajat yang ingin diubah.
+%				\end{itemize}.
+%		\textbf{Kembalian:}  Angka dalam satuan radian.
 	
 		\item \textbf{public static void log\_error(String message)}\\
 		Berfungsi untuk melakukan log dengan pesan tertentu.\\
@@ -345,12 +348,15 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		
 	\end{itemize}
 	
+	\item Index.scala.html\\
+	Kelas yang berada pada package Views dan berfungsi untuk tampilan pada aplikasi KIRI.
+	
 \end{enumerate}
 
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.3]{Gambar/Class-Diagram-Rinci}
+	\includegraphics[scale=0.4]{Gambar/Class-Diagram-Rinci}
 	\caption{Diagram Kelas Rinci} 
 	\label{fig:4_kelas_diagram_rinci}
 \end{figure}
@@ -359,11 +365,11 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 \section{Perancangan Antarmuka}
 \label{sec:perancangan_antarmuka}
 
-Untuk memenuhi kebutuhan interaksi antara pengguna dengan sistem, maka dirancanglah sebuah antarmuka dari KIRI. Antarmuka mengikuti aplikasi KIRI yang lama. Rancangan antarmuka terdiri dari:
+Untuk memenuhi kebutuhan interaksi antara pengguna dengan sistem, maka sebuah antarmuka mengikuti aplikasi KIRI yang lama. Antarmuka terdiri dari:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.3]{Gambar/KIRI-main}
+	\includegraphics[scale=0.3]{Gambar/mockup-home}
 	\caption{Halaman Utama KIRI} 
 	\label{fig:4_KIRI_main}
 \end{figure}
@@ -382,13 +388,6 @@ Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:4_KIRI_main}), terda
     		\end{enumerate}
     \end{enumerate}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.4]{Gambar/KIRI-peta}
-	\caption{Peta pada KIRI} 
-	\label{fig:4_KIRI_peta}
-\end{figure}
-
 \subsection{Peta}
 Peta berfungsi untuk memudahkan pengguna dalam memilih lokasi awal dan lokasi akhir serta memberikan gambaran rute yang telah dicari oleh KIRI. KIRI menggunakan OpenLayers yang berbasis JavaScript untuk memuat peta pada halaman \textit{web}. 
 
@@ -396,53 +395,25 @@ Peta berfungsi untuk memudahkan pengguna dalam memilih lokasi awal dan lokasi ak
 Form yang terdapat pada halaman utama KIRI (Gambar \ref{fig:4_KIRI_form}) terdiri dari:
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{Gambar/KIRI-form}
+	\includegraphics[scale=0.5]{Gambar/mockup-form}
 	\caption{Form pada KIRI} 
 	\label{fig:4_KIRI_form}
 \end{figure}
 
 \subsubsection{Dropdown Menu Kota}
-\textit{Dropdown} yang berfungsi untuk memilih kota yang akan ditampilkan pada peta dan memperbarui peta (Gambar \ref{fig:4_KIRI_drop_kota}).
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{Gambar/KIRI-drop-kota}
-	\caption{Dropdown Menu Kota pada KIRI} 
-	\label{fig:4_KIRI_drop_kota}
-\end{figure}
+\textit{Dropdown} yang berfungsi untuk memilih kota yang akan ditampilkan pada peta dan memperbarui peta.
 
 \subsubsection{Dropdown Menu Bahasa}
-\textit{Dropdown} yang berfungsi untuk memilih bahasa yang akan digunakan pada aplikasi KIRI (Gambar \ref{fig:4_KIRI_drop_bahasa}).
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{Gambar/KIRI-drop-bahasa}
-	\caption{Dropdown Menu Bahasa pada KIRI} 
-	\label{fig:4_KIRI_drop_bahasa}
-\end{figure}
+\textit{Dropdown} yang berfungsi untuk memilih bahasa yang akan digunakan pada aplikasi KIRI.
 
 
 \subsubsection{Textfield}
 \textit{Textfield} pada KIRI agar pengguna dapat memasukkan \textit{input} sendiri. Textfield pada KIRI dapat menerima dua masukan pengguna, yaitu:
 
 \begin{enumerate}
-	\item \textbf{Textfield dengan Masukan Nama Tempat}, pengguna dapat memasukkan nama tempat asal dan tujuan (Gambar \ref{fig:4_KIRI_textfield_nama})
+	\item \textbf{Textfield dengan Masukan Nama Tempat}, pengguna dapat memasukkan nama tempat asal dan tujuan.
 	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[scale=0.5]{Gambar/KIRI-textfield-nama}
-		\caption{Input User(Nama Tempat)} 
-		\label{fig:4_KIRI_textfield_nama}
-	\end{figure}
-	
-	\item \textbf{Textfield dengan Masukan Klik Peta}, pengguna memasukkan koordinat tempat asal dan tujuan dengan klik pada peta. Dengan melakukan klik pada peta, textfield tempat asal dan tujuan akan akan secara otomatis terisi oleh koordinat masing-masing tempat (Gambar \ref{fig:4_KIRI_textfield_koord}).
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[scale=0.3]{Gambar/KIRI-textfield-koord}
-		\caption{Input User(Klik pada peta)} 
-		\label{fig:4_KIRI_textfield_koord}
-	\end{figure}
+	\item \textbf{Textfield dengan Masukan Klik Peta}, pengguna memasukkan koordinat tempat asal dan tujuan dengan klik pada peta. Dengan melakukan klik pada peta, textfield tempat asal dan tujuan akan akan secara otomatis terisi oleh koordinat masing-masing tempat.
 	
 
 \end{enumerate}
@@ -454,18 +425,11 @@ Pengguna dapat menukar isi dari \textit{textfield} tempat asal dan tujuan.
 Pengguna dapat melakukan pemilihan tempat dari awal dan mengulang tampilan peta. 
 
 \subsubsection{Tombol Find}
-Pengguna dapat mencari rute untuk sampai ke tujuan (Gambar \ref{fig:4_KIRI_find}). Pengguna dapat memilih rute alternatif yang sudah disediakan KIRI jika ada (Gambar \ref{fig:4_KIRI_find_alternate}).
+Pengguna dapat mencari rute untuk sampai ke tujuan (Gambar \ref{fig:4_KIRI_find}). Pengguna dapat memilih rute alternatif yang sudah disediakan KIRI jika ada.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.3]{Gambar/KIRI-find}
+	\includegraphics[scale=0.3]{Gambar/mockup-findroute}
 	\caption{Contoh Pencarian Rute pada KIRI} 
 	\label{fig:4_KIRI_find}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.3]{Gambar/KIRI-find-alternate}
-	\caption{Contoh Rute Alternatif pada KIRI} 
-	\label{fig:4_KIRI_find_alternate}
 \end{figure}

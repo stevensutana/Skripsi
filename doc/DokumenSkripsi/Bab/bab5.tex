@@ -44,15 +44,58 @@ Hasil implementasi berupa aplikasi berbasis web yang menggunakan Play Framework.
 \section{Pengujian}
 \subsection{Pengujian Fungsional}
 
-Pengujian fungsional dilakukan untuk mengetahui kesesuaian reaksi perangkat lunak dengan reaksi yang diharapkan berdasarkan aksi pengguna terhadap perangkat lunak. Pengujian ini dilakukan pada berbagai sistem yaitu Windows, Linux, MacOS, dan Android dengan hasil yang sama. Terdapat tujuh tes kasus yang diujikan, detail serta hasilnya dapat dilihat pada Tabel \ref{table:hasilFungsional}.
+Pengujian fungsional dilakukan untuk mengetahui kesesuaian reaksi perangkat lunak dengan reaksi yang diharapkan berdasarkan aksi pengguna terhadap perangkat lunak. Pengujian ini dilakukan pada berbagai sistem yaitu Windows dan MacOS dengan hasil yang sama. Terdapat sembilan tes kasus yang diujikan, detail serta hasilnya dapat dilihat pada Tabel \ref{table:hasilFungsional}.
 			
 \begin{table}[H]
 	\centering
 	\caption{Tabel Pengujian Fungsional}
 		\begin{tabular}{|p{0.25cm}| p{3.5cm}| p{7cm}| p{2.5cm}|} \hline
 		No.	&	Aksi Pengguna	&	Reaksi yang diharapkan	&	Reaksi Perangkat Lunak \\ \hline
-		1.	&	Pengguna menjalankan aplikasi	&	Halaman utama akan ditampilkan	&	sesuai	\\ \hline
+		1 & Pengguna menjalankan aplikasi & Halaman utama ditampilkan & Sesuai \\ \hline
+2 & Pengguna memilih kota yang ingin ditampilkan & Memperbarui peta dengan kota yang dipilih & Sesuai \\ \hline
+3 & Pengguna memilih bahasa yang ingin ditampilkan & Memperbarui tampilan dengan bahasa yang dipilih & Sesuai \\ \hline
+4 & Pengguna melakukan klik pada peta & \textit{Marker} muncul dari titik yang diklik oleh pengguna dan titik koordinat muncul pada \textit{textfield} tempat asal dan/atau tujuan & Sesuai \\ \hline
+5 & Pengguna memilih tombol Swap & Masukan pengguna tempat awal dan tujuan ditukar & Sesuai \\ \hline
+6 & Pengguna memilih tombol Reset & Memperbarui halaman utama menjadi semula & Sesuai \\ \hline
+7 & Pengguna memilih tombol Find & Hasil pencarian rute muncul beserta alternatifnya (jika ada) & Sesuai, namun hasil JSON yang didapat \textit{key} \verb!travel_time! terlebih dahulu. Hasil ini tidak mengubah keluaran karena JSON dapat diambil dengan mengirimkan parameter berupa nama \textit{key}. \\ \hline
+8 & Pengguna memasukkan nama tempat pada \textit{textfield} tempat asal dan/atau tujuan & Sugesti nama tempat muncul pada masing-masing \textit{textfield} dan menampilkan hasil pencarian beserta alternatifnya (jika ada) & Sesuai \\ \hline
+9 & Pengguna memilih hasil pencarian rute alternatif & Hasil pencarian rute alternatif muncul dan memperbarui peta dengan hasil pencarian rute alternatif & Sesuai \\ \hline
 		
 		\end{tabular}
 	\label{table:hasilFungsional}
+\end{table}
+
+
+\subsection{Pengujian Eksperimental}
+
+Pengujian eksperimental dilakukan untuk membandingkan perbedaan waktu eksekusi dari aplikasi KIRI (PHP) dengan aplikasi KIRI (Play Framework). Pengujian eksperimental mengambil tiga tes kasus dan masing-masing kasus diambil empat kali pengujian. Pengujian ini dilakukan pada sistem MacOS.Hasilnya dapat dilihat pada tabel  \ref{table:hasilEksperimental}.
+			
+\begin{table}[H]
+	\centering
+	\caption{Tabel Pengujian Eksperimental}
+	\scalebox{0.8}{
+		\begin{tabular}{|l|l|c|c|c|c|c|}
+\hline
+No. & \multicolumn{1}{c|}{Aksi} & \multicolumn{5}{c|}{PHP} \\ \hline
+\multicolumn{2}{|l|}{} & \begin{tabular}[c]{@{}c@{}}Waktu \\ eksekusi \\ pertama\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ kedua\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ ketiga\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ keempat\end{tabular} & \begin{tabular}[c]{@{}c@{}}Rata-\\ rata\end{tabular} \\ \hline
+1. & Pengguna akses halaman utama KIRI & 1.00 & 0.89 & 0.87 & 1.57 & 1.08 \\ \hline
+2. & Pengguna mengirimkan request dengan mode sama dengan `findroute' & 1.17 & 2.92 & 3.22 & 3.36 & 2.67 \\ \hline
+3. & Pengguna mengirimkan request dengan mode sama dengan `searchplace' & 1.14 & 0.78 & 0.52 & 1.16 & 0.90 \\ \hline
+\end{tabular}
+}
+	\label{table:hasilEksperimental}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\scalebox{0.8}{
+		\begin{tabular}{|l|l|c|c|c|c|c|}
+\hline
+No. & \multicolumn{1}{c|}{Aksi} & \multicolumn{5}{c|}{Play Framework} \\ \hline
+\multicolumn{2}{|l|}{} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ pertama\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ kedua\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ ketiga\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ keempat\end{tabular} & \begin{tabular}[c]{@{}c@{}}Rata-\\ rata\end{tabular} \\ \hline
+1. & Pengguna akses halaman utama KIRI & 1.51 & 1.58 & 1.67 & 1.59 & 1.59 \\ \hline
+2. & Pengguna mengirimkan request dengan mode sama dengan `findroute' & 3.63 & 2.15 & 2.96 & 1.41 & 2.54 \\ \hline
+3. & Pengguna mengirimkan request dengan mode sama dengan `searchplace' & 0.72 & 0.1 & 1.38 & 0.88 & 0.77 \\ \hline
+\end{tabular}
+}
 \end{table}

@@ -1,0 +1,324 @@
+\chapter{Kode Program \textit{Models}}
+\label{app:C}
+
+%selalu gunakan single spacing untuk source code !!!!!
+\singlespacing 
+% language: bahasa dari kode program
+% terdapat beberapa pilihan : Java, C, C++, PHP, Matlab, R, dll
+%
+% basicstyle : ukuran font untuk kode program
+% terdapat beberapa pilihan : tiny, scriptsize, footnotesize, dll
+%
+% caption : nama yang akan ditampilkan di dokumen akhir, lihat contoh
+\begin{lstlisting}[language=Java,basicstyle=\tiny,caption=Alternative.java]
+package models;
+
+public class Alternative {
+    private double mw,wm,pt;
+
+
+    public Alternative(double mw, double wm, double pt) {
+        this.mw = mw;
+        this.wm = wm;
+        this.pt = pt;
+    }
+
+    public double getPt() {
+        return pt;
+    }
+
+
+    public double getWm() {
+        return wm;
+    }
+
+
+    public double getMw() {
+        return mw;
+    }
+
+}
+
+
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Java,basicstyle=\tiny,caption=ProtoRegion.java]
+package models;
+
+public class ProtoRegion {
+
+    private double lat,lon;
+    private int radius,zoom;
+    private String searchPlace_regex,name;
+
+    public ProtoRegion(double lat, double lon, int radius, int zoom, String searchPlace_regex,String name) {
+        this.lat = lat;
+        this.lon = lon;
+        this.radius = radius;
+        this.zoom = zoom;
+        this.searchPlace_regex = searchPlace_regex;
+        this.name = name;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public int getZoom() {
+        return zoom;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public String getSearchPlace_regex() {
+        return searchPlace_regex;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+
+
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Java,basicstyle=\tiny,caption=Constants.java]
+package models.helpers;
+
+import models.Alternative;
+import models.ProtoRegion;
+
+import java.util.*;
+
+public final class Constants {
+
+
+    public static final Alternative[] ALTERNATIVES;
+
+    public static final Map<String, ProtoRegion> REGIONINFOS;
+
+
+    // Cache types and expiry
+    public static final String CACHE_GEOCODING = "geocoding";
+    public static final String CACHE_SEARCHPLACE = "searchplace";
+
+    public static final String PLACES_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+
+    /** Maximum number of search result. */
+    public static final int SEARCH_MAXRESULT = 10;
+    /** API key for server side apps. */
+    public static final String GMAPS_SERVER_KEY = "AIzaSyBa1bNBVkchvxSFd8U_Cn7HsHux6M-DIk4";
+    /** URL for Google Maps" Reverse geocoding web service. */
+    public static final String GMAPS_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+
+    public static final String ANGKOTWEBID_URL_PREFIX = "https://angkot.web.id/go/route/";
+    public static final String ANGKOTWEBID_URL_SUFFIX = "?ref=kiri";
+
+
+    public static final int SPEED_WALK = 5;
+    public static final String MENJANGAN_URL = "http://newmenjangan.cloudapp.net:8000";
+
+    public static final String PROTO_ATTRIBUTIONS = "attributions";
+
+    public static final String PROTO_ERRORCODE = "errorcode";
+
+    public static final String PROTO_LOCALE = "locale";
+    public static final String PROTO_LOCALE_INDONESIA = "id";
+    public static final String PROTO_LOCALE_ENGLISH = "en";
+    public static final String PROTO_LOCATION = "location";
+    public static final String PROTO_MESSAGE = "message";
+
+    public static final String PROTO_MODE_FINDROUTE = "findroute";
+    public static final String PROTO_MODE_REPORTERROR = "reporterror";
+    public static final String PROTO_MODE_SEARCH = "searchplace";
+    public static final String PROTO_MODE_NEARBYTRANSPORTS = "nearbytransports";
+    public static final String PROTO_NEARBYTRANSPORTS = "nearbytransports";
+    public static final String PROTO_PLACENAME = "placename";
+    public static final String PROTO_PRESENTATION_DESKTOP = "desktop";
+    public static final String PROTO_PRESENTATION_MOBILE = "mobile";
+    public static final String PROTO_REGION = "region";
+    public static final String PROTO_REGION_BANDUNG = "bdo";
+    public static final String PROTO_REGION_JAKARTA = "cgk";
+    public static final String PROTO_REGION_SURABAYA = "sub";
+    public static final String PROTO_REGION_MALANG = "mlg";
+    public static final String PROTO_ROUTESTART = "start";
+    public static final String PROTO_ROUTINGRESULT = "routingresult";
+    public static final String PROTO_ROUTINGRESULTS = "routingresults";
+    public static final String PROTO_SEARCH_QUERYSTRING = "querystring";
+    public static final String PROTO_SEARCH_RESULT = "searchresult";
+    public static final String PROTO_STATUS = "status";
+    public static final String PROTO_STATUS_ERROR = "error";
+    public static final String PROTO_STATUS_OK = "ok";
+    public static final String PROTO_STEPS = "steps";
+    public static final String PROTO_TRAVELTIME = "traveltime";
+    // KalapaDago protocol constants
+    public static final String PROTOKD_POINT_FINISH = "finish";
+    public static final String PROTOKD_POINT_START = "start";
+    public static final String PROTOKD_RESULT_NONE = "none";
+    public static final String PROTOKD_TRANSITMODE_WALK = "walk";
+
+    static{
+
+        ALTERNATIVES = new Alternative[3];
+        ALTERNATIVES[0] = new Alternative(0.75,1,0.15);
+        ALTERNATIVES[1] = new Alternative(1,0.75,0.15);
+        ALTERNATIVES[2] = new Alternative(0.75,1,0.45);
+
+        REGIONINFOS = new HashMap<String, ProtoRegion>();
+
+        REGIONINFOS.put(PROTO_REGION_BANDUNG, new ProtoRegion(-6.91474, 107.60981, 17000, 12, ", *(bandung|bdg)$", "Bandung"));
+        REGIONINFOS.put(PROTO_REGION_JAKARTA, new ProtoRegion(-6.21154, 106.84517, 15000, 11, ", *(jakarta|jkt)$", "Jakarta"));
+        REGIONINFOS.put(PROTO_REGION_SURABAYA, new ProtoRegion(-7.27421, 112.71908, 15000, 12, ", *(surabaya|sby)$", "Surabaya"));
+        REGIONINFOS.put(PROTO_REGION_MALANG, new ProtoRegion(-7.9812985, 112.6319264, 15000, 13, ", *(malang|mlg)$", "Malang"));
+    }
+
+
+}
+
+
+\end{lstlisting}
+
+
+
+
+\begin{lstlisting}[language=Java,basicstyle=\tiny,caption=Utils.java]
+package models.helpers;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.db.DB;
+import play.libs.Json;
+import play.Logger;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public final class Utils {
+
+    public static void log_statistic(String verifier,String type,String additional_info){
+        Connection connection = null;
+        try {
+            connection = DB.getConnection();
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "INSERT INTO statistics (verifier, type, additionalInfo) VALUES ?,?,?");
+            stmt.setString(1,verifier);
+            stmt.setString(2,type);
+            stmt.setString(3,additional_info);
+            stmt.executeUpdate();
+
+            connection.close();
+        } catch (Exception e) {
+        }
+    }
+
+
+    public static ObjectNode die_nice(String message) {
+        ObjectNode obj = Json.newObject();
+        obj.put(Constants.PROTO_STATUS, Constants.PROTO_STATUS_ERROR);
+        obj.put(Constants.PROTO_MESSAGE, message);
+        return obj;
+    }
+
+    public static int indexPregMatch(String regex, String content) {
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(content);
+        int index = -1;
+        while (matcher.find()) {
+            index = matcher.start();
+        }
+        return index;
+    }
+
+
+    public static ObjectNode well_done(String message) {
+        ObjectNode obj = Json.newObject();
+        obj.put(Constants.PROTO_STATUS, Constants.PROTO_STATUS_OK);
+        if (message != null) {
+            obj.put(Constants.PROTO_MESSAGE, message);
+        }
+        return obj;
+    }
+
+    public static String get_from_cache(String type,String key){
+
+        Connection connection = DB.getConnection();
+        StringBuilder output = new StringBuilder();
+        try {
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT cacheValue FROM cache WHERE type = ? AND cacheKey = ?");
+            stmt.setString(1,type);
+            stmt.setString(2,key);
+
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
+                output.append(result.getString(1));
+            }
+
+
+            connection.close();
+        } catch (Exception e) {
+            log_error("Unable to retrieve from cache:" + e.getMessage());
+        }
+
+        return output.toString();
+    }
+
+    public static void put_to_cache(String type, String key,String value){
+        Connection connection = DB.getConnection();
+        try {
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "INSERT INTO cache(type, cacheKey, cacheValue) VALUES (?,?,?)");
+            stmt.setString(1,type);
+            stmt.setString(2, key);
+
+            stmt.setString(3, String.valueOf(value));
+            stmt.executeUpdate();
+            connection.close();
+        } catch (Exception e) {
+            log_error("Warning: Can't store cache "+e.getMessage());
+        }
+
+
+    }
+
+
+    public static void log_error(String message){
+
+        Logger.error(message);
+    }
+
+    public static String validateLocale(String locale){
+
+        if(locale.equals(Constants.PROTO_LOCALE_INDONESIA)){
+
+            return locale;
+        }else{
+            return Constants.PROTO_LOCALE_ENGLISH;
+        }
+    }
+
+    public static String validateRegion(String region){
+
+        if(Constants.REGIONINFOS.get(region) != null){
+
+            return region;
+        }else{
+            return Constants.PROTO_REGION_BANDUNG;
+        }
+    }
+
+}
+
+
+\end{lstlisting}
+
