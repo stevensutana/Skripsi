@@ -6,48 +6,48 @@
 JDBC API \cite{jdbc} adalah standar industri untuk konektivitas basisdata-independen antara bahasa pemrograman Java dan berbagai basisdata. JDBC API menyediakan API untuk akses basisdata berbasis SQL. JDBC API memungkinkan untuk melakukan tiga hal: 
 \begin{itemize}
 	\item Membangun koneksi dengan basisdata atau mengakses sumber data.
-	\item Mengirim pernyataan SQL.
-	\item Mengolah hasil dari pernyataan SQL.
+	\item Mengirim \textit{statement} SQL.
+	\item Mengolah hasil dari \textit{statement} SQL.
 \end{itemize}
 
 \subsection{Injeksi SQL}
-Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah celah keamanan yang terjadi dalam lapisan basisdata sebuah aplikasi. Celah ini terjadi ketika masukan pengguna tidak disaring secara benar dari karakter-karakter pelolos bentukan string yang diimbuhkan dalam pernyataan SQL. Hal ini adalah sebuah contoh dari sebuah kategori celah keamanan yang lebih umum yang dapat terjadi setiap kali sebuah bahasa pemrograman atau skrip ditambahkan di dalam bahasa pemrograman yang lain. Bentuk-bentuk celah keamanan injeksi SQL:
+Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah celah keamanan yang terjadi dalam lapisan basisdata sebuah aplikasi. Celah ini terjadi ketika masukan pengguna tidak disaring secara benar dari karakter-karakter pelolos bentukan string yang diimbuhkan dalam \textit{statement} SQL. Hal ini adalah sebuah contoh dari sebuah kategori celah keamanan yang lebih umum yang dapat terjadi setiap kali sebuah bahasa pemrograman atau skrip ditambahkan di dalam bahasa pemrograman yang lain. Bentuk-bentuk celah keamanan injeksi SQL:
 \begin{itemize}
 	\item Karakter-karakter pelolos yang tidak disaring secara benar.\\
-	Bentuk injeksi SQL ini terjadi ketika masukan pengguna tidak disaring dari karakter-karakter pelolos dan kemudian diteruskan ke dalam sebuah pernyataan SQL. Baris kode berikut menggambarkan celah keamanan:
+	Bentuk injeksi SQL ini terjadi ketika masukan pengguna tidak disaring dari karakter-karakter pelolos dan kemudian diteruskan ke dalam sebuah \textit{statement} SQL. Baris kode berikut menggambarkan celah keamanan:
 	\begin{lstlisting}
-	pernyataan := "SELECT * FROM pengguna WHERE nama = '" + namaPengguna + "';"
+	statement := "SELECT * FROM pengguna WHERE nama = '" + namaPengguna + "';"
 \end{lstlisting}
 	
-	Jika variabel \verb!namaPengguna! dirangkai sedemikian rupa oleh pengguna yang bermaksud buruk, pernyataan SQL tersebut bisa melakukan lebih daripada yang pengarangnya maksudkan. Sebagai contoh, mengeset variabel \verb!namaPengguna! sebagai:
+	Jika variabel \verb!namaPengguna! dirangkai sedemikian rupa oleh pengguna yang bermaksud buruk, \textit{statement} SQL tersebut bisa melakukan lebih daripada yang pengarangnya maksudkan. Sebagai contoh, mengeset variabel \verb!namaPengguna! sebagai:
 	\begin{lstlisting}
 		a' or 't'='t
 	\end{lstlisting}
-	menjadikan pernyataan SQL ini oleh bahasa yang memuatnya:
+	menjadikan \textit{statement} SQL ini oleh bahasa yang memuatnya:
 	\begin{lstlisting}
 		SELECT * FROM pengguna WHERE nama = 'a' or 't'='t';
 	\end{lstlisting}
-	Jika kode ini akan digunakan dalam sebuah prosedur untuk melakukan otentikasi, maka contoh ini dapat dipakai untuk memaksakan pemilihan sebuah nama pengguna yang sah karena evaluasi pernyataan SQL tersebut akan selalu bernilai benar.
+	Jika kode ini akan digunakan dalam sebuah prosedur untuk melakukan otentikasi, maka contoh ini dapat dipakai untuk memaksakan pemilihan sebuah nama pengguna yang sah karena evaluasi \textit{statement} SQL tersebut akan selalu bernilai benar.
 	
-	 Nilai \verb!namaPengguna! berikut ini pada pernyataan di atas akan menyebabkan dihapusnya tabel ``pengguna'':
+	 Nilai \verb!namaPengguna! berikut ini pada \textit{statement} di atas akan menyebabkan dihapusnya tabel ``pengguna'':
 	 
 	\begin{lstlisting}
 		a';DROP TABLE pengguna; SELECT * FROM data WHERE nama LIKE '%
 	\end{lstlisting}
 	
-	Masukan ini menjadikan pernyataan akhir SQL sebagai berikut:
+	Masukan ini menjadikan \textit{statement} akhir SQL sebagai berikut:
 
 	\begin{lstlisting}
 		SELECT * FROM pengguna WHERE nama = 'a';DROP TABLE pengguna; 
 	\end{lstlisting}
 	\item Penanganan tipe data yang tidak benar.\\
-	Bentuk injeksi SQL ini terjadi ketika sebuah unsur masukan pengguna tidak diperiksa batasan-batasan tipenya. Ini dapat terjadi ketika sebuah unsur numerik akan digunakan dalam sebuah pernyataan SQL, tetapi pemrogram tidak melakukan pemeriksaan untuk memastikan bahwa masukan pengguna adalah numerik. Sebagai contoh:
+	Bentuk injeksi SQL ini terjadi ketika sebuah unsur masukan pengguna tidak diperiksa batasan-batasan tipenya. Ini dapat terjadi ketika sebuah unsur numerik akan digunakan dalam sebuah \textit{statement} SQL, tetapi pemrogram tidak melakukan pemeriksaan untuk memastikan bahwa masukan pengguna adalah numerik. Sebagai contoh:
 	
 	\begin{lstlisting}
-		pernyataan := "SELECT * FROM data WHERE id = " + variabel_a + ";"
+		statement := "SELECT * FROM data WHERE id = " + variabel_a + ";"
 	\end{lstlisting}
 	
-	Terlihat jelas dari pernyataan ini, \verb!variabel\_a! menjadi sebuah nomor yang berhubungan dengan unsur ``id''. Namun begitu, jika pada kenyataannya sebuah string, maka pengguna akhir dapat memanipulasi pernyataan tersebut sesukanya, dan karena itu mengabaikan kebutuhan akan karakter-karakter pelolos. Sebagai contoh, mengeset \verb!variabel\_a! sebagai
+	Terlihat jelas dari \textit{statement} ini, \verb!variabel\_a! menjadi sebuah nomor yang berhubungan dengan unsur ``id''. Namun begitu, jika pada kenyataannya sebuah string, maka pengguna akhir dapat memanipulasi \textit{statement} tersebut sesukanya, dan karena itu mengabaikan kebutuhan akan karakter-karakter pelolos. Sebagai contoh, mengeset \verb!variabel\_a! sebagai
 
 	\begin{lstlisting}
 		1;DROP TABLE pengguna
@@ -60,11 +60,10 @@ Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah 
 	\item Celah keamanan dalam server basis data.\\
 	Terkadang celah keamanan dapat berada dalam perangkat lunak server basis data itu sendiri, seperti yang terjadi pada fungsi-fungsi real\_escape\_chars() di server MySQL.
 \end{itemize}
+\textbf{Prepared Statement}\\
+Prepared Statement adalah fitur yang digunakan untuk mengeksekusi \textit{statement} basisdata berulang kali dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan \textit{statement} SQL seperti \textit{query} atau \textit{update}, \textit{statement} mengambil bentuk \textit{template} yang diganti dengan nilai-nilai konstan tertentu yang diganti selama setiap eksekusi.
 
-\subsection{Prepared Statement}
-Prepared Statement adalah fitur yang digunakan untuk mengeksekusi pernyataan basisdata berulang kali dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan pernyataan SQL seperti \textit{query} atau \textit{update}, pernyataan mengambil bentuk \textit{template} yang diganti dengan nilai-nilai konstan tertentu yang diganti selama setiap eksekusi.
-
-JDBC menyediakan objek PreparedStatement untuk mendukung Prepared Statement. Alasan lain menggunakan PreparedStatement adalah untuk mengurangi waktu eksekusi. Keuntungan lainnya adalah pernyataan SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, objek PreparedStatement berisi tidak hanya sebuah pernyataan SQL, tetapi pernyataan SQL yang telah pre-kompilasi. Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
+JDBC menyediakan objek PreparedStatement untuk mendukung Prepared Statement. Alasan lain menggunakan PreparedStatement adalah untuk mengurangi waktu eksekusi. Keuntungan lainnya adalah \textit{statement} SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, objek PreparedStatement berisi tidak hanya sebuah \textit{statement} SQL, tetapi \textit{statement} SQL yang telah pre-kompilasi. Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
 
 \begin{lstlisting}[caption=Contoh PreparedStatement,label = {lst_2_prepared}]
 		java.sql.PreparedStatement stmt = connection.prepareStatement(
@@ -77,41 +76,41 @@ JDBC menyediakan objek PreparedStatement untuk mendukung Prepared Statement. Ala
 \section{Play Framework}
 \label{sec:play}
 \subsection{Struktur Play Framework}
-\play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi ada juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang komplit, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. Referensi yang digunakan membahas \play 2.2, sedangkan versi \play yang dipakai dalam penelitian ini adalah versi 2.4. Ada sedikit perbedaan sintaks yang akan dijelaskan pada bagian yang berbeda.
-Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman:
-
-\begin{enumerate}
-	\item Penggunaan \play sederhana.
-	\item Konfigurasi skema URL aplikasi deklaratif.
-	\item Pemetaan type-safety.
-	\item \play menyediakan contoh sintaks \textit{type-safety}.
-	\item Arsitektur yang mencakup teknologi HTML5.
-	\item Kode langsung aktif berubah ketika memuat kembali halaman web.
-	\item Fitur \textit{full-stack web-framework}, termasuk \textit{persistence}, keamanan, dan \textit{internationalization}.
-	\item Mendukung aplikasi \textit{event-driven} dan dinamis.
-\end{enumerate}
+\play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang lengkap, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. Referensi \cite{playforjava} yang digunakan membahas \play 2.2, sedangkan versi \play yang dipakai dalam penelitian ini adalah versi 2.4. Ada sedikit perbedaan sintaks yang akan dijelaskan pada bagian yang berbeda.
+%Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman:
+%
+%\begin{enumerate}
+%	\item Penggunaan \play sederhana.
+%	\item Konfigurasi skema URL aplikasi deklaratif.
+%	\item Pemetaan type-safety.
+%	\item \play menyediakan contoh sintaks \textit{type-safety}.
+%	\item Arsitektur yang mencakup teknologi HTML5.
+%	\item Kode langsung aktif berubah ketika memuat kembali halaman web.
+%	\item Fitur \textit{full-stack web-framework}, termasuk \textit{persistence}, keamanan, dan \textit{internationalization}.
+%	\item Mendukung aplikasi \textit{event-driven} dan dinamis.
+%\end{enumerate}
 
 \play memiliki struktur yang dapat dilihat pada gambar \ref{fig:2_play_struktur}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.7]{Gambar/play-struktur}
-	\caption{Struktur Play Framework} 
+	\caption{Struktur Play Framework \cite{playforjava}} 
 	\label{fig:2_play_struktur}
 \end{figure}
 
-\subsubsection{Direktori conf.}
-Konfigurasi \play terdapat pada direktori \textit{conf}. Dalam direktori \textit{conf}, terdapat file \textit{application.conf} dan \textit{routes}. File \textit{application.conf} mengandung informasi data konfigurasi aplikasi, seperti \textit{logging}, koneksi basis data, dan port berapa server berjalan. File \textit{routes} menentukan \textit{routes} aplikasi, yaitu pemetaan dari URL HTTP ke kode aplikasi. Setiap \textit{routes} memiiki tiga bagian, yaitu HTTP \textit{method}, URL \textit{path}, dan \textit{action method}. HTTP \textit{method} merupakan metode yang dipakai dalam pengiriman HTTP. URL \textit{path} adalah URL yang dipakai untuk mengakses halaman. \textit{Action method} merupakan metode  yang dipanggil ketika mengakses halaman pada URL \textit{path}. Sebagai contoh dapat dilihat pada \ref{fig:2_play_routes}, HTTP \textit{method} yang dipakai pada URL /list adalah GET dan akan memanggil \textit{method} list pada kelas Products di controllers.
+\subsubsection{Direktori conf/}
+Konfigurasi \play terdapat pada direktori \textit{conf/}. Dalam direktori \textit{conf/}, terdapat file \textit{application.conf} dan \textit{routes}. File \textit{application.conf} mengandung informasi data konfigurasi aplikasi, seperti \textit{logging}, koneksi basis data, dan port berapa server berjalan. File \textit{routes} menentukan \textit{routes} aplikasi, yaitu pemetaan dari URL HTTP ke kode aplikasi. Setiap \textit{routes} memiiki tiga bagian, yaitu HTTP \textit{method}, URL \textit{path}, dan \textit{action method}. HTTP \textit{method} merupakan metode yang dipakai dalam pengiriman HTTP. URL \textit{path} adalah URL yang dipakai untuk mengakses halaman. \textit{Action method} merupakan metode  yang dipanggil ketika mengakses halaman pada URL \textit{path}. Sebagai contoh dapat dilihat pada \ref{fig:2_play_routes}, HTTP \textit{method} yang dipakai pada URL /list adalah GET dan akan memanggil \textit{method} list pada kelas Products di controllers.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.7]{Gambar/play-routes}
-	\caption{Contoh \textit{Routes}} 
+	\caption{Contoh \textit{Routes} \cite{playforjava}} 
 	\label{fig:2_play_routes}
 \end{figure}
 
 \subsubsection{Direktori public}
-Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, JavaScript, dan halaman statis HTML. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_struktur}.
+Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, JavaScript, dan halaman statis HTML. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_struktur}. Di contoh tersebut, file \textit{images/favicon.png} dapat diakses melalui URL \verb!@routes.Assets.versioned("images/favicon.png")!. 
 %
 %\begin{figure}[H]
 %	\centering
@@ -121,11 +120,11 @@ Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung 
 %\end{figure}
 
 \subsubsection{Direktori app.}
-Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_struktur}. 
+Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti kode sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_struktur}. 
 
 Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman \textit{view}. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request} berupa view. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. View dapat menerima parameter yang didefinisikan pada template view. Contoh view dengan menerima parameter berupa String dapat dilihat pada kode listing \ref{lst_2_view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view} dengan memberi parameter ``Hello World''. \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada kode listing \ref{lst_2_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima \textit{parameter} berupa ``Hello World''. Pada \cite{playforjava}, hasil Result memiliki tipe \verb!static!, tetapi pada \play 2.4 \verb!static! dihilangkan.
 
-\begin{lstlisting}[caption=Contoh View,label = {lst_2_view},language=Java]
+\begin{lstlisting}[caption=Contoh View (index.scala.html),label = {lst_2_view},language=Java]
 @(title: String)
 
 	<!DOCTYPE html>
@@ -150,19 +149,19 @@ Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java 
     }
 \end{lstlisting}
 
-Beberapa alternatif hasil Results, yaitu:
+Beberapa alternatif hasil Results \ref{lst_2_controller}, yaitu:
 \begin{enumerate}
-	\item \textbf{\textit{Method} ok} 
+	\item \textbf{\textit{Method} ok()}\\ 
 	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 200 atau sukses dalam mengirim HTTP Request.
-	\item \textbf{\textit{Method} notFound} 
+	\item \textbf{\textit{Method} notFound()}\\
 	Method yang berfungsi untuk mengembalikan Result dengan  kode \textit{HTTP Response} 404 atau tidak ada halaman yang dituju.
-	\item \textbf{\textit{Method} badRequest} 
+	\item \textbf{\textit{Method} badRequest()}\\
 	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 400 atau adanya kesalahan masukan pengguna.
-	\item \textbf{\textit{Method} internalServerError}
+	\item \textbf{\textit{Method} internalServerError()}\\
 	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 500 atau adanya kesalahan pada server.
-	\item \textbf{\textit{Method} status}
+	\item \textbf{\textit{Method} status()}\\
 	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} yang dapat ditentukan sendiri beserta pesannya.
-	\item \textbf{\textit{Method} redirect}
+	\item \textbf{\textit{Method} redirect()}\\
 	Method yang berfungsi untuk mengembalikan Result untuk mengalihkan halaman.
 \end{enumerate}
 
@@ -205,7 +204,7 @@ Untuk mendapatkan JSON, pertama menguraikan String menjadi JsonNode, lalu mendap
 	\item db.default.driver=com.mysql.jdbc.Driver\\
 			Merupakan driver basisdata yang digunakan.
 	\item db.default.url=``jdbc:mysql://localhost/Skripsi''\\
-			Merupakan url dari basisdata yang digunakan dengan tabel Skripsi.
+			Merupakan url dari basisdata yang digunakan dengan basisdata Skripsi.
 	\item db.default.username=``root''\\
 			Username yang digunakan pada basisdata.
 	\item db.default.password=``root''\\

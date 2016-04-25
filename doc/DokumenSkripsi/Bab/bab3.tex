@@ -9,12 +9,12 @@ Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terda
     		\item \textbf{Peta}
     		\item \textbf{Form Samping} yang terdiri dari beberapa bagian, yaitu:
     		\begin{enumerate}
-    			\item Dropdown Menu Kota
-    			\item Dropdown Menu Bahasa
-    			\item Textfield
-    			\item Tombol Swap
-    			\item Tombol Reset
-    			\item Tombol Find
+    			\item Dropdown Menu Kota, untuk memilih kota tujuan untuk pencarian rute.
+    			\item Dropdown Menu Bahasa, untuk memilih bahasa yang akan ditampilkan pada aplikasi.
+    			\item Textfield ``From'' \& ``To'', untuk menerima masukan pengguna.
+    			\item Tombol Swap, untuk menukar isi masukan pengguna antara Textfield ``From'' dan Textfield ``To''.
+    			\item Tombol Reset, untuk menyetel ulang peta dan masukan pengguna.
+    			\item Tombol Find, untuk mencari pencarian rute.
     		\end{enumerate}
 \end{enumerate}
 
@@ -729,13 +729,13 @@ Tujuan dari fungsi ini adalah merubah lokasi dalam bentuk \textit{point} menjadi
 	\item Melakukan pengecekan data \verb!location!. Jika \verb!location! sama dengan \verb!`start'! maka mengembalikan \verb!message_start!. Jika \verb!location! sama dengan \verb!`finish'!, maka mengembalikan \verb!message_finish!.
 	\item Jika bukan keduanya, maka memanggil fungsi \verb!mysqli_escape_string!.
 	\item Melakukan pengecekan pada tabel \textit{cache} ada atau tidak dengan \textit{key} \verb!cache_geocoding! dan bernilai sesuai dengan parameter \verb!location! atau tidak dan dimasukkan ke data \verb!cached_geocode!. Jika ada nilainya, langsung mengembalikan nilai tersebut.
-	\item Jika tidak ada, maka akan menambahkan \textit{query} \verb!?key=$gmaps_server_key&latlng=$location&sensor=false! pada \textit{URL} \url{https://maps.googleapis.com/maps/api/geocode/json} dimana \verb!gmaps_server_key! adalah \textit{key} untuk API Google dan \verb!latlng! adalah garis lintang dan garis bujur. Jika berhasil akses dan mendapatkan \verb!status! sama dengan \verb!`OK'!, maka akan menambahkan lokasi sugesti pada pengguna. Jika \verb!status! tidak sama dengan \verb!`OK'!', maka akan menampilkan pesan kesalahan. 
+	\item Jika tidak ada, maka akan menambahkan \textit{query} \verb!?key=$gmaps_server_key&latlng=$location&sensor=false! pada \textit{URL} \url{https://maps.googleapis.com/maps/api/geocode/json} dimana \verb!gmaps_server_key! adalah \textit{key} untuk API Google dan \verb!latlng! adalah garis lintang dan garis bujur. Jika berhasil akses dan mendapatkan \verb!status! sama dengan \verb!`OK'!, maka akan menambahkan lokasi sugesti pada pengguna. Jika \verb!status! tidak sama dengan \verb!`OK'!, maka akan menampilkan pesan kesalahan. 
 \end{itemize}
 \section{Analisis Sistem Usulan}
 \label{sec:perubahan}
 
 \subsection{Peta}
-Peta pada sistem usulan menggunakan JavaScript yang sama dengan sistem kini.
+Peta pada sistem usulan menggunakan OpenLayers yang sama dengan sistem kini.
 
 \subsection{Form Samping}
 \subsubsection{Dropdown Menu Kota}
@@ -865,7 +865,7 @@ to = Ke:
 ...
 \end{lstlisting}
 
-Pada \play, ada dua cara untuk melakukan i18n dan sudah tersedia method untuk i18n, yaitu:
+Pada \play, ada dua cara untuk melakukan i18n dan sudah tersedia metode untuk melakukan i18n, yaitu:
 \begin{enumerate}
 	\item Memanggil \textit{method} @Messages dengan parameter berupa String yang merupakan kunci dari file messages.LANG. Tetapi, dengan menggunakan cara ini, perlu dilakukan memuat ulang dua kali halaman \textit{web}. Kode dapat dilihat pada \ref{lst_3_i18n_play_1}
 	
@@ -889,7 +889,6 @@ Pada \play, ada dua cara untuk melakukan i18n dan sudah tersedia method untuk i1
 	\end{lstlisting}
 	
 \end{enumerate}
- memanggil method @Messages dengan parameter berupa String yang merupakan kunci dari file messages.LANG. Dengan memanggil method @Messages ini, akan mengganti dengan value pada file messages.LANG seperti pada kode listing \ref{lst_3_i18n_play}.
 
 \subsection{Pencarian Rute}
 Algoritma yang digunakan pada sistem usulan sama, tetapi ada beberapa struktur data yang berbeda yang akan dijelaskan sebagai berikut:
@@ -1025,14 +1024,14 @@ Aktivitas-aktivitas yang ada pada KIRI dapat dijelaskan sebagai berikut:
 \end{enumerate}
 
 
-\section{Analisis Class Diagram}
+\section{Analisis Kelas}
 \label{sec:kelasdiagram}
 Diagram kelas analisis KIRI dapat dilihat pada \ref{fig:3_classdiagram}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{Gambar/Class-Diagram-Analisis}
-	\caption{Class Diagram Analisis KIRI} 
+	\includegraphics[scale=0.6]{Gambar/Class-Diagram-Analisis}
+	\caption{Diagram Kelas Analisis KIRI} 
 	\label{fig:3_classdiagram}
 \end{figure}
 

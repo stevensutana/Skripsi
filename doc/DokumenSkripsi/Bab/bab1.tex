@@ -4,7 +4,7 @@
 \section{Latar Belakang}
 \label{sec:latarbelakang}
 
-KIRI \cite{statickiri} adalah sebuah aplikasi yang membantu pengguna dalam mengggunakan kendaraan umum. Peran KIRI sangat sederhana, yaitu memberitahu dimana lokasi sekarang dan kemana lokasi tujuan, lalu KIRI akan memberitahu bagaimana cara sampai ke lokasi tujuan dengan menggunakan kendaraan umum. 
+KIRI \cite{statickiri} adalah sebuah aplikasi yang membantu pengguna dalam menggunakan kendaraan umum. Peran KIRI sangat sederhana, yaitu jika diberitahu di mana lokasi sekarang dan kemana lokasi tujuan, lalu KIRI akan memberitahu bagaimana cara sampai ke lokasi tujuan dengan menggunakan kendaraan umum. 
 
 Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} merupakan bahasa \textit{scripting} yang cocok untuk pengembangan halaman \textit{web}. Tetapi menurut peneliti, bahasa PHP tidak cocok untuk proyek besar. Masalah yang sering dijumpai pada bahasa PHP adalah tidak ada \textit{type safety}. 
 
@@ -14,15 +14,15 @@ Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} mer
 
 \textit{Porting} adalah proses adaptasi perangkat lunak yang awalnya tidak ditujukan untuk dieksekusi pada lingkungan tertentu. Istilah \textit{porting} digunakan ketika mengacu pada perubahan yang dibuat ketika tidak kompatibel dengan lingkungan.
 
-Pengembangan yang akan dilakukan adalah melakukan \textit{porting} kode KIRI (PHP) menjadi \play agar struktur kode KIRI menjadi rapih dan bahasa yang digunakan adalah bahasa Java. Dengan demikian, penulis bermaksud membuat proyek tugas akhir dengan judul ``Porting PHP menjadi \play (Studi Kasus: KIRI \textit{Front-End})``
+Pengembangan yang akan dilakukan adalah melakukan \textit{porting} kode KIRI yang dibuat dalam bahasa PHP menjadi \play agar struktur kode KIRI menjadi rapih dan bahasa yang digunakan adalah bahasa Java. Dengan demikian, penulis bermaksud membuat proyek tugas akhir dengan judul ``Porting PHP menjadi \play (Studi Kasus: KIRI \textit{Front-End})``
 
 \section{Rumusan Masalah}
 \label{rumusanMasalah}
 Rumusan masalah yang akan dibahas pada skripsi ini adalah:
 \begin{enumerate}
 	\item Bagaimana memahami dan menganalisis kode KIRI yang sudah ada?
-	\item Bagaimana melakukan porting kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java) ?
-	\item Bagaimana perbandingan performa KIRI (PHP) dengan KIRI (Java)?
+	\item Bagaimana melakukan porting kode KIRI dalam bahasa PHP menjadi Play Framework (Java) ?
+	\item Bagaimana perbandingan performa KIRI dalam bahasa PHP dengan KIRI dalam bahasa Java dari segi kecepatan?
 \end{enumerate}
 
 \section{Tujuan}
@@ -30,8 +30,8 @@ Rumusan masalah yang akan dibahas pada skripsi ini adalah:
 Tujuan dengan membahas skripsi ini adalah:
 \begin{enumerate}
 	\item Memahami dan menganalisis kode KIRI.
-	\item Menjadikan kode KIRI \textit{Front-End Server Side}(PHP) menjadi Play Framework (Java).
-	\item Membandingkan performa KIRI (PHP) dengan KIRI (Java).
+	\item Menjadikan kode KIRI dalam bahasa PHP menjadi Play Framework (Java).
+	\item Membandingkan performa KIRI dalam bahasa PHP dengan KIRI dalam bahasa Java dari segi kecepatan.
 \end{enumerate}
 
 \section{Batasan Masalah}
@@ -39,8 +39,8 @@ Tujuan dengan membahas skripsi ini adalah:
 Beberapa batasan dengan skripsi ini adalah:
 \begin{enumerate}
 	\item Play Framework yang digunakan adalah versi 2.4.3.
-	\item Kode KIRI yang sudah ada diambil dari Github pascalalfadian\cite{githubkiri}.
-	\item URL \url{http://newmenjangan.cloudapp.net:8000} dan \url{https://angkot.web.id} online.
+	\item Kode KIRI yang digunakan adalah versi commit \verb!`b650bfa'! yang tersedia di Github pascalalfadian\cite{githubkiri}.
+	%\item URL \url{http://newmenjangan.cloudapp.net:8000} dan \url{https://angkot.web.id} online.
 \end{enumerate}
 
 \section{Metode Penelitian}
@@ -61,4 +61,8 @@ Setiap bab dalam penulisan ini memiliki sistematika yang dijelaskan ke dalam poi
 		\item Bab 1: Pendahuluan, yaitu membahas tentang latar belakang, rumusan masalah, tujuan, batasan masalah, metode penelitian dan sistematika penulisan.
 		\item Bab 2: Dasar Teori, yaitu membahas mengenai teori-teori yang mendukung berjalannya skripsi ini yang berisi tentang penggunaan Play Framework.
 		\item Bab 3: Analisis, yaitu membahas mengenai analisis masalah yang berisi tentang kode KIRI \textit{Front-End Server Side} serta melakukan \textit{porting} kode KIRI \textit{Front-End Server Side} menjadi Play Framework.
+	\item Bab 4: Perancangan, yaitu membahas mengenai perancangan aplikasi, meliputi diagram kelas rinci beserta deskripsi kelas dan fungsinya dan perancangan antarmuka aplikasi.
+	\item Bab 5: Implementasi dan Pengujian, yaitu membahas mengenai implementasi dan pengujian aplikasi, meliputi lingkungan implementasi, hasil implementasi, pengujian fungsional, dan pengujian eksperimental.
+	\item Bab 6: Kesimpulan dan Saran, yaitu berisi kesimpulan dari hasil pembangunan aplikasi beserta saran untuk pengem- bangan berikutnya.
 	\end{enumerate}
+		
