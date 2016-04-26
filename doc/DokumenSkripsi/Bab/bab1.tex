@@ -6,9 +6,10 @@
 
 KIRI \cite{statickiri} adalah sebuah aplikasi yang membantu pengguna dalam menggunakan kendaraan umum. Peran KIRI sangat sederhana, yaitu jika diberitahu di mana lokasi sekarang dan kemana lokasi tujuan, lalu KIRI akan memberitahu bagaimana cara sampai ke lokasi tujuan dengan menggunakan kendaraan umum. 
 
-Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} merupakan bahasa \textit{scripting} yang cocok untuk pengembangan halaman \textit{web}. Tetapi menurut peneliti, bahasa PHP tidak cocok untuk proyek besar. Masalah yang sering dijumpai pada bahasa PHP adalah tidak ada \textit{type safety}. 
+Kode KIRI \cite{githubkiri} menggunakan bahasa PHP. Bahasa PHP \cite{phpnet} merupakan bahasa \textit{scripting} yang cocok untuk pengembangan halaman \textit{web}. Tetapi menurut peneliti, bahasa PHP tidak cocok untuk proyek besar. Masalah yang sering dijumpai pada bahasa PHP adalah tidak ada deklarasi tipe variabel. Tipe variabel pada PHP ditentukan pada saat \textit{runtime} tergantung pada konteks apa variabel tersebut digunakan. Hal ini memicu banyaknya kesalahan tipe data dalam aplikasi.
 
-\textit{Type safety} \footnote{ \url{https://en.wikipedia.org/wiki/Type_safety}, diakses 27 Oktober 2015} adalah fitur keamanan untuk mencegah kesalahan tipe data. Kesalahan tipe data dapat disebabkan oleh perbedaan tipe untuk konstanta program, variabel, dan fungsi. Sebagai contoh tipe data yang dibutuhkan berupa Float tetapi dalam program tipe data yang dimasukkan berupa Integer. Beberapa bahasa pemrograman terdapat fitur \textit{type safety}. Java mendukung Type Safety.
+%\textit{Type safety} \footnote{ \url{https://en.wikipedia.org/wiki/Type_safety}, diakses 27 Oktober 2015} adalah fitur keamanan untuk mencegah kesalahan tipe data. Kesalahan tipe data dapat disebabkan oleh perbedaan tipe untuk konstanta program, variabel, dan fungsi. Sebagai contoh tipe data yang dibutuhkan berupa Float tetapi dalam program tipe data yang dimasukkan berupa Integer. Beberapa bahasa pemrograman terdapat fitur \textit{type safety}. Java mendukung Type Safety.
+Bahasa pemrograman Java \cite{java} merupakan bahasa pemrograman yang \textit{statically-typed}, yang berarti semua varibel harus dideklarasikan terlebih dahulu sebelum digunakan. Tipe data variabel menentukan nilai yang dapat dimasukkan ke variabel tersebut dan operasi yang dapat dilakukan pada variabel tersebut. Dengan menggunakan Java, kesalahan tipe data dapat dicegah. Kesalahan tipe data dapat disebabkan oleh perbedaan tipe untuk konstanta program, variabel, dan fungsi. Sebagai contoh tipe data yang dibutuhkan berupa Integer tetapi dalam program tipe data yang dimasukkan berupa String.
 
 \play adalah \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. \play menerapkan konsep MVC, yaitu Model, View, dan Controller\cite{playforjava}. 
 
@@ -30,7 +31,7 @@ Rumusan masalah yang akan dibahas pada skripsi ini adalah:
 Tujuan dengan membahas skripsi ini adalah:
 \begin{enumerate}
 	\item Memahami dan menganalisis kode KIRI.
-	\item Menjadikan kode KIRI dalam bahasa PHP menjadi Play Framework (Java).
+	\item Melakukan porting kode KIRI dalam bahasa PHP menjadi Play Framework (Java).
 	\item Membandingkan performa KIRI dalam bahasa PHP dengan KIRI dalam bahasa Java dari segi kecepatan.
 \end{enumerate}
 

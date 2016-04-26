@@ -60,17 +60,47 @@ Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah 
 	\item Celah keamanan dalam server basis data.\\
 	Terkadang celah keamanan dapat berada dalam perangkat lunak server basis data itu sendiri, seperti yang terjadi pada fungsi-fungsi real\_escape\_chars() di server MySQL.
 \end{itemize}
-\textbf{Prepared Statement}\\
-Prepared Statement adalah fitur yang digunakan untuk mengeksekusi \textit{statement} basisdata berulang kali dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan \textit{statement} SQL seperti \textit{query} atau \textit{update}, \textit{statement} mengambil bentuk \textit{template} yang diganti dengan nilai-nilai konstan tertentu yang diganti selama setiap eksekusi.
 
-JDBC menyediakan objek PreparedStatement untuk mendukung Prepared Statement. Alasan lain menggunakan PreparedStatement adalah untuk mengurangi waktu eksekusi. Keuntungan lainnya adalah \textit{statement} SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, objek PreparedStatement berisi tidak hanya sebuah \textit{statement} SQL, tetapi \textit{statement} SQL yang telah pre-kompilasi. Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
+\textbf{Prepared Statement}\\
+Prepared Statement adalah fitur yang digunakan untuk mengeksekusi \textit{statement} basisdata berulang kali dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan \textit{statement} SQL seperti \textit{query} atau \textit{update}, \textit{statement} mengambil bentuk \textit{template} yang diganti dengan nilai-nilai konstan tertentu yang diganti selama setiap eksekusi. Dengan menggunakan Prepared Statement, waktu eksekusi untuk \textit{statement} SQL berkurang dan \textit{statement} SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, Prepared Statement berisi tidak hanya sebuah \textit{statement} SQL, tetapi \textit{statement} SQL yang telah dilakukan pre-kompilasi.
+
+JDBC menyediakan kelas PreparedStatement untuk mendukung Prepared Statement. Hal pertama yang dilakukan adalah menyiapkan koneksi untuk \textit{database}. Memanggil objek \verb!DB! yang disediakan oleh \play untuk mendapatkan koneksi ke \textit{database}. Dengan memanggil objek DB, koneksi ke database sudah disediakan sesuai dengan konfigurasi database. 
+Untuk menggunakan PreparedStatement, pertama membuat objek yang berupa PreparedStatement dengan menyiapkan \textit{statement} SQL tetapi nilai yang ingin dimasukkan ke \textit{statement} SQL diberi \verb!`?'! terlebih dahulu.
+Kelas PreparedStatement mempunyai beberapa \textit{method} dengan rincian: 
+ \begin{itemize}
+ 	\item \textbf{public void setString(int parameterIndex,String x)}\\
+ 			Berfungsi untuk menentukan nilai yang ingin dimasukkan.\\[2\baselineskip]
+ 			\textbf{Parameter:}
+ 			\begin{itemize}
+ 				\item \textbf{parameterIndex} Indeks yang ingin dimasukkan nilainya pada \textit{statement} SQL.
+ 				\item \textbf{String x} Nilai yang ingin dimasukkan.
+ 			\end{itemize}
+ 			\textbf{Kembalian:} Tidak ada.
+ 	\item \textbf{public void executeUpdate()}\\
+ 			Berfungsi untuk eksekusi statement SQL yang merupakan statement SQL manipulasi data.
+ 			\textbf{Kembalian:} Tidak ada.
+ 	\item \textbf{public ResultSet executeQuery()}\\
+ 			Berfungsi untuk eksekusi statement SQL.\\
+ 			\textbf{Kembalian:} Objek ResultSet yang merupakan objek yang dibuat dari \textit{statement} SQL.
+\end{itemize}
+Setelah selesai dengan koneksi \textit{database}, koneksi \textit{database} harus ditutup.
+ 
+ Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
 
 \begin{lstlisting}[caption=Contoh PreparedStatement,label = {lst_2_prepared}]
-		java.sql.PreparedStatement stmt = connection.prepareStatement(
-               "SELECT * FROM users WHERE USERNAME = ? AND ROOM = ?");
-		stmt.setString(1, username);
-		stmt.setInt(2, roomNumber);
-		stmt.executeQuery();
+		Connection connection = DB.getConnection();
+        try {
+            java.sql.PreparedStatement stmt = connection.prepareStatement(
+                    "INSERT INTO cache(type, cacheKey, cacheValue) VALUES (?,?,?)");
+            stmt.setString(1,type);
+            stmt.setString(2, key);
+
+            stmt.setString(3, String.valueOf(value));
+            stmt.executeUpdate();
+            connection.close();
+        } catch (Exception e) {
+            log_error("Warning: Can't store cache "+e.getMessage());
+        }
 \end{lstlisting}
 
 \section{Play Framework}

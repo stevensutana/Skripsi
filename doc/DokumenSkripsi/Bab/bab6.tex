@@ -6,15 +6,14 @@
 
 Dari hasil \textit{porting} aplikasi KIRI, didapatkan kesimpulan-kesimpulan sebagai berikut:
 	\begin{enumerate}
-		\item Aplikasi KIRI berhasil dilakukan porting dari bahasa PHP menjadi bahasa Java.
-		\item Aplikasi KIRI telah berhasil dibangun dengan menggunakan Play Framework.
-		\item Aplikasi KIRI berhasil dibangun sesuai dengan fitur-fitur yang ada pada Github pascalalfadian\cite{githubkiri}.
-		\item Dari hasil pengujian eksperimental, terlihat waktu eksekusi aplikasi KIRI dalam Play Framework dalam mencari rute lebih cepat.
+		\item Berhasil memahami dan menganalisis kode KIRI dengan melakukan implementasi kode KIRI menjadi Play Framework (Java).
+		\item Berhasil melakukan porting kode KIRI dalam bahasa PHP menjadi Play Framework (Java). 
+		\item Dari hasil pengujian eksperimental, waktu eksekusi KIRI menggunakan Play Framework dalam memuat konten dinamis lebih cepat, sedangkan dalam memuat konten statis, PHP lebih unggul.
 	\end{enumerate}
 
 \section{Saran}
 \label{sec:saran}
 Dari hasil penelitian termasuk kesimpulan yang didapat, berikut adalah beberapa saran untuk pengembangan:
 \begin{enumerate}
-	\item Penelitian ini menggunakan layanan web untuk algoritma pencarian rute terpendek. Jika layanan web ini dalam keadaan nyala, maka pencarian rute pada aplikasi KIRI tidak dapat berjalan. Sebaiknya algoritma pencarian rute dijalankan dalam aplikasi KIRI sehingga tidak ada aplikasi KIRI dapat berjalan terus.
+	\item Penelitian ini menggunakan layanan web untuk algoritma pencarian rute terpendek. Jika layanan web ini dalam keadaan tidak nyala, maka pencarian rute pada aplikasi KIRI tidak dapat berjalan. Sebaiknya algoritma pencarian rute dijalankan dalam aplikasi KIRI sehingga aplikasi KIRI dapat berjalan terus tanpa ada ketergantungan dari layanan web diluar KIRI.
 \end{enumerate}
