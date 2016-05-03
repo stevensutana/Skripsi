@@ -13,60 +13,56 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 	\item Application\\
 	Kelas ini merupakan kelas yang sudah disediakan \play dan merupakan kelas Controller pada aplikasi KIRI. Atribut yang dimiliki kelas Application adalah:
 	\begin{itemize}
-		\item \textbf{DynamicForm dynamicForm:} objek DynamicForm yang berperan dalam mengambil query pada URL. 
+		\item \textbf{DynamicForm dynamicForm:} objek DynamicForm yang berperan dalam mengambil nilai pada \textit{query} parameter URL. 
 		\item \textbf{Comparator<ArrayList<String>{}> comparator:} objek Comparator yang berperan dalam fungsi untuk membandingkan String dalam ArrayList.
-		\item \textbf{CacheApi cache:} objek CacheApi yang berperan dalam mengambil data \textit{cache} yang telah dibuat oleh aplikasi KIRI.
+		\item \textbf{CacheApi cache:} objek CacheApi yang berperan dalam mengambil data \textit{cache} yang telah dibuat oleh aplikasi.
 		
 	\end{itemize}
 	\textit{Method-method} yang dimiliki kelas ini merupakan \textit{action method} dengan rincian sebagai berikut:
 	\begin{itemize}
 		\item \textbf{public Result index()}\\
 		Berfungsi untuk validasi \textit{cache} \verb!locale! dan \verb!region! serta mengarahkan pengguna ke halaman utama KIRI.\\
-		\textbf{Kembalian:}  Halaman utama KIRI.
+		\textbf{Kembalian:}  Result yang berupa Halaman utama KIRI.
 		
 		\item \textbf{public Result handle()}\\
 		Berfungsi untuk melakukan logikal data ketika pengguna mencari rute pada KIRI.\\
 		\textbf{Kembalian:}  Halaman utama KIRI dengan hasil pencarian rute.
 		
 		\item \textbf{public String getFromMenjangan(String start,String finish,double mw,double wm,double pt)}\\
-		Berfungsi untuk mendapatkan hasil dari menjangan.\\
+		Berfungsi untuk mendapatkan hasil dari \url{http://newmenjangan.cloudapp.net:8000}.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{start} Lokasi awal pengguna.
-					\item \textbf{finish} Lokasi akhir pengguna.
+					\item \textbf{start} Koordinat lokasi awal pengguna.
+					\item \textbf{finish} Koordinat lokasi akhir pengguna.
 					\item \textbf{mw} Alternatif minimum walk.
 					\item \textbf{wm} Alternatif walking multiplier.
 					\item \textbf{pt} Alternatif penalty transfer.
-				\end{itemize}.
-				
-		\textbf{Kembalian:}  Hasil dari layanan HTTP menjangan dengan query parameter.
+				\end{itemize}
+		\textbf{Kembalian:}  Hasil dari layanan web \url{http://newmenjangan.cloudapp.net:8000} dengan \textit{query} parameter.
 		
 		\item \textbf{public String getFromMenjangan(String start,String finish)}\\
-		Berfungsi untuk mendapatkan hasil dari menjangan.\\
+		Berfungsi untuk mendapatkan hasil dari \url{http://newmenjangan.cloudapp.net:8000}.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{start} Lokasi awal pengguna.
-					\item \textbf{finish} Lokasi akhir pengguna.
-				\end{itemize}.
-				
-		\textbf{Kembalian:}  Hasil dari layanan HTTP menjangan dengan query parameter.
+					\item \textbf{start} Koordinat lokasi awal pengguna.
+					\item \textbf{finish} Koordinat lokasi akhir pengguna.
+				\end{itemize}
+		\textbf{Kembalian:}  Hasil dari layanan web \url{http://newmenjangan.cloudapp.net:8000} dengan \textit{query} parameter.
 		
 		\item \textbf{public String getFromMenjangan(String start)}\\
-		Berfungsi untuk mendapatkan hasil dari menjangan.\\
+		Berfungsi untuk mendapatkan hasil dari \url{http://newmenjangan.cloudapp.net:8000}.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{start} Lokasi awal pengguna.
-				\end{itemize}.
-				
-		\textbf{Kembalian:}  Hasil dari layanan HTTP menjangan dengan query parameter.
+					\item \textbf{start} Koordinat lokasi awal pengguna.
+				\end{itemize}
+		\textbf{Kembalian:}  Hasil dari layanan web \url{http://newmenjangan.cloudapp.net:8000} dengan \textit{query} parameter.
 		
 		\item \textbf{public String file\_get\_contents(String url)}\\
 		Berfungsi untuk mendapatkan hasil dari URL tertentu.\\
 		\textbf{Parameter:}
 				\begin{itemize}
 					\item \textbf{url} URL yang ingin didapatkan.
-				\end{itemize}.
-				
+				\end{itemize}
 		\textbf{Kembalian:}  Hasil dari layanan HTTP dengan URL tertentu.
 		
 		\item \textbf{public String getPlacesAPI(String location,String radius,String querystring)}\\
@@ -76,17 +72,15 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 					\item \textbf{location} Lokasi yang ingin dicari(garis lintang dan garis bujur).
 					\item \textbf{radius} Radius dari lokasi yang ingin dicari.
 					\item \textbf{querystring} Kata yang berkaitan dengan lokasi yang ingin dicari.
-				\end{itemize}.
-				
+				\end{itemize}
 		\textbf{Kembalian:}  Hasil dari layanan HTTP menjangan dengan query parameter.
 		
 		\item \textbf{public String format\_traveltime(double time)}\\
 		Berfungsi untuk melakukan format waktu.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{time} Waktu yang ingin diubah formatnya.
-				\end{itemize}.
-				
+					\item \textbf{time} Waktu yang ingin diubah formatnya sesuai format lokalisasi pengguna.
+				\end{itemize}
 		\textbf{Kembalian:}  Hasil waktu yang sudah diformat.
 		
 		\item \textbf{public String retrieve\_data(String param)}\\
@@ -94,17 +88,15 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		\textbf{Parameter:}
 				\begin{itemize}
 					\item \textbf{param} Query yang ingin didapatkan.
-				\end{itemize}.
-				
-		\textbf{Kembalian:}  Data pada query URL.
+				\end{itemize}
+		\textbf{Kembalian:}  Data pada \textit{query} paremeter URL.
 		
 		\item \textbf{public boolean check\_apikey(String apikey)}\\
 		Berfungsi untuk validasi \verb!apikey! yang digunakan valid atau apikey yang digunakan ada batasan alamat IP.\\
 		\textbf{Parameter:}
 				\begin{itemize}
 					\item \textbf{apikey} Apikey yang ingin dicek.
-				\end{itemize}.
-				
+				\end{itemize}
 		\textbf{Kembalian:}  Hasil pengecekan apikey dapat dipakai atau tidak. Jika tidak dapat dipakai, akan mengembalikan hasil pesan kesalahan.
 		
 		\item \textbf{public String humanize\_point(String location)}\\
@@ -112,8 +104,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		\textbf{Parameter:}
 				\begin{itemize}
 					\item \textbf{location} Titik koordinat lokasi.
-				\end{itemize}.
-				
+				\end{itemize}
 		\textbf{Kembalian:}  Nama lokasi tempat.
 		
 		\item \textbf{public String format\_distance(double distance,String locale)}\\
@@ -122,8 +113,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 				\begin{itemize}
 					\item \textbf{distance} Jarak yang ingin diubah formatnya.
 					\item \textbf{locale} Lokalisasi bahasa.
-				\end{itemize}.
-				
+				\end{itemize}
 		\textbf{Kembalian:}  Hasil distance yang sudah diformat sesuai lokalisasi.
 	\end{itemize}
 	\item Constants\\
@@ -132,7 +122,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		\item \textbf{Alternative[] ALTERNATIVES:} Objek \verb!Alternative! dalam \textit{array}.
 		\item \textbf{Map<String,ProtoRegion> REGIONINFOS:} HashMap yang terdiri dari kunci berupa String dan berisi objek ProtoRegion.
 		\item \textbf{String CACHE\_GEOCODING:} Untuk mencari atau menyimpan pada basisdata cache dengan type geocoding.
-		\item \textbf{String CACHE\_SEARCHPLACE:} Untuk mencari atau menyimpan pada basisdata cache dengan type searchplace.
+		\item \textbf{String CACHE\_SEARCHPLACE:} Untuk mencari atau menyimpan pada tabel cache dengan tipe searchplace.
 		\item \textbf{String PLACES\_URL:} URL Google API untuk mencari nama lokasi tempat.
 		\item \textbf{int SEARCH\_MAXRESULT} Angka untuk menentukan batas maksimal hasil pencarian.
 		\item \textbf{String GMAPS\_SERVER\_KEY:} Kunci agar dapat akses Google API.
@@ -148,23 +138,23 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		\item \textbf{String PROTO\_LOCALE\_ENGLISH:} Nilai dari \textit{query} \verb!locale! dengan isi \verb!`en'!.
 		\item \textbf{String PROTO\_LOCATION:} Untuk menyimpan pada HashMap dengan \textit{key} location.
 		\item \textbf{String PROTO\_MESSAGE:} Untuk menampilkan JSON dengan \textit{key} message.
-		\item \textbf{String PROTO\_MODE\_FINDROUTE:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
-		\item \textbf{String PROTO\_MODE\_REPORTERROR:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
-		\item \textbf{String PROTO\_MODE\_SEARCH:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_MODE\_FINDROUTE:} Untuk mendapatkan nilai dari \textit{query} parameter \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_MODE\_REPORTERROR:} Untuk mendapatkan nilai dari \textit{query} parameter \verb!mode! pada protokol.
+		\item \textbf{String PROTO\_MODE\_SEARCH:} Untuk mendapatkan nilai dari \textit{query} parameter \verb!mode! pada protokol.
 		\item \textbf{String PROTO\_MODE\_NEARBYTRANSPORTS:} Untuk mendapatkan nilai dari \textit{query}  \verb!mode! pada protokol.
 		\item \textbf{String PROTO\_NEARBYTRANSPORTS:} Untuk menampilkan JSON dengan \textit{key} \verb!nearbytransports!.
 		\item \textbf{String PROTO\_PLACENAME:} Untuk menampilkan JSON dengan \textit{key} \verb!placename!.
-		\item \textbf{String PROTO\_PRESENTATION\_DESKTOP:} Untuk mengetahui apakah aplikasi dibuka di \textit{desktop} atau tidak.
-		\item \textbf{String PROTO\_PRESENTATION\_MOBILE:} Untuk mengetahui apakah aplikasi dibuka di \textit{mobile} atau tidak.
-		\item \textbf{String PROTO\_REGION:} Untuk mendapatkan nilai dari \textit{query} URL \verb!region!.
+		\item \textbf{String PROTO\_PRESENTATION\_DESKTOP:} Untuk mengetahui apakah aplikasi dibuka di \textit{desktop}.
+		\item \textbf{String PROTO\_PRESENTATION\_MOBILE:} Untuk mengetahui apakah aplikasi dibuka di \textit{mobile}.
+		\item \textbf{String PROTO\_REGION:} Untuk mendapatkan nilai dari \textit{query} parameter \verb!region!.
 		\item \textbf{String PROTO\_REGION\_BANDUNG:} Region Bandung dengan kode \verb!`bdo'!.
 		\item \textbf{String PROTO\_REGION\_JAKARTA:} Region Jakarta dengan kode \verb!`jkt'!.
 		\item \textbf{String PROTO\_REGION\_SURABAYA:} Region Surabaya dengan kode \verb!`sby'!.
 		\item \textbf{String PROTO\_REGION\_MALANG:} Region Malang dengan kode \verb!`mlg'!.
-		\item \textbf{String PROTO\_ROUTESTART:} Untuk mendapatkan nilai dari \textit{query} URL \verb!start!.
+		\item \textbf{String PROTO\_ROUTESTART:} Untuk mendapatkan nilai dari \textit{query} parameter \verb!start!.
 		\item \textbf{String PROTO\_ROUTINGRESULT:} Untuk menampilkan JSON dengan \textit{key} \verb!routingresult!.
 		\item \textbf{String PROTO\_ROUTINGRESULTS:} Untuk menampilkan JSON dengan \textit{key} \verb!routingresults!.
-		\item \textbf{String PROTO\_SEARCH\_QUERYSTRING:} Untuk mendapatkan nilai dari \textit{query} URL \verb!querystring!.
+		\item \textbf{String PROTO\_SEARCH\_QUERYSTRING:} Untuk mendapatkan nilai dari \textit{query} parameter \verb!querystring!.
 		\item \textbf{String PROTO\_SEARCH\_RESULT:} Untuk menampilkan JSON dengan \textit{key} \verb!searchresult!.
 		\item \textbf{String PROTO\_STATUS:} Untuk menampilkan JSON dengan \textit{key} \verb!status!.
 		\item \textbf{String PROTO\_STATUS\_ERROR:} Untuk menampilkan JSON dengan nilai \verb!`error'!.
@@ -179,7 +169,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 	
 	
 	\item Alternative\\
-	Kelas yang berada pada \textit{package} Models. Kelas ini untuk merepresentasikan alternatif dalam pencarian rute pada URL \textit{http://newmenjangan.cloudapp.net:8000}. Kelas Alternative mempunyai atribut antara lain:
+	Kelas yang berada pada \textit{package} models. Kelas ini untuk merepresentasikan alternatif dalam pencarian rute pada URL \textit{http://newmenjangan.cloudapp.net:8000}. Kelas Alternative mempunyai atribut antara lain:
 	\begin{itemize}
 		\item \textbf{double mw:} Maximumwalk dari alternatif.
 		\item \textbf{double wm:} Walkingmultiplier dari alternatif.
@@ -202,7 +192,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 	\end{itemize}
 	
 	\item ProtoRegion\\
-	Kelas yang berada pada \textit{package} Models. Kelas ini untuk merepresentasikan kota dengan masing-masing mempunyai atribut sendiri. Kelas ProtoRegion mempunyai atribut antara lain:
+	Kelas yang berada pada \textit{package} models. Kelas ini untuk merepresentasikan kota dengan atribut masing-masing. Kelas ProtoRegion mempunyai atribut antara lain:
 	\begin{itemize}
 		\item \textbf{double lat:} Titik lintang dari kota tertentu.
 		\item \textbf{double lon:} Titik bujur dari kota tertentu.
@@ -240,27 +230,18 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 	\end{itemize}
 	
 	\item Utils\\
-	Kelas yang merupakan kelas pembantu untuk fungsi-fungsi dalam aplikasi KIRI. Kelas Utils mempunyai \textit{Method-method} dengan rincian sebagai berikut:
+	Kelas yang merupakan kelas pembantu untuk fungsi-fungsi dalam aplikasi KIRI. Kelas Utils mempunyai \textit{method-method} dengan rincian sebagai berikut:
 	\begin{itemize}
 	
 		\item \textbf{public static void log\_statistic(String verifier,String type,String additional\_info)}\\
-		Berfungsi untuk memasukkan data dalam basisdata statistic.\\
+		Berfungsi untuk memasukkan data dalam tabel statistic.\\
 		\textbf{Parameter:}
 				\begin{itemize}
 					\item \textbf{verifier} Apikey yang mengisi data ke tabel.
-					\item \textbf{type} Tipe statistic.
+					\item \textbf{type} Tipe statistik.
 					\item \textbf{additional\_info} Keterangan statistik.
 				\end{itemize}.
 		\textbf{Kembalian:}  Tidak ada.
-		
-		\item \textbf{public static boolean domain\_matches(String url,String filter)}\\
-		Berfungsi untuk pengecekan URL dengan filter sama atau tidak.\\
-		\textbf{Parameter:}
-				\begin{itemize}
-					\item \textbf{url} Apikey yang mengisi data ke tabel.
-					\item \textbf{filter} Filter untuk URL.
-				\end{itemize}.
-		\textbf{Kembalian:}  \texttt{true} jika URL sama dengan filter, \texttt{false} jika tidak sama.
 	
 %		\item \textbf{public static boolean pregMatch(String regex, String content)}\\
 %		Berfungsi untuk pengecekan apakah dalam suatu kalimat mengandung kata tertentu.\\
@@ -323,10 +304,10 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 %		\textbf{Kembalian:}  Angka dalam satuan radian.
 	
 		\item \textbf{public static void log\_error(String message)}\\
-		Berfungsi untuk melakukan log dengan pesan tertentu.\\
+		Berfungsi untuk melakukan \textit{log} dengan pesan tertentu.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{message} Pesan yang ingin dilog.
+					\item \textbf{message} Pesan yang ingin dikeluarkan.
 				\end{itemize}.
 		\textbf{Kembalian:}  Tidak ada.
 		
@@ -334,7 +315,7 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		Berfungsi untuk melakukan validasi locale yang didapat dari cache.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{locale} Input locale.
+					\item \textbf{locale} Masukan locale.
 				\end{itemize}.
 		\textbf{Kembalian:}  Locale yang sudah divalidasi.
 		
@@ -342,14 +323,14 @@ Deskripsi kelas beserta fungsi dari diagram kelas rinci tersebut adalah sebagai 
 		Berfungsi untuk melakukan validasi region yang didapat dari cache.\\
 		\textbf{Parameter:}
 				\begin{itemize}
-					\item \textbf{region} Input region.
+					\item \textbf{region} Masukan region.
 				\end{itemize}.
 		\textbf{Kembalian:}  Region yang sudah divalidasi.
 		
 	\end{itemize}
 	
 	\item Index.scala.html\\
-	Kelas yang berada pada package Views dan berfungsi untuk tampilan pada aplikasi KIRI.
+	Kelas yang berada pada package views dan berfungsi untuk tampilan pada aplikasi KIRI.
 	
 \end{enumerate}
 
@@ -389,10 +370,10 @@ Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:4_KIRI_main}), terda
     \end{enumerate}
 
 \subsection{Peta}
-Peta berfungsi untuk memudahkan pengguna dalam memilih lokasi awal dan lokasi akhir serta memberikan gambaran rute yang telah dicari oleh KIRI. KIRI menggunakan OpenLayers yang berbasis JavaScript untuk memuat peta pada halaman \textit{web}. 
+Peta berfungsi untuk memudahkan pengguna dalam memilih lokasi awal dan lokasi akhir serta memberikan gambaran rute yang telah dicari oleh KIRI. KIRI menggunakan OpenLayers yang berbasis JavaScript untuk memuat peta pada halaman web. 
 
 \subsection{Form Samping}
-Form yang terdapat pada halaman utama KIRI (Gambar \ref{fig:4_KIRI_form}) terdiri dari:
+\textit{Form} yang terdapat pada halaman utama KIRI (Gambar \ref{fig:4_KIRI_form}) terdiri dari:
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{Gambar/mockup-form}

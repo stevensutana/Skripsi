@@ -9,12 +9,12 @@ Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terda
     		\item \textbf{Peta}
     		\item \textbf{Form Samping} yang terdiri dari beberapa bagian, yaitu:
     		\begin{enumerate}
-    			\item Dropdown Menu Kota, untuk memilih kota tujuan untuk pencarian rute.
-    			\item Dropdown Menu Bahasa, untuk memilih bahasa yang akan ditampilkan pada aplikasi.
-    			\item Textfield ``From'' \& ``To'', untuk menerima masukan pengguna.
-    			\item Tombol Swap, untuk menukar isi masukan pengguna antara Textfield ``From'' dan Textfield ``To''.
-    			\item Tombol Reset, untuk menyetel ulang peta dan masukan pengguna.
-    			\item Tombol Find, untuk mencari pencarian rute.
+    			\item \textbf{Dropdown Menu Kota}, untuk memilih kota tujuan.
+    			\item \textbf{Dropdown Menu Bahasa}, untuk memilih bahasa yang akan ditampilkan pada aplikasi.
+    			\item \textbf{Textfield ``From'' \& ``To''}, untuk menerima masukan pengguna.
+    			\item \textbf{Tombol Swap}, untuk menukar isi masukan pengguna antara Textfield ``From'' dan Textfield ``To''.
+    			\item \textbf{Tombol Reset}, untuk menyetel ulang peta dan masukan pengguna.
+    			\item \textbf{Tombol Find}, untuk mencari pencarian rute.
     		\end{enumerate}
 \end{enumerate}
 
@@ -26,7 +26,7 @@ Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terda
 \end{figure}
 
 \subsection{Peta}
-Peta pada aplikasi KIRI berfungsi untuk menerima masukan pengguna berupa klik,  menampilkan titik start dan finish, serta menampilkan hasil pencarian rute.
+Peta pada aplikasi KIRI berfungsi untuk menerima masukan pengguna berupa klik,  menampilkan lokasi start dan finish, serta menampilkan hasil pencarian rute.
 
 \begin{figure}[H]
 	\centering
@@ -35,29 +35,26 @@ Peta pada aplikasi KIRI berfungsi untuk menerima masukan pengguna berupa klik,  
 	\label{fig:3_KIRI_peta}
 \end{figure}
 
-KIRI menggunakan OpenLayers yang berbasis JavaScript untuk memuat peta pada halaman \textit{web}. Pertama melakukan deklarasi peta yang digunakan menggunakan BingMaps. Penggunaan BingMaps membutuhkan dua \textit{parameter}, yaitu \textit{key} yang merupakan kunci untuk menggunakan BingMaps dan \textit{imagerySet} yang merupakan tipe peta pada BingMaps. Contoh deklarasi peta dapat dilihat pada kode listing \ref{lst_3_php_peta_bing}.
+KIRI menggunakan OpenLayers yang berbasis JavaScript untuk memuat peta pada halaman web. Pertama melakukan deklarasi peta yang digunakan menggunakan BingMaps. Penggunaan BingMaps membutuhkan dua parameter, yaitu \textit{key} yang merupakan kunci untuk menggunakan BingMaps dan \textit{imagerySet} yang merupakan tipe peta pada BingMaps. Contoh deklarasi peta dapat dilihat pada kode listing \ref{lst_3_php_peta_bing}.
 
 \begin{lstlisting}[caption=Deklarasi peta BingMaps,label = {lst_3_php_peta_bing}]
 var mapLayer = new ol.layer.Tile(
 {
 	source : new ol.source.BingMaps(
-	{
-		key : 'AuV7xXD6_UMiQ5BLoZr0xkpjLpzWqMT55772Q8XtLIQeuDebHPKiNXSlZXxEr1GA',
-		imagerySet : 'Road'
-	})
+		{
+			key : 'AuV7xXD6_UMiQ5BLoZr0xkpjLpzWqMT55772Q8XtLIQeuDebHPKiNXSlZXxEr1GA',
+			imagerySet : 'Road'
+		})
 });
-\end{lstlisting}
-
-Untuk menambahkan fitur pada peta OpenLayers, seperti membuat \textit{marker} pada peta dan membuat rute pada peta dapat dicapai dengan membuat objek \verb!ol.source.Vector! seperti pada kode listing \ref{lst_3_php_peta_olvector}.
-
-\begin{lstlisting}[caption=Objek ol.source.Vector,label = {lst_3_php_peta_olvector}]
 var resultVectorSource = new ol.source.Vector();
 var inputVectorSource = new ol.source.Vector();
 \end{lstlisting}
 
-Setelah deklarasi peta beserta konfigurasi fitur yang terdapat pada peta, memasukkan semua fitur pada \textit{layers} dan \textit{target} untuk memasukkan \textit{id tag} yang digunakan pada HTML seperti pada kode listing \ref{lst_3_php_peta_instansiasi}.
+Untuk menambahkan fitur pada peta OpenLayers, seperti membuat \textit{marker} pada peta dan membuat rute pada peta dapat dicapai dengan menyiapkan objek \verb!ol.source.Vector!.
 
-\begin{lstlisting}[caption=Instansiasi peta,label = {lst_3_php_peta_instansiasi}]
+Setelah deklarasi peta beserta menyiapkan fitur yang terdapat pada peta, memasukkan semua fitur pada \textit{layers} dan \textit{target} untuk memasukkan \textit{id tag} yang digunakan pada HTML seperti pada kode listing \ref{lst_3_php_peta_instansiasi}.
+
+\begin{lstlisting}[caption=Menentukan target tampilan peta,label = {lst_3_php_peta_instansiasi}]
 var map = new ol.Map(
 	{
 		...
@@ -76,7 +73,7 @@ Form yang terdapat pada halaman utama KIRI (Gambar \ref{fig:3_KIRI_form}) terdir
 \end{figure}
 
 \subsubsection{Dropdown Menu Kota}
-\textit{Dropdown} yang berfungsi untuk memilih kota yang akan ditampilkan pada peta (Gambar \ref{fig:3_KIRI_drop_kota}).
+\textit{Dropdown} yang berfungsi untuk memilih kota tujuan (Gambar \ref{fig:3_KIRI_drop_kota}).
 
 \begin{figure}[H]
 	\centering
@@ -85,7 +82,7 @@ Form yang terdapat pada halaman utama KIRI (Gambar \ref{fig:3_KIRI_form}) terdir
 	\label{fig:3_KIRI_drop_kota}
 \end{figure}
 
-Melakukan deklarasi variabel regioninfos sebagai \textit{associated array} pada file constants.php. Setiap kota direpresentasikan sebagai variabel proto\_region\_KOTA dimana KOTA adalah kota yang ada pada KIRI. Setiap proto\_region\_KOTA merupakan array dengan indeks:
+Melakukan deklarasi variabel \verb!regioninfos! sebagai \textit{associated array} pada file \textit{constants.php}. Setiap kota direpresentasikan sebagai \verb!variabel proto_region_KOTA! dimana KOTA adalah kota yang ada pada KIRI. Setiap \verb!variabel proto_region_KOTA! merupakan \textit{array} dengan indeks:
 \begin{enumerate}
 	\item \textit{lat} sebagai garis lintang,
 	\item \textit{lon} sebagai garis bujur,
@@ -135,7 +132,7 @@ Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_regioninfos}.
 ..
 \end{lstlisting}
 
-Untuk menampilkan pilihan kota, pertama mengambil array regioninfos, lalu melakukan pengulangan sebanyak nilai yang terdapat pada regioninfos. Dalam pengulangan tersebut, menulis \textit{tag} HTML \verb!option! sesuai dengan \textit{name} yang terdapat pada regioninfos, jika \textit{name} tersebut sama dengan \textit{region} pengguna, maka opsi tersebut akan terpilih. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_tampilan}
+Untuk menampilkan pilihan kota, pertama mengambil \textit{array} \verb!regioninfos!, lalu melakukan pengulangan sebanyak nilai yang terdapat pada \verb!regioninfos!. Dalam pengulangan tersebut, menulis \textit{tag} HTML \verb!option! sesuai dengan \textit{name} yang terdapat pada \verb!regioninfos!, jika \verb!regioninfos! dengan indeks\verb!`name'! sama dengan \textit{region} pengguna, maka opsi tersebut akan terpilih. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_tampilan}
 
 \begin{lstlisting}[caption=Menampilkan pilihan kota kepada pengguna ,label = {lst_3_php_dropdown_kota_tampilan}]
 ..
@@ -153,7 +150,7 @@ Untuk menampilkan pilihan kota, pertama mengambil array regioninfos, lalu melaku
 ..
 \end{lstlisting}
 
-Untuk memperbarui peta, KIRI menggunakan fungsi JavaScript dengan menerima dua parameter, yaitu newRegion dan updateCookie. Pertama membuat \textit{cookie} dengan kunci region, lalu membuat variabel \textit{point} dengan mengubah String menjadi format garis lintang dan garis bujur dari titik tengah peta yang dituju. Untuk memperbarui peta dengan mengatur titik tengah pada peta yaitu memanggil \textit{method} \verb!setCenter! yang menerima parameter ol.proj.transform yang berisi garis lintang dan bujur serta kode dari Sistem  dan Transformasi  Koordinat. Setelah itu, mengatur tingkat \textit{zoom} dengan memanggil \textit{method} \verb!setZoom! dengan parameter berupa tingkat \textit{zoom} dari peta yang dituju. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_update}
+Untuk memperbarui peta, KIRI menggunakan fungsi JavaScript dengan menerima dua parameter, yaitu \verb!newRegion! dan \verb!updateCookie!. Pertama membuat \textit{cookie} dengan kunci \verb!region!, lalu membuat variabel \verb!point! dengan mengubah String menjadi format garis lintang dan garis bujur dari titik tengah peta yang dituju. Untuk memperbarui peta dengan mengatur titik tengah pada peta yaitu memanggil \textit{method} \verb!setCenter! yang menerima parameter \verb!ol.proj.transform! yang berisi garis lintang dan bujur. Setelah itu, mengatur tingkat \textit{zoom} dengan memanggil \textit{method} \verb!setZoom! dengan parameter berupa tingkat \textit{zoom} dari peta yang dituju. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_update}
 
 \begin{lstlisting}[caption=Fungsi JavaScript untuk memperbarui peta ,label = {lst_3_php_dropdown_kota_update}]
 /**
@@ -168,7 +165,7 @@ function updateRegion(newRegion, updateCookie) {
 }
 \end{lstlisting}
 
-Untuk melakukan pengubahan dari tipe data String menjadi \textit{array} Float yang berguna menjadi garis lintang dan garis bujur dengan cara memanggil \textit{method} \verb!split! dengan \textit{parameter} `,' yang berfungsi membuang `,' dan menjadikan \textit{array}. Setelah menjadi \textit{array}, String tersebut masing-masing dijadikan ke tipe data Float dengan cara memanggil \textit{method} \verb!parseFloat! dengan \textit{parameter} String yang ingin dijadikan Float. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_parse}.
+Untuk mengubah tipe data String menjadi \textit{array} Float yang berguna menjadi garis lintang dan garis bujur dengan cara memanggil \textit{method} \textbf{split} dengan parameter `,' yang berfungsi membuang `,' dan menjadikan \textit{array}. Setelah menjadi \textit{array}, String tersebut masing-masing dijadikan ke tipe data Float dengan cara memanggil \textit{method} \textbf{parseFloat} dengan parameter String yang ingin dijadikan Float. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_kota_parse}.
 
 \begin{lstlisting}[caption=Fungsi JavaScript untuk mengubah String menjadi \textit{array} Float ,label = {lst_3_php_dropdown_kota_parse}]
 /**
@@ -182,7 +179,7 @@ function stringToLonLat(text) {
 \end{lstlisting}
 
 \subsubsection{Dropdown Menu Bahasa}
-\textit{Dropdown} yang berfungsi untuk memilih bahasa yang akan digunakan pada KIRI (Gambar \ref{fig:3_KIRI_drop_bahasa}).
+\textit{Dropdown} yang berfungsi untuk memilih bahasa yang akan ditampilkan pada aplikasi (Gambar \ref{fig:3_KIRI_drop_bahasa}).
 
 \begin{figure}[H]
 	\centering
@@ -204,7 +201,7 @@ Untuk menampilkan pilihan bahasa, menggunakan \textit{tag} HTML \verb!option!. P
 ..
 \end{lstlisting}
 
-Ketika memilih \textit{dropdown} bahasa, memanggil \textit{method} JavaScript dengan \textit{parameter} berupa fungsi yang berisi menambahkan URL dengan \textit{query} \verb!locale! sama dengan \verb!id! atau \verb!locale! sama dengan \verb!en!. Lalu menyimpan \textit{cookies} dengan data \verb!locale!. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_bahasa_fungsi}.
+Ketika memilih \textit{dropdown} bahasa, memanggil \textit{method} JavaScript dengan parameter berupa fungsi yang berisi menambahkan \textit{query parameter} \verb!locale!. Kode dapat dilihat pada kode listing \ref{lst_3_php_dropdown_bahasa_fungsi}.
 
 \begin{lstlisting}[caption=Fungsi JavaScript untuk Internationalization ,label = {lst_3_php_dropdown_bahasa_fungsi}]
 ..
@@ -258,7 +255,7 @@ localeSelect.change(function() {
 		\label{fig:3_KIRI_textfield_nama}
 	\end{figure}
 	
-	\item \textbf{Textfield dengan Masukan Klik Peta}, pengguna memasukkan koordinat tempat asal dan tujuan dengan melakukan klik pada peta. Dengan melakukan klik pada peta, textfield tempat asal dan tujuan akan akan secara otomatis terisi oleh koordinat masing-masing tempat (Gambar \ref{fig:3_KIRI_textfield_koord}).
+	\item \textbf{Textfield dengan Masukan Klik Peta}, pengguna melakukan klik pada peta. Dengan melakukan klik pada peta, textfield tempat asal dan tujuan akan akan secara otomatis terisi oleh koordinat masing-masing tempat (Gambar \ref{fig:3_KIRI_textfield_koord}).
 	
 \begin{figure}[H]
 	\centering
@@ -267,7 +264,7 @@ localeSelect.change(function() {
 	\label{fig:3_KIRI_textfield_koord}
 \end{figure}
 	
-	Agar peta dapat diklik, maka memanggil method \verb!on! dengan parameter `click' dan fungsi yang akan diimplementasikan ketika melakukan klik pada peta. Isi fungsi tersebut adalah pertama melakukan pengecekan apabila textfield tempat asal atau tempat tujuan kosong, maka membuat geometri yang merupakan objeck \verb!ol.geom.Point! dengan parameter koordinat pada peta yang diklik oleh pengguna, lalu membuat \textit{marker} dengan gambar start.png bila textfield tempat asal kosong atau finish.png bila textfield tempat tujuan kosong. Setelah itu, menambahkan fitur marker ke \verb!inputVectorSource! yang akan ditampilkan pada peta dan menulis koordinat pada textfield tempat asal atau tempat tujuan. Kode dapat dilihat pada kode listing \ref{lst_3_php_textfield_koord_kode}.
+	Agar peta dapat diklik, maka memanggil method \verb!on! dengan parameter `click' dan fungsi yang akan diimplementasikan ketika melakukan klik pada peta. Isi fungsi tersebut adalah pertama melakukan pengecekan apabila textfield tempat asal atau tempat tujuan kosong, maka membuat objek \verb!ol.geom.Point! dengan parameter koordinat pada peta yang diklik oleh pengguna, lalu membuat \textit{marker} dengan gambar start.png bila textfield tempat asal kosong atau finish.png bila textfield tempat tujuan kosong. Setelah itu, menambahkan fitur marker ke \verb!inputVectorSource! yang akan ditampilkan pada peta dan menulis koordinat pada textfield tempat asal atau tempat tujuan. Kode dapat dilihat pada kode listing \ref{lst_3_php_textfield_koord_kode}.
 	
 	\begin{lstlisting}[caption=Membuat \textit{event} klik pada peta,label = {lst_3_php_textfield_koord_kode}]
 ..
@@ -305,7 +302,7 @@ map.on('click', function(event) {
 \end{enumerate}
 
 \subsubsection{Tombol Swap}
-Pengguna dapat menukar isi dari \textit{textfield} tempat asal dan tujuan. Pertama kali yang dilakukan adalah mencari pada dokumen dengan \textit{id} `swapbutton' dan memanggil \textit{method} \verb!click! dengan mengisi fungsi \verb!swapInput! seperti pada kode listing \ref{lst_3_php_swap}. Fungsi \verb!swapInput! berisi melakukan pencarian pada dokumen dengan \textit{id} `startInput' dan `finishInput'. Melakukan penampungan sementara dengan mengambil isi dari \textit{textfield} tempat asal, lalu menukar isi dari \textit{textfield} tempat asal dan tujuan. Setelah itu, jika kedua textfield ada isinya, melakukan pencarian rute. Kode dapat diliihat pada kode listing \ref{lst_3_php_swap_fungsi}.
+Pengguna dapat menukar isi dari \textit{textfield} tempat asal dan tujuan. Pertama kali yang dilakukan adalah mencari pada dokumen dengan \textit{id} `swapbutton' dan memanggil \textit{method} \textbf{click} dengan mengisi fungsi \textbf{swapInput} seperti pada kode listing \ref{lst_3_php_swap}. Fungsi \textbf{swapInput} berisi melakukan pencarian pada dokumen dengan \verb!id! sama dengan \verb!`startInput'! dan \verb!`finishInput'!. Melakukan penampungan sementara dengan mengambil isi dari \textit{textfield} tempat asal, lalu menukar isi dari \textit{textfield} tempat asal dan tujuan. Setelah itu, jika kedua textfield ada isinya, melakukan pencarian rute. Kode dapat diliihat pada kode listing \ref{lst_3_php_swap_fungsi}.
 
 \begin{lstlisting}[caption=\textit{Method} untuk memanggil fungsi JavaScript ketika tombol \textit{swap} ditekan ,label = {lst_3_php_swap}]
 ..
@@ -420,7 +417,7 @@ Pengguna dapat mencari rute untuk sampai ke tujuan (Gambar \ref{fig:3_KIRI_find}
 	\label{fig:3_KIRI_find_alternate}
 \end{figure}
 
-Hal yang pertama kali dilakukan adalah melakukan validasi jika salah satu textfield kosong, maka akan langsung membatalkan proses dan memberi peringatan kepada pengguna. Jika tidak kosong, maka akan memunculkan peringatan `mohon menunggu' karena sedang dilakukan pencarian rute. Setelah itu melakukan pengecekan apakah isi dari textfield merupakan format yang bener untuk garis lintang dan bujur. Jika formatnya benar, maka dimasukkan ke dalam array \verb!coordinates! dan melakukan penambahan jumlah  completedLatLon yang berfungsi untuk mengetahui apakah kedua \textit{textfield} sudah benar formatnya untuk dilakukan pencarian rute. Jika formatnya tidak benar, maka melakukan pengecekan array \verb!coordinates! kosong atau tidak. 
+Hal yang pertama kali dilakukan adalah melakukan validasi jika salah satu \textit{textfield} kosong, maka akan langsung membatalkan proses dan memberi peringatan kepada pengguna. Jika tidak kosong, maka akan memunculkan peringatan `mohon menunggu' karena sedang dilakukan pencarian rute. Setelah itu melakukan pengecekan apakah isi dari \textit{textfield} merupakan format yang benar untuk garis lintang dan bujur. Jika formatnya benar, maka dimasukkan ke dalam \textit{array} \verb!coordinates! dan melakukan penambahan jumlah  completedLatLon yang berfungsi untuk mengetahui apakah kedua \textit{textfield} sudah benar formatnya untuk dilakukan pencarian rute. Jika formatnya tidak benar, maka melakukan pengecekan \textit{array} \verb!coordinates! kosong atau tidak. 
 Jika kosong, maka melakukan pencarian pilihan tempat yang akan menjadi tempat sugesti yang diberikan kepada pengguna. Jika tidak kosong, maka memanggil fungsi \verb!checkCoordinatesThenRoute! dengan parameter berupa coordinates. Terakhir, melakukan pengecekan \verb!completedLatLon! jika isinya sama dengan dua, maka memanggil fungsi \verb!checkCoordinatesThenRoute!. Kode dapat dilihat pada kode listing \ref{lst_3_php_find_fungsi}.
 
 \begin{lstlisting}[caption=Fungsi JavaScript untuk ketika tombol \textit{find} ditekan,label = {lst_3_php_find_fungsi}]
@@ -497,7 +494,7 @@ function findRouteClicked() {
 }
 \end{lstlisting}
 
-Fungsi \verb!checkCoordinatesThenRoute! melakukan pengecekan jika array \verb!coordinates! tempat awal dan tempat tujuan tidak kosong maka melakukan \verb!protocol.findRoute!. \verb!protocol.findRoute! akan melakukan pencarian rute dengan koordinat tempat awal dan tujuan. Jika hasil \verb!results! dari \verb!protocol.findRoute! sama dengan `ok', maka menunjukkan rute pencarian. Jika hasil result bukan `ok', maka akan menampilkan peringatan `gangguan koneksi'. Kode dapat dilihat pada kode listing \ref{lst_3_php_find_checkRoute}.
+Fungsi \textbf{checkCoordinatesThenRoute} melakukan pengecekan jika \textit{array} \verb!coordinates! tempat awal dan tempat tujuan tidak kosong maka melakukan \verb!protocol.findRoute!. \verb!protocol.findRoute! akan melakukan pencarian rute dengan koordinat tempat awal dan tujuan. Kode dapat dilihat pada kode listing \ref{lst_3_php_find_checkRoute}.
 \begin{lstlisting}[caption=Fungsi JavaScript checkCoordinatesThenRoute,label = {lst_3_php_find_checkRoute}]
 /**
  * Check if coordinates are complete. If yes, then start routing.
@@ -546,7 +543,7 @@ Penggunaan Internationalization (i18n) pada PHP dilakukan dengan cara deklarasi 
 ?>
 \end{lstlisting}
 
-Setelah itu, masukkan \textit{script} PHP pada \textit{tag} HTML yang ingin diubah saat dilakukan i18n. Adanya \textit{script} PHP pada tag HTML, maka teks akan berubah jika dilakukan i18n seperti pada kode listing \ref{lst_3_i18n_php}.
+Setelah itu, memuat file i18n dan masukkan \textit{script} PHP pada \textit{tag} HTML yang ingin diubah saat dilakukan i18n. Adanya \textit{script} PHP pada tag HTML, maka teks akan berubah jika dilakukan i18n seperti pada kode listing \ref{lst_3_i18n_php}.
 
 \begin{lstlisting}[caption=Script PHP untuk Internationalization,label = {lst_3_i18n_php}]
 	...
@@ -564,43 +561,43 @@ Untuk menentukan file mana yang akan digunakan dalam proses i18n, jangan lupa un
 \end{lstlisting}
 
 \subsection{Pencarian Rute}
-Pencarian rute pada KIRI dilakukan di \textit{server side}, yaitu pada \textit{file} handle.php. Langkah awal pada handle.php dapat dijelaskan sebagai berikut:
+Pencarian rute pada KIRI dilakukan di bagian server, yaitu pada file handle.php. Langkah awal pada handle.php dapat dijelaskan sebagai berikut:
 \begin{enumerate}
-	\item Memuat \textit{file} constants.php untuk menyiapkan data yang akan dipakai pada halaman \textit{web}.
+	\item Memuat \textit{file} constants.php untuk menyiapkan data yang akan dipakai pada halaman web.
 	\item Memuat utils.php untuk fungsi manipulasi data, koneksi basisdata, mengirimkan pencatatan, dan melakukan validasi.
 	\begin{itemize}
 		\item Fungsi \verb!init_mysql! untuk memuat koneksi basisdata dengan memasukkan \textit{host, username, password}, dan basisdata yang digunakan pada MySQL.
-		\item Fungsi \verb!log_statistic! untuk pencatatan data pada basisdata.
+		\item Fungsi \verb!log_statistic! untuk pencatatan data pada basisdata dengan tabel \verb!`statistic'!.
 		\item Fungsi \verb!die_nice! untuk mengirimkan pesan kesalahan.
 		\item Fungsi \verb!check_apikey_validity! untuk pengecekan apikey yang digunakan ada atau tidak.
-		\item Fungsi \verb!retrieve_from_post! untuk mengambil data pada URL dengan memanggil method \verb!\$_POST! dengan parameter \textit{key} yang digunakan.
-		\item Fungsi \verb!retrieve_from_get! untuk mengambil data pada URL dengan memanggil method \verb!\$_GET! dengan parameter \textit{key} yang digunakan.
-		\item Fungsi \verb!retrieve_from_cache! untuk mengambil data pada basisdata \textit{cache} dengan parameter `type' dan `cacheKey'.
-		\item Fungsi \verb!put_to_cache! untuk memasukkan data pada basisdata \textit{cache} dengan parameter `type' , `cacheKey', dan `cacheValue'.
+		\item Fungsi \verb!retrieve_from_post! untuk mengambil data pada URL dengan memanggil method \verb!$_POST! pada \textit{query} parameter URL.
+		\item Fungsi \verb!retrieve_from_get! untuk mengambil data pada URL dengan memanggil method \verb!$_GET! pada \textit{query} parameter URL.
+		\item Fungsi \verb!retrieve_from_cache! untuk mengambil data pada basisdata dengan tabel \verb!`cache'! dengan parameter `type' dan `cacheKey'.
+		\item Fungsi \verb!put_to_cache! untuk memasukkan data pada basisdata dengan tabel \verb!`cache'! dengan parameter `type' , `cacheKey', dan `cacheValue'.
 	\end{itemize}
 	\item \verb!start_working! untuk menyiapkan header pada PHP.
 	\begin{itemize}
-		\item Fungsi \verb!header('Content-Type: application/json')! untuk menghasilkan \textit{output} berupa JSON.
+		\item Fungsi \verb!header('Content-Type: application/json')! untuk menghasilkan keluaran berupa JSON.
 		\item Fungsi \verb!header('Cache-control: no-cache')! digunakan pada HTTP/1.1 dan fungsi \verb!header('Pragma: no-cache')! digunakan pada HTTP/1.0. Keduanya berfungsi untuk mencegah pengguna menyimpan \textit{cache response}.
 	\end{itemize}
-	\item \verb!init_mysql! untuk koneksi pada basisdata menggunakan MySQL. 
-	\item Mendapatkan data \verb!mode!, \verb!version!, dan \verb!apikey! dari \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `mode', `version', dan `apikey'.
+	\item \verb!init_mysql! untuk menyiapkan koneksi basisdata.
+	\item Mendapatkan data \verb!mode!, \verb!version!, dan \verb!apikey! dari \textit{method} \verb!POST! masing-masing dengan parameter `mode', `version', dan `apikey'.
 	\item Jika data \verb!version! sama dengan  \verb!null!, maka isi data \verb!version! dengan 1. 
 	\item Melakukan pengecekan \verb!apikey! apakah ada di basisdata atau tidak. Jika ada, cek lagi apakah ada pengecualian IP komputer pada basisdata.
 \end{enumerate}
 
 \subsubsection{Mode Findroute}
-Bagian ini terletak pada baris 14-181 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah memasukkan data \verb!start!, \verb!finish!, dan \verb!locale! dengan mendapatkan \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `start', `finish', dan `locale'. Tetapi sebelum dimasukkan, memanggil \textit{method} \verb!addslashes! yang berfungsi jika ada karakter spesial seperti ' atau " tidak dianggap sebagai suatu String yang berbeda. Setelah itu melakukan pengecekan untuk lokalisasi. Jika ada, memuat \textit{file} (lokalisasi Bahasa Inggris atau lokalisasi Bahasa Indonesia). Setelah itu melakukan pengecekan variabel \verb!presentation!, ada dua yaitu \textit{mobile} atau \textit{desktop}. Melakukan pengecekan version yang digunakan:
+Bagian ini terletak pada baris 14-181 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah memasukkan data \verb!start!, \verb!finish!, dan \verb!locale! dengan mendapatkan nilai \textit{method} \verb!POST! dengan parameter `start', `finish', dan `locale'. Sebelum dimasukkan, memanggil \textit{method} \verb!addslashes! yang berfungsi jika ada karakter spesial seperti ' atau " tidak dianggap sebagai suatu String yang berbeda. Setelah itu melakukan pengecekan untuk lokalisasi. Jika ada lokalisasi, memuat \textit{file} (lokalisasi Bahasa Inggris atau lokalisasi Bahasa Indonesia). Setelah itu melakukan pengecekan variabel \verb!presentation!, ada dua yaitu \verb!`mobile'! atau \verb!`desktop'!. Melakukan pengecekan version yang digunakan:
 \begin{itemize}
 	\item Jika \verb!version! lebih besar sama dengan 2, maka memasukkan data \verb!count! dengan 1. Jika \verb!presentation! sama dengan \verb!`mobile'!, maka memasukkan data \verb!count! dengan jumlah \textit{array} \verb!alternatives!. Setelah itu melakukan pengulangan sebanyak \verb!count! yang berisi:\\
-		Menambahkan \textit{query URL} \url{http://newmenjangan.cloudapp.net:8000} dengan:
+		Menambahkan \textit{query} parameter URL \url{http://newmenjangan.cloudapp.net:8000} dengan:
 		\begin{itemize}
 			\item 	``?start=x'' dan ``finish=y'', dimana x adalah koordinat tempat asal dan y adalah koordinat tempat tujuan.
 			\item \verb!mw!, \verb!wm!, dan \verb!pt! masing-masing dengan nilai dari \textit{array} \verb!alternative! satu persatu dengan indeks `mw', `wm', dan `pt'.
 			\item memanggil fungsi \verb!file_get_content! yang akan mengembalikan \verb!FALSE! jika gagal dan mengembalikan JSON pesan kesalahan. Jika berhasil akan mendapatkan String dengan \textit{URL} \url{http://newmenjangan.cloudapp.net:8000}, pembacaan maksimal sebanyak 51200 \textit{bytes}.
 			\item memasukkan ke \textit{array} \verb!results! yang mempunyai indeks `result' dengan nilai \verb!true!.
 		\end{itemize}
-	\item Jika \verb!version! kurang dari 2, langsung akses \textit{URL} \url{http://newmenjangan.cloudapp.net:8000} dengan \textit{query} ``?start=x'' dan ``finish=y'', dimana x adalah koordinat tempat asal dan y adalah koordinat tempat tujuan.
+	\item Jika \verb!version! kurang dari 2, langsung akses \textit{URL} \url{http://newmenjangan.cloudapp.net:8000} dengan \textit{query} parameter ``?start=x'' dan ``finish=y'', dimana x adalah koordinat tempat asal dan y adalah koordinat tempat tujuan.
 \end{itemize}
 
 Langkah selanjutnya adalah pengulangan sejumlah data \verb!results! menjadi \verb!result! dengan nilai yang dimasukkan ke data \verb!dummy! yang berisi:
@@ -608,25 +605,25 @@ Langkah selanjutnya adalah pengulangan sejumlah data \verb!results! menjadi \ver
 	\item Membuat data \verb!steps! yang berisi data \verb!result! yang telah dipisahkan per baris.
 	\item Melakukan pengulangan setiap data \verb!steps! dan dimasukkan ke \verb!step! yang berisi:
 	\begin{itemize}
-		\item Membuang spasi yang ada pada data \verb!step!. Jika \verb!step! sudah tidak ada isinya, melanjutkan ke langkah selanjutnya.
+		\item Membuang spasi yang ada pada data \verb!step!.
 		\item Jika \verb!step! sama dengan \verb!`none'!, melakukan pengecekan pada banyaknya data \verb!results!. Jika banyak data \verb!results! bukan satu berarti ada rute alternatif dan akan melanjutkan ke langkah selanjutnya. Tetapi jika banyak data \verb!results! adalah satu, maka tidak ada rute alternatif.
-		\item Mendaftarkan data \verb!means!, \verb!means_detail!, \verb!route!, \verb!distance!, dan \verb!nearbyplaceids! yang didapat dari data \verb!step! yang telah dipisahkan `/'. Jika salah satu data kosong, akan menutup koneksi SQL dan mengeluarkan pesan kesalahan.
+		\item Mendaftarkan data \verb!means!, \verb!means_detail!, \verb!route!, \verb!distance!, dan \verb!nearbyplaceids! yang didapat dari data \verb!step! yang telah dipisahkan `/'. Jika salah satu data kosong, akan mengirimkan pesan kesalahan.
 		\item Inisialisasi data \verb!points! yang didapat dari data \verb!route! yang sudah dipisahkan spasi, inisialisasi data \verb!from! dari data \verb!points! dengan indeks 0 dan inisialisasi data \verb!to'! dari data \verb!points! dengan indeks terakhir.
 		\item Jika nilai data \verb!points! ada yang sama dengan \verb!`start'!, maka mengganti data \verb!points! tersebut dengan data \verb!start!. Jika nilai data \verb!points! ada yang sama dengan \verb!`finish'!, maka mengganti data \verb!points! tersebut dengan data \verb!finish!.
-		 \item Memasukkan data \verb!humanized_from! dengan memanggil fungsi \verb!humanize_point! dengan \textit{parameter} \verb!from! dan \verb!humanized_to! dengan memanggil fungsi \verb!humanize_point! dengan \textit{parameter} \verb!to!.
-		 \item Jika \verb!means! sama dengan \verb!`walk'!, melakukan pengecekan apakah  \verb!humanized_from! sama dengan \verb!humanized_to!. Jika \verb!presentation! tidak sama dengan \verb!mobile!, maka memasukkan \verb!message_walk_samestreet! ke variabel \verb!humanreadable!. Mengganti \verb!from! yang ada di \verb!humanreadable! dengan nilai \verb!humanized_from!, mengganti \verb!distance! yang ada di \verb!humanreadable! dengan nilai \verb!distance! yang dipresentasikan sesuai format wilayah pengguna. Lalu menghitung waktu tempuh yg dibutuhkan.
-		 \item Jika \verb!means! tidak sama dengan \verb!`walk'!, melakukan pencarian pada basisdata \verb!tracks! digabung dengan \verb!tracktypes! dengan kolom nama jalur, tipe jalur yang digunakan, \textit{URL} untuk melakukan pemesanan (jika XTrans), kecepatan transportasi, dan informasi internal jalur dengan syarat:
+		 \item Memasukkan data \verb!humanized_from! dengan memanggil fungsi \verb!humanize_point! dengan parameter \verb!from! dan \verb!humanized_to! dengan memanggil fungsi \verb!humanize_point! dengan parameter \verb!to!.
+		 \item Jika \verb!means! sama dengan \verb!`walk'!, melakukan pengecekan apakah  \verb!humanized_from! sama dengan \verb!humanized_to!. Jika \verb!presentation! tidak sama dengan \verb!mobile!, maka memasukkan \verb!message_walk_samestreet! ke variabel \verb!humanreadable!. Mengganti \verb!from! yang ada di \verb!humanreadable! dengan nilai \verb!humanized_from!, mengganti \verb!distance! yang ada di \verb!humanreadable! dengan nilai \verb!distance! yang dipresentasikan sesuai format wilayah pengguna. Lalu menghitung waktu tempuh yang dibutuhkan.
+		 \item Jika \verb!means! tidak sama dengan \verb!`walk'!, melakukan pencarian pada tabel \verb!tracks! digabung dengan \verb!tracktypes! dengan kolom nama jalur, tipe jalur yang digunakan, \textit{URL} untuk melakukan pemesanan (jika XTrans), kecepatan transportasi, dan informasi internal jalur dengan syarat:
 				\begin{enumerate}
 					\item \verb!trackTypeId! sama dengan \verb!means! pada tabel \verb!tracktypes! dan \verb!tracks!.
 					\item \verb!trackid! sama dengan \verb!means_detail! pada tabel \verb!tracks!.
 				\end{enumerate}						 
-		  Jika ada hasil dari pencarian basisdata, maka: 
+		  Jika ada hasil dari pencarian, maka: 
 		  \begin{enumerate}
 		  		\item Memasukkan nilai \verb!trackname! dari tabel \verb!tracks! ke \verb!readable_track_name!.
 		  		\item Memasukkan nilai \verb!nama! dari tabel \verb!tracktypes! ke \verb!track_type_name!.
 		  		\item Memasukkan nilai \verb!speed! dari tabel \verb!tracktypes! ke data \verb!speed! yang sudah dijadikan format angka.
 		  \end{enumerate}
-		  Lalu melanjutkan pengecekan apakah \verb!presentation! sama dengan \verb!`mobile'!, maka menambahkan data \verb!humanized_from! dengan \verb!`%fromicon'! dan \verb!humanized_to! dengan \verb!`%toicon'!. Memasukkan \verb!message_angkot! ke data \verb!humanreadable!. Memperbarui nilai \verb!humanreadable! dengan mengganti:
+		  Lalu melanjutkan pengecekan apakah \verb!presentation! sama dengan \verb!`mobile'!. Jika \verb!presentation! sama dengan \verb!`mobile'!, maka menambahkan data \verb!humanized_from! dengan \verb!`%fromicon'! dan \verb!humanized_to! dengan \verb!`%toicon'!. Setelah itu, memasukkan \verb!message_angkot! ke data \verb!humanreadable!. Memperbarui nilai \verb!humanreadable! dengan mengganti:
 		  
 		  \begin{itemize}
 		  		\item \verb!%from! dengan nilai dari \verb!humanized_from!.
@@ -636,18 +633,18 @@ Langkah selanjutnya adalah pengulangan sejumlah data \verb!results! menjadi \ver
 		  		\item \verb!%tracktype! dengan nilai dari \verb!track_type_name!.		  		
 		  \end{itemize}
 		 Setelah itu, menghitung waktu tempuh dari data \verb!distance! dibagi dengan data \verb!speed!. Melakukan pengecekan nilai \verb!URL! dari tabel \verb!tracktypes! dan nilai  \verb!extraParameters! dari tabel \verb!tracktypes! kosong tidak. Jika tidak kosong maka menambahkan data \verb!booking_url! dengan menambahkan nilai \verb!URL! dari tabel \verb!tracktypes! dan nilai  \verb!extraParameters! dari tabel \verb!tracktypes!. 
-		 Lalu melakukan pengecekan nilai \verb!internalinfo! dari tabel \verb!tracks! dimulai dengan \verb!angkotwebid:!. Jika dimulai dengan \verb!angkotwebid:!, maka mendapatkan \textit{array} \verb!token! dengan memisahkan `:' pada \verb!internalInfo!. Memasukkan data  \verb!editor_url! dengan awalan \textit{URL} angkotwebid, \verb!token! dengan indeks kedua, dan akhiran \textit{URL} angkotwebid. 
-		 \item Jika \verb!humanreadable! tidak sama dengan \verb!null!, maka memasukkan \verb!route_output! dengan isi array dari \verb!means!, \verb!means_detail!, \verb!points!,  \verb!humanreadable!, \verb!booking_url!, dan \verb!editor_url!. 
+		 Lalu melakukan pengecekan nilai \verb!internalinfo! dari tabel \verb!tracks! dimulai dengan \verb!`angkotwebid:'!. Jika dimulai dengan \verb!`angkotwebid:'!, maka mendapatkan \textit{array} \verb!token! dengan memisahkan `:' pada \verb!internalInfo!. Memasukkan data  \verb!editor_url! yang berisi awalan \textit{URL} angkotwebid, \verb!token! dengan indeks kedua, dan akhiran \textit{URL} angkotwebid. 
+		 \item Jika \verb!humanreadable! tidak sama dengan \verb!null!, maka memasukkan \verb!route_output! dengan isi \textit{array} dari \verb!means!, \verb!means_detail!, \verb!points!,  \verb!humanreadable!, \verb!booking_url!, dan \verb!editor_url!. 
 	\end{itemize}
 	\item Memasukkan \verb!routing_result! dengan indeks \verb!steps! dengan nilai dari  \verb!route_output!.
 	\item Memasukkan \verb!routing_result! dengan indeks \verb!traveltime! dengan nilai jam dan menit dari \verb!travel_time! yang sudah dilakukan i18n.
 	\item Memasukkan data \verb!routing_result! ke dalam \textit{array} \verb!routing_results!.
 \end{itemize}
-Setelah itu, memasukkan data ke tabel statistik dengan \textit{parameter}:
+Setelah itu, memasukkan data ke tabel statistik dengan parameter:
 	\begin{itemize}
 		\item \verb!apikey! yang digunakan.
 		\item \verb!FINDROUTE! merupakan tipe statistik yang dimasukkan.
-		\item \verb!$start/$finish/sizeof($results)! merupakan keterangan statistik dimana \verb!$start! adalah titik koordinat tempat asal, \verb!$finish! adalah titik koordinat tempat tujuan, dan jumlah dari data \verb!$results!.
+		\item \verb!$start/$finish/sizeof($results)! merupakan keterangan statistik dimana \verb!$start! adalah titik koordinat tempat asal, \verb!$finish! adalah titik koordinat tempat tujuan, dan \verb!sizeof($results)! adalah jumlah dari data \verb!$results!.
 	\end{itemize}
 Lalu menutup koneksi ke basisdata. Jika \verb!version! tidak sama dengan \verb!null! dan \verb!version! lebih besar sama dengan 2, maka print hasil yang sudah di \textit{encode} menjadi JSON, yaitu:
 	\begin{itemize}
@@ -662,17 +659,17 @@ Jika \verb!version! sama dengan \verb!null! dan \verb!version! kurang dari 2, ma
 	\end{itemize}
 
 \subsubsection{Mode Search}
-Bagian ini terletak di baris 183-280 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah memasukkan data \verb!querystring!, \verb!apikey!, dan \verb!region! dengan mendapatkan \textit{method} \verb!POST! masing-masing dengan \textit{parameter} `querystring', `apikey', dan `region'. Jika \verb!region! sama dengan \verb!null!, maka isi \verb!region! dengan \verb!`bandung!. Melakukan pengulangan sejumlah data \verb!regioninfos! dengan nilai yang dimasukkan ke data \verb!value! yang berisi:
+Bagian ini terletak pada baris 183-280 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah memasukkan data \verb!querystring!, \verb!apikey!, dan \verb!region! dengan mendapatkan nilai \textit{method} \verb!POST! masing-masing dengan parameter `querystring', `apikey', dan `region'. Jika \verb!region! sama dengan \verb!null!, maka isi \verb!region! dengan \verb!`bandung!. Melakukan pengulangan sejumlah data \verb!regioninfos! dengan nilai yang dimasukkan ke data \verb!value! yang berisi:
 \begin{itemize}
 	\item Mencari dalam \verb!querystring! ada \textit{pattern} \verb!`/searchplace'! dimana \verb!`searchplace'! diambil dari \verb!value! dengan \textit{key} \verb!`searchplace_regex'! dan tampilkan pada \textit{array} \verb!matches!. Jika terdapat \textit{pattern} tersebut, maka memasukkan data \verb!region! dengan nilai \verb!key!, memperbarui \verb!querystring! dengan mengambil panjang kalimat dari indeks nol sampai dengan indeks ditemukannya \textit{pattern} tersebut.
 	\item Mengubah \verb!querystring! menjadi format \textit{URL}.
-	\item Memasukkan data \verb!cached_searchplace'! dengan mengambil data dari tabel \verb!cache! dengan tipe \verb!searchplace! dan \textit{key} \verb!region/querystring!. Jika \verb!cached_searchplace! tidak sama dengan \verb!null!, maka membuat JSON untuk \textit{output} dengan:
+	\item Memasukkan data \verb!cached_searchplace! dengan mengambil data dari tabel \verb!cache! dengan tipe \verb!searchplace! dan \textit{key} \verb!region/querystring!. Jika \verb!cached_searchplace! tidak sama dengan \verb!null!, maka membuat JSON untuk \textit{output} dengan:
 	\begin{itemize}
 		\item \verb!status! dengan nilai \verb!`ok'!
 		\item \verb!searchresult! dengan nilai \verb!cached_searchplace!
 		\item \verb!attributions! dengan nilai \verb!null!
 	\end{itemize}
-	Jika \verb!cached_searchplace! sama dengan \verb!null!, memasukkan data \verb!lat', \verb!lon', dan \verb!radius' yang didapat dari \verb!regioninfos' dengan indeks \verb!region' dan \textit{key} `lat', `lon', dan `radius'. Memasukkan \verb!result' dengan hasil akses \textit{URL} dari data \verb!full_url'. Jika \verb!result sama dengan \verb!FALSE! atau jumlah \verb!result! lebih besar dari \verb!maximum_http_response_size!, maka mengeluarkan pesan kesalahan. 
+	Jika \verb!cached_searchplace! sama dengan \verb!null!, memasukkan data \verb!lat!, \verb!lon!, dan \verb!radius! yang diambil dari \verb!regioninfos! dengan indeks \verb!`region'! dan \textit{key} \verb!`lat'!, \verb!`lon'!, dan \verb!`radius'!. Memasukkan \verb!result! dengan hasil akses \textit{URL} dari data \verb!`full_url'!. Jika \verb!result! sama dengan \verb!FALSE! atau jumlah \verb!result! lebih besar dari \verb!maximum_http_response_size!, maka mengeluarkan pesan kesalahan. 
 	Setelah itu, memasukkan \verb!json_result! dengan mengubah format JSON menjadi String dari data \verb!result!. Jika \verb!json_result! dengan indeks \verb!`status'! adalah \verb!`OK'! atau \verb!`ZERO_RESULTS'!, maka menyiapkan \textit{array} \verb!search_result!. Jika hasilnya \verb!`ZERO_RESULTS'!, maka mengeluarkan catatan kesalahan dan memperbarui data \verb!size! menjadi 0. Jika hasilnya \verb!`OK'!, maka mengambil angka minimal antara banyaknya data \verb!json_result! dengan indeks \verb!`results'! dan \verb!search_maxresult!. Melakukan pengulangan dari nol sampai dengan \verb!size! yang dinisialkan dengan \verb!i!:
 	\begin{itemize}
 		\item Memasukkan data \verb!current_venue! dengan \verb!json_result! indeks results dengan \textit{key} \verb!i!.
@@ -685,30 +682,30 @@ Bagian ini terletak di baris 183-280 dari handle.php (kode \ref{lst:handle.php})
 			\item \verb!attributions! dengan nilai \verb!null!
 		\end{itemize}
 		\item Mengirim catatan dengan \verb!apikey! yang digunakan.
-		\item Memasukkan ke tabel \textit{cache} dengan tipe \verb!`cache_searchplace'! dan \textit{key} \verb!region/querystring! yang berisi JSON \verb!search_result!.
+		\item Memasukkan data ke tabel \textit{cache} dengan tipe \verb!`cache_searchplace'! dan \textit{key} \verb!region/querystring! yang berisi JSON \verb!search_result!.
 	\end{itemize}
 	\item Mengeluarkan hasil JSON \verb!json_output!.
 \end{itemize}
 
 \subsubsection{Mode Reporterror}
-Bagian ini terletak di baris 282-284 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah mendapatkan \verb!errorcode! dari \textit{method} \verb!POST! dengan \textit{parameter} \verb!`errorcode'!. Mencatat kesalahan dan dimasukkan ke dalam \textit{file}. Mengeluarkan JSON dengan:
+Bagian ini terletak pada baris 282-284 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah mendapatkan \verb!errorcode! dari \textit{method} \verb!POST! dengan parameter \verb!`errorcode'!. Mencatat kesalahan dan dimasukkan ke dalam \textit{file}. Mengeluarkan JSON dengan:
 \begin{itemize}
 			\item \verb!status! dengan nilai \verb!`ok'!
 \end{itemize} 
 dan memberhentikan eksekusi program.
 
 \subsubsection{Mode Nearbytransport}
-Bagian ini terletak di baris 286-313 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah mendapatkan \verb!start! dari \textit{method} \verb!POST! dengan \textit{parameter} \verb!`routestart'!. Jika \verb!version! lebih besar sama dengan 2, maka membuat data \verb!lines! dengan mendapatkan String dari \textit{URL} \url{http://newmenjangan.cloudapp.net:8000} dengan query \verb!/?start=`start`!. Setelah mendapatkan String tersebut, lakukan pemisahan baris. Melakukan pengulangan sebanyak \verb!lines! yang berisi:
+Bagian ini terletak pada baris 286-313 dari handle.php (kode \ref{lst:handle.php}). Langkah pertama yang dilakukan adalah mendapatkan \verb!start! dari \textit{method} \verb!POST! dengan parameter \verb!`routestart'!. Jika \verb!version! lebih besar sama dengan 2, maka membuat data \verb!lines! dengan mendapatkan String dari \textit{URL} \url{http://newmenjangan.cloudapp.net:8000} dengan \textit{query} parameter ``/?start=\$start''. Setelah mendapatkan hasil, lakukan pemisahan baris. Melakukan pengulangan sebanyak \verb!lines! yang berisi:
 \begin{itemize}
-	\item Melakukan pemisahan dari \verb!`\'! dari \verb!line!, lalu mendaftarkan menjadi  \verb!tracktypeid!, \verb!trackid!,dan \verb!distance!.
-	\item Membuat data \verb!result' dengan eksekusi perintah SQL, yaitu mendapatkan \verb!trackname! dari tabel \verb!tracks! dimana kolom \verb!trackid! dan \verb!tracktypeid! sesuai dengan data \verb!tracktypeid! dan \verb!trackid!.
-	\item Membuat data \verb!row! dengan mengambil hasil dari data \verb!result! dan melakukan pengulangan yang berisi:
+	\item Melakukan pemisahan \verb!`\'! dari \verb!line!, lalu mendaftarkan data menjadi  \verb!tracktypeid!, \verb!trackid!,dan \verb!distance!.
+	\item Membuat data \verb!result! dengan eksekusi \textit{statement} SQL, yaitu mendapatkan \verb!trackname! dari tabel \verb!tracks! dimana kolom \verb!trackid! dan \verb!tracktypeid! sesuai dengan data \verb!tracktypeid! dan \verb!trackid!.
+	\item Membuat data \verb!row! dengan mengambil hasil data \verb!result! dan melakukan pengulangan yang berisi:
 	\begin{itemize}
 		\item Membuat data \verb!trackName! dengan mengambil \verb!row! dengan indeks nol.
 		\item Membuat data \verb!nearby_result! yang merupakan \textit{array} dari \verb!trackTypeId'!, \verb!trackId!, \verb!trackName!, dan \verb!distance!.
 	\end{itemize}
 	\item Menyortir \textit{array} \verb!nearby_result! berdasarkan fungsi \verb!nearby_result_compare!. Fungsi \verb!nearby_result_compare! membandingkan jarak yang diambil dari \textit{array} dengan indeks ketiga.
-	\item Memasukkan data ke tabel statistik dengan \textit{parameter}:
+	\item Memasukkan data ke tabel statistik dengan parameter:
 	\begin{itemize}
 		\item \verb!apikey! yang digunakan.
 		\item \verb!NEARBYTRANSPORTS! merupakan tipe statistik yang dimasukkan.
@@ -725,11 +722,11 @@ Bagian ini terletak di baris 286-313 dari handle.php (kode \ref{lst:handle.php})
 \subsubsection{Fungsi humanize\_point}
 Tujuan dari fungsi ini adalah merubah lokasi dalam bentuk \textit{point} menjadi nama lokasi tempat dari \textit{point} tersebut. Fungsi ini menerima parameter \verb!location! yang merupakan String. Fungsi ini berisi sebagai berikut:
 \begin{itemize}
-	\item Melakukan deklarasi variabel global untuk digunakan.
+	\item Melakukan deklarasi variabel \textit{global} untuk digunakan.
 	\item Melakukan pengecekan data \verb!location!. Jika \verb!location! sama dengan \verb!`start'! maka mengembalikan \verb!message_start!. Jika \verb!location! sama dengan \verb!`finish'!, maka mengembalikan \verb!message_finish!.
 	\item Jika bukan keduanya, maka memanggil fungsi \verb!mysqli_escape_string!.
 	\item Melakukan pengecekan pada tabel \textit{cache} ada atau tidak dengan \textit{key} \verb!cache_geocoding! dan bernilai sesuai dengan parameter \verb!location! atau tidak dan dimasukkan ke data \verb!cached_geocode!. Jika ada nilainya, langsung mengembalikan nilai tersebut.
-	\item Jika tidak ada, maka akan menambahkan \textit{query} \verb!?key=$gmaps_server_key&latlng=$location&sensor=false! pada \textit{URL} \url{https://maps.googleapis.com/maps/api/geocode/json} dimana \verb!gmaps_server_key! adalah \textit{key} untuk API Google dan \verb!latlng! adalah garis lintang dan garis bujur. Jika berhasil akses dan mendapatkan \verb!status! sama dengan \verb!`OK'!, maka akan menambahkan lokasi sugesti pada pengguna. Jika \verb!status! tidak sama dengan \verb!`OK'!, maka akan menampilkan pesan kesalahan. 
+	\item Jika tidak ada, maka akan menambahkan \textit{query} parameter ``?key=\$gmaps\_server\_key\&latlng=\$location\&sensor=false'' pada \textit{URL} \url{https://maps.googleapis.com/maps/api/geocode/json} dimana \verb!gmaps_server_key! adalah \textit{key} untuk API Google dan \verb!latlng! adalah garis lintang dan garis bujur. Jika berhasil akses dan mendapatkan \verb!status! sama dengan \verb!`OK'!, maka akan menambahkan lokasi sugesti pada pengguna. Jika \verb!status! tidak sama dengan \verb!`OK'!, maka akan menampilkan pesan kesalahan. 
 \end{itemize}
 \section{Analisis Sistem Usulan}
 \label{sec:perubahan}
@@ -739,7 +736,7 @@ Peta pada sistem usulan menggunakan OpenLayers yang sama dengan sistem kini.
 
 \subsection{Form Samping}
 \subsubsection{Dropdown Menu Kota}
-Untuk menampilkan pilihan kota pada \play, menampilkan semua pilihan kota yang terdapat pada KIRI. Kode dapat dilihat pada kode listing \ref{lst_3_play_dropdown_kota_tampilan}
+Untuk menampilkan pilihan kota pada \play, menampilkan semua pilihan kota yang terdapat pada KIRI dan melakukan validasi \verb!location!. Kode dapat dilihat pada kode listing \ref{lst_3_play_dropdown_kota_tampilan}
 
 \begin{lstlisting}[caption=Menampilkan pilihan kota kepada pengguna ,label = {lst_3_play_dropdown_kota_tampilan}]
 ..
@@ -756,7 +753,7 @@ Untuk menampilkan pilihan kota pada \play, menampilkan semua pilihan kota yang t
 \end{lstlisting}
 
 \subsubsection{Dropdown Menu Bahasa}
-Untuk menampilkan pilihan bahasa, menggunakan \textit{tag} HTML \verb!option!. Pada bagian ini. Kode dapat dilihat pada \ref{lst_3_pplay_dropdown_bahasa_tampilan}
+Untuk menampilkan pilihan bahasa, menggunakan \textit{tag} HTML \verb!option!. Pada bagian ini. Kode dapat dilihat pada \ref{lst_3_play_dropdown_bahasa_tampilan}
 
 \begin{lstlisting}[caption=Menampilkan pilihan bahasa kepada pengguna ,label = {lst_3_play_dropdown_bahasa_tampilan}]
 ..
@@ -772,7 +769,7 @@ Untuk menampilkan pilihan bahasa, menggunakan \textit{tag} HTML \verb!option!. P
 \end{lstlisting}
 
 \subsubsection{Textfield}
-Pada \play, \textit{Textfield} pada KIRI dibuat  agar dapat dilakukan proses i18n, seperti pada kode listing \ref{lst_3_play_textfield_from} untuk \textit{textfield} tempat asal dan kode listing \ref{lst_3_play_textfield_to} untuk \textit{textfield} tempat tujuan.
+Pada \play, \textit{textfield} pada KIRI dibuat  agar dapat dilakukan proses i18n, seperti pada kode listing \ref{lst_3_play_textfield_from} untuk \textit{textfield} tempat asal dan kode listing \ref{lst_3_play_textfield_to} untuk \textit{textfield} tempat tujuan.
 
 \begin{lstlisting}[caption=Menampilkan \textit{textfield} tempat awal kepada pengguna ,label = {lst_3_play_textfield_from}]
 ..
@@ -898,9 +895,9 @@ Algoritma yang digunakan pada sistem usulan sama, tetapi ada beberapa struktur d
 		\item Fungsi \verb!setContentType! untuk menghasilkan \textit{output} dengan tipe tertentu.
 		\item Fungsi \verb!setHeader! untuk mengatur \textit{header} pada aplikasi.
 	\end{itemize}
-	\item \textit{Array} pada Java menggunakan HashMap dan ArrayList karena array mengandung indeks dan \textit{key} tertentu.
+	\item \textit{Array} pada Java menggunakan HashMap dan arrayList karena \textit{array} mengandung indeks dan \textit{key} tertentu.
 	\item Koneksi pada aplikasi menggunakan JDBC.
-	\item Hasil eksekusi perintah SQL dimulai dari indeks ke satu, bukan nol.
+	\item Hasil eksekusi \textit{statement} SQL dimulai dari indeks ke satu, bukan nol.
 	\item StringBuilder untuk menghasilkan output pada aplikasi.
 	\item Melakukan format JSON dengan menggunakan ObjectNode.
 	\item Melakukan \textit{encode} JSON menggunakan JsonNode.
@@ -942,7 +939,7 @@ Terdapat empat \textit{use case}, yaitu:
 							No 	& Aksi Aktor & Reaksi Sistem \\ \hline
 							1 	& Pengguna memasukkan lokasi 	&	Sistem mendapatkan lokasi kemudian menampilkan hasil pencarian rute \\ \hline 
 						\end{tabular} 
-			\item Eksepsi: Lokasi tidak ditemukan.
+			\item Eksepsi: Rute tidak ditemukan.
 		\end{itemize}
 	\item \textbf{Memilih rute alternatif}
 	\begin{itemize}
@@ -965,7 +962,7 @@ Terdapat empat \textit{use case}, yaitu:
 			\item Aktor: Pengguna
 			\item Deskripsi: Memilih opsi bahasa yang akan digunakan.
 			\item Kondisi awal: -
-			\item Kondisi akhir: Menampilkan kepada pengguna dengan bahasa yang dipilih
+			\item Kondisi akhir: Menampilkan aplikasi dengan bahasa yang dipilih
 			\item Skenario utama: \\ \\
 				\begin{tabular}{|p{0.5cm} |p{6cm}| p{6cm}|}
 						\hline
@@ -980,7 +977,7 @@ Terdapat empat \textit{use case}, yaitu:
 			\item Aktor: Pengguna
 			\item Deskripsi: Memilih opsi lokasi kota yang akan ditampilkan pada peta dan pencarian rute pada kota tersebut.
 			\item Kondisi awal: -
-			\item Kondisi akhir: Menampilkan kepada pengguna dengan lokasi kota yang dipilih
+			\item Kondisi akhir: Menampilkan peta dengan lokasi kota yang dipilih
 			\item Skenario utama: \\ \\
 				\begin{tabular}{|p{0.5cm} |p{6cm}| p{6cm}|}
 						\hline
@@ -1009,7 +1006,7 @@ Aktivitas-aktivitas yang ada pada KIRI dapat dijelaskan sebagai berikut:
 	\item Pengguna memberikan masukan. Masukan dapat berupa dua, yaitu:
 	\begin{itemize}
 		\item Masukan berupa nama lokasi.
-		\item Masukan berupa klik pada peta. Pengguna klik pada peta, kemudian sistem mendapatkan koordinat pada lokasi yang diklik pengguna dan menulis koordinat tersebut kepada \textit{textfield} tempat asal atau tujuan.
+		\item Masukan berupa klik pada peta. Pengguna klik pada peta, kemudian sistem mendapatkan koordinat pada lokasi yang diklik pengguna dan menulis koordinat tersebut pada \textit{textfield} tempat asal atau tujuan.
 	\end{itemize}
 	\item Sistem melakukan proses pencarian rute dan melakukan pengecekan apakah ada rute alternatif atau tidak.
 	\begin{itemize}
@@ -1039,9 +1036,9 @@ Kelas-kelas yang ada pada KIRI dapat dijelaskan sebagai berikut:
 
 \begin{enumerate}
 	\item Application\\
-			Kelas ini berfungsi untuk menghubungkan \textit{model} dengan \textit{view} dan berada pada \textit{package} Controllers.
+			Kelas ini berfungsi untuk menghubungkan \textit{model} dengan \textit{view} dan berada pada \textit{package} controllers.
 	\item Alternative\\
-			Kelas untuk merepresentasikan alternatif rute yang akan dicari dan berada pada \textit{package} Models.
+			Kelas untuk merepresentasikan alternatif rute yang akan dicari dan berada pada \textit{package} models.
 	\item ProtoRegion\\
-			Kelas untuk merepresentasikan detail kota yang disediakan KIRI dan berada pada \textit{package} Models.
+			Kelas untuk merepresentasikan detail kota yang disediakan KIRI dan berada pada \textit{package} models.
 \end{enumerate}

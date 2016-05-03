@@ -17,7 +17,7 @@ Implementasi perangkat lunak ini dilakukan di komputer dengan spesifikasi sebaga
 \end{enumerate}
 
 \subsection{Hasil Implementasi}
-Hasil implementasi berupa aplikasi berbasis web yang menggunakan Play Framework. Aplikasi dapat diakses pada jaringan lokal dengan URL \url{http://localhost:9000}. Aplikasi KIRI terdiri dari satu halaman utama. Halaman utama KIRI, pengguna dapat melakukan pencarian rute KIRI dengan masukan nama tempat atau masukan berupa klik pada peta yang disediakan pada halaman utama KIRI. Setelah melakukan masukan untuk pencarian rute, muncul hasil pencarian rute dan/atau hasil alternatif rute yang ditampilkan pada halaman utama KIRI serta menggambarkan hasil rute pada peta yang disediakan aplikasi KIRI.
+Hasil implementasi berupa aplikasi berbasis web yang menggunakan Play Framework. Aplikasi dapat diakses pada jaringan lokal dengan URL \url{http://localhost:9000}. Aplikasi KIRI terdiri dari satu halaman utama. Halaman utama KIRI, pengguna dapat melakukan pencarian rute KIRI dengan masukan nama tempat atau masukan berupa klik pada peta yang disediakan pada halaman utama KIRI. Setelah memberikan masukan untuk pencarian rute, muncul hasil pencarian rute dan/atau hasil alternatif rute yang ditampilkan pada halaman utama KIRI serta menggambarkan hasil rute pada peta.
 
 \begin{figure}[H]
 	\centering
@@ -55,9 +55,9 @@ Pengujian fungsional dilakukan untuk mengetahui kesesuaian reaksi perangkat luna
 2 & Pengguna memilih kota yang ingin ditampilkan & Memperbarui peta dengan kota yang dipilih & Sesuai \\ \hline
 3 & Pengguna memilih bahasa yang ingin ditampilkan & Memperbarui tampilan dengan bahasa yang dipilih & Sesuai \\ \hline
 4 & Pengguna melakukan klik pada peta & \textit{Marker} muncul dari titik yang diklik oleh pengguna dan titik koordinat muncul pada \textit{textfield} tempat asal dan/atau tujuan & Sesuai \\ \hline
-5 & Pengguna memilih tombol Swap & Masukan pengguna tempat awal dan tujuan ditukar & Sesuai \\ \hline
+5 & Pengguna memilih tombol Swap & Masukan pengguna pada \textit{textfield} tempat awal dan tujuan ditukar & Sesuai \\ \hline
 6 & Pengguna memilih tombol Reset & Memperbarui halaman utama menjadi semula & Sesuai \\ \hline
-7 & Pengguna memilih tombol Find & Hasil pencarian rute muncul beserta alternatifnya (jika ada) & Sesuai, namun dengan urutan yang berbeda. Hal ini tidak mengubah arti pesan yang dikirim. \\ \hline
+7 & Pengguna memilih tombol Find & Hasil pencarian rute muncul beserta alternatifnya (jika ada) & Sesuai, namun JSON yang dihasilkan mempunyai urutan yang berbeda. Hal ini tidak mengubah arti pesan yang dikirim. \\ \hline
 8 & Pengguna memasukkan nama tempat pada \textit{textfield} tempat asal dan/atau tujuan & Sugesti nama tempat muncul pada masing-masing \textit{textfield} dan menampilkan hasil pencarian beserta alternatifnya (jika ada) & Sesuai \\ \hline
 9 & Pengguna memilih hasil pencarian rute alternatif & Hasil pencarian rute alternatif muncul dan memperbarui peta dengan hasil pencarian rute alternatif & Sesuai \\ \hline
 		
@@ -111,4 +111,4 @@ No. & \multicolumn{1}{c|}{Aksi} & \multicolumn{5}{c|}{Play Framework} \\ \hline
 	\label{fig:5_grafik_eksperimental}
 \end{figure}
 
-Dari hasil dan grafik pengujian eksperimental, didapat kesimpulan bahwa waktu eksekusi \play lebih cepat dalam memuat konten yang dinamis. Konten dinamis termasuk dengan struktur data dalam memuat konten dinamis tersebut. Sedangkan untuk konten statis, waktu eksekusi \play kalah dibandingkan dengan PHP. Konten statis yang dimaksud adalah memuat konten tanpa melalui proses terlebih dahulu, misalnya gambar, JavaScript, dan Stylesheet pada aplikasi.
+Dari hasil dan grafik pengujian eksperimental, didapat kesimpulan bahwa waktu eksekusi \play lebih cepat dalam memuat konten yang dinamis. Konten dinamis termasuk dengan struktur data dalam memuat konten dinamis tersebut. Sedangkan untuk konten statis, waktu eksekusi \play lebih lambat dibandingkan dengan PHP. Konten statis yang dimaksud adalah memuat konten tanpa melalui proses terlebih dahulu, misalnya gambar, JavaScript, dan Stylesheet pada aplikasi.

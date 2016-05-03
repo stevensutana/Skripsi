@@ -11,7 +11,7 @@ JDBC API \cite{jdbc} adalah standar industri untuk konektivitas basisdata-indepe
 \end{itemize}
 
 \subsection{Injeksi SQL}
-Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah celah keamanan yang terjadi dalam lapisan basisdata sebuah aplikasi. Celah ini terjadi ketika masukan pengguna tidak disaring secara benar dari karakter-karakter pelolos bentukan string yang diimbuhkan dalam \textit{statement} SQL. Hal ini adalah sebuah contoh dari sebuah kategori celah keamanan yang lebih umum yang dapat terjadi setiap kali sebuah bahasa pemrograman atau skrip ditambahkan di dalam bahasa pemrograman yang lain. Bentuk-bentuk celah keamanan injeksi SQL:
+Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah celah keamanan yang terjadi dalam lapisan basisdata sebuah aplikasi. Celah ini terjadi ketika masukan pengguna tidak disaring secara benar dari karakter-karakter pelolos bentukan string yang diimbuhkan dalam \textit{statement} SQL. Hal ini adalah sebuah contoh dari sebuah kategori celah keamanan yang lebih umum yang dapat terjadi setiap kali sebuah bahasa pemrograman atau skrip ditambahkan dalam bahasa pemrograman yang lain. Bentuk-bentuk celah keamanan injeksi SQL:
 \begin{itemize}
 	\item Karakter-karakter pelolos yang tidak disaring secara benar.\\
 	Bentuk injeksi SQL ini terjadi ketika masukan pengguna tidak disaring dari karakter-karakter pelolos dan kemudian diteruskan ke dalam sebuah \textit{statement} SQL. Baris kode berikut menggambarkan celah keamanan:
@@ -19,7 +19,7 @@ Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah 
 	statement := "SELECT * FROM pengguna WHERE nama = '" + namaPengguna + "';"
 \end{lstlisting}
 	
-	Jika variabel \verb!namaPengguna! dirangkai sedemikian rupa oleh pengguna yang bermaksud buruk, \textit{statement} SQL tersebut bisa melakukan lebih daripada yang pengarangnya maksudkan. Sebagai contoh, mengeset variabel \verb!namaPengguna! sebagai:
+	Jika variabel \verb!namaPengguna! dirangkai sedemikian rupa oleh pengguna yang bermaksud buruk, \textit{statement} SQL tersebut bisa melakukan lebih daripada yang pengarangnya maksudkan. Sebagai contoh, memasukkan variabel \verb!namaPengguna! sebagai:
 	\begin{lstlisting}
 		a' or 't'='t
 	\end{lstlisting}
@@ -41,13 +41,13 @@ Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah 
 		SELECT * FROM pengguna WHERE nama = 'a';DROP TABLE pengguna; 
 	\end{lstlisting}
 	\item Penanganan tipe data yang tidak benar.\\
-	Bentuk injeksi SQL ini terjadi ketika sebuah unsur masukan pengguna tidak diperiksa batasan-batasan tipenya. Ini dapat terjadi ketika sebuah unsur numerik akan digunakan dalam sebuah \textit{statement} SQL, tetapi pemrogram tidak melakukan pemeriksaan untuk memastikan bahwa masukan pengguna adalah numerik. Sebagai contoh:
+	Bentuk injeksi SQL ini terjadi ketika sebuah masukan pengguna tidak diperiksa batasan tipenya. Ini dapat terjadi ketika sebuah unsur numerik akan digunakan dalam sebuah \textit{statement} SQL, tetapi pemrogram tidak melakukan pemeriksaan untuk memastikan bahwa masukan pengguna adalah numerik. Sebagai contoh:
 	
 	\begin{lstlisting}
 		statement := "SELECT * FROM data WHERE id = " + variabel_a + ";"
 	\end{lstlisting}
 	
-	Terlihat jelas dari \textit{statement} ini, \verb!variabel\_a! menjadi sebuah nomor yang berhubungan dengan unsur ``id''. Namun begitu, jika pada kenyataannya sebuah string, maka pengguna akhir dapat memanipulasi \textit{statement} tersebut sesukanya, dan karena itu mengabaikan kebutuhan akan karakter-karakter pelolos. Sebagai contoh, mengeset \verb!variabel\_a! sebagai
+	Terlihat jelas dari \textit{statement} ini, \verb!variabel_a! menjadi sebuah nomor yang berhubungan dengan unsur \verb!id!. Namun begitu, jika pada kenyataannya sebuah String, maka pengguna akhir dapat memanipulasi \textit{statement} tersebut sesukanya, dan karena itu mengabaikan kebutuhan akan karakter-karakter pelolos. Sebagai contoh, mengeset \verb!variabel_a! sebagai
 
 	\begin{lstlisting}
 		1;DROP TABLE pengguna
@@ -58,14 +58,14 @@ Injeksi SQL \cite{injeksi-sql} adalah sebuah teknik yang menyalahgunakan sebuah 
 	\end{lstlisting}
 	
 	\item Celah keamanan dalam server basis data.\\
-	Terkadang celah keamanan dapat berada dalam perangkat lunak server basis data itu sendiri, seperti yang terjadi pada fungsi-fungsi real\_escape\_chars() di server MySQL.
+	Terkadang celah keamanan dapat berada dalam perangkat lunak server basisdata itu sendiri, seperti yang terjadi pada fungsi \verb!real_escape_chars! di server MySQL.
 \end{itemize}
 
 \textbf{Prepared Statement}\\
-Prepared Statement adalah fitur yang digunakan untuk mengeksekusi \textit{statement} basisdata berulang kali dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan \textit{statement} SQL seperti \textit{query} atau \textit{update}, \textit{statement} mengambil bentuk \textit{template} yang diganti dengan nilai-nilai konstan tertentu yang diganti selama setiap eksekusi. Dengan menggunakan Prepared Statement, waktu eksekusi untuk \textit{statement} SQL berkurang dan \textit{statement} SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, Prepared Statement berisi tidak hanya sebuah \textit{statement} SQL, tetapi \textit{statement} SQL yang telah dilakukan pre-kompilasi.
+Prepared Statement adalah fitur yang digunakan untuk mengeksekusi \textit{statement} basisdata dengan tingkat efisiensi yang tinggi.  Biasanya digunakan dengan \textit{statement} SQL seperti \textit{query} atau \textit{update}, \textit{statement} mengambil bentuk \textit{template} yang diganti dengan nilai-nilai konstan tertentu yang diganti setiap eksekusi. Dengan menggunakan Prepared Statement, waktu eksekusi untuk \textit{statement} SQL berkurang dan \textit{statement} SQL dikirim ke basisdata langsung, dimana dilakukan kompilasi. Akibatnya, Prepared Statement berisi tidak hanya sebuah \textit{statement} SQL, tetapi \textit{statement} SQL yang telah dilakukan pre-kompilasi.
 
-JDBC menyediakan kelas PreparedStatement untuk mendukung Prepared Statement. Hal pertama yang dilakukan adalah menyiapkan koneksi untuk \textit{database}. Memanggil objek \verb!DB! yang disediakan oleh \play untuk mendapatkan koneksi ke \textit{database}. Dengan memanggil objek DB, koneksi ke database sudah disediakan sesuai dengan konfigurasi database. 
-Untuk menggunakan PreparedStatement, pertama membuat objek yang berupa PreparedStatement dengan menyiapkan \textit{statement} SQL tetapi nilai yang ingin dimasukkan ke \textit{statement} SQL diberi \verb!`?'! terlebih dahulu.
+JDBC menyediakan kelas PreparedStatement untuk mendukung Prepared Statement. Hal pertama yang dilakukan adalah menyiapkan koneksi untuk basisdata. Memanggil objek \verb!DB! yang disediakan oleh \play untuk mendapatkan koneksi ke basisdata. Dengan memanggil objek DB, koneksi ke basisdata sudah disediakan sesuai dengan konfigurasi basisdata. 
+Untuk menggunakan PreparedStatement, pertama membuat objek yang berupa PreparedStatement dengan menyiapkan \textit{statement} SQL tetapi nilai yang ingin dimasukkan ke \textit{statement} SQL diganti \verb!`?'! terlebih dahulu.
 Kelas PreparedStatement mempunyai beberapa \textit{method} dengan rincian: 
  \begin{itemize}
  	\item \textbf{public void setString(int parameterIndex,String x)}\\
@@ -83,9 +83,7 @@ Kelas PreparedStatement mempunyai beberapa \textit{method} dengan rincian:
  			Berfungsi untuk eksekusi statement SQL.\\
  			\textbf{Kembalian:} Objek ResultSet yang merupakan objek yang dibuat dari \textit{statement} SQL.
 \end{itemize}
-Setelah selesai dengan koneksi \textit{database}, koneksi \textit{database} harus ditutup.
- 
- Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
+Setelah selesai dengan koneksi basisdata, koneksi basisdata harus ditutup. Contoh kode PreparedStatement dapat dilihat pada kode listing \ref{lst_2_prepared}.
 
 \begin{lstlisting}[caption=Contoh PreparedStatement,label = {lst_2_prepared}]
 		Connection connection = DB.getConnection();
@@ -106,7 +104,7 @@ Setelah selesai dengan koneksi \textit{database}, koneksi \textit{database} haru
 \section{Play Framework}
 \label{sec:play}
 \subsection{Struktur Play Framework}
-\play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang lengkap, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, fleksibel, dan kuat. Referensi \cite{playforjava} yang digunakan membahas \play 2.2, sedangkan versi \play yang dipakai dalam penelitian ini adalah versi 2.4. Ada sedikit perbedaan sintaks yang akan dijelaskan pada bagian yang berbeda.
+\play \cite{playforjava} merupakan \textit{framework} untuk aplikasi web dengan menggunakan bahasa Java dan Scala. \play tidak sepenuhnya menggunakan bahasa Java, tetapi juga bahasa Scala. Terdapat bahasa Scala bukan berarti harus mempelajari bahasa Scala karena dalam Play 2 dilengkapi dengan Java API yang lengkap, memberikan opsi untuk memilih bahasa pemrograman yang cocok. \play mempunyai antarmuka yang sederhana, nyaman, dan fleksibel. Referensi \cite{playforjava} yang digunakan membahas \play 2.2, sedangkan versi \play yang dipakai dalam penelitian ini adalah versi 2.4. Ada sedikit perbedaan sintaks yang akan dijelaskan pada bagian yang berbeda.
 %Beberapa fitur utama yang membuat \play produktif dan penggunaan yang nyaman:
 %
 %\begin{enumerate}
@@ -130,7 +128,7 @@ Setelah selesai dengan koneksi \textit{database}, koneksi \textit{database} haru
 \end{figure}
 
 \subsubsection{Direktori conf/}
-Konfigurasi \play terdapat pada direktori \textit{conf/}. Dalam direktori \textit{conf/}, terdapat file \textit{application.conf} dan \textit{routes}. File \textit{application.conf} mengandung informasi data konfigurasi aplikasi, seperti \textit{logging}, koneksi basis data, dan port berapa server berjalan. File \textit{routes} menentukan \textit{routes} aplikasi, yaitu pemetaan dari URL HTTP ke kode aplikasi. Setiap \textit{routes} memiiki tiga bagian, yaitu HTTP \textit{method}, URL \textit{path}, dan \textit{action method}. HTTP \textit{method} merupakan metode yang dipakai dalam pengiriman HTTP. URL \textit{path} adalah URL yang dipakai untuk mengakses halaman. \textit{Action method} merupakan metode  yang dipanggil ketika mengakses halaman pada URL \textit{path}. Sebagai contoh dapat dilihat pada \ref{fig:2_play_routes}, HTTP \textit{method} yang dipakai pada URL /list adalah GET dan akan memanggil \textit{method} list pada kelas Products di controllers.
+Konfigurasi \play terdapat pada direktori \textit{conf/}. Dalam direktori \textit{conf/}, terdapat file \textit{application.conf} dan \textit{routes}. File \textit{application.conf} berisi informasi data tentang konfigurasi aplikasi, seperti \textit{logging}, koneksi basis data, dan port berapa server berjalan. File \textit{routes} menentukan \textit{routes} aplikasi, yaitu pemetaan URL HTTP ke kode aplikasi. Setiap \textit{routes} memiiki tiga bagian, yaitu HTTP \textit{method}, URL \textit{path}, dan \textit{action method}. HTTP \textit{method} merupakan metode yang dipakai dalam pengiriman HTTP. URL \textit{path} adalah URL yang dipakai untuk mengakses halaman. \textit{Action method} merupakan metode  yang dipanggil ketika mengakses halaman pada URL \textit{path}. Sebagai contoh dapat dilihat pada \ref{fig:2_play_routes}, HTTP \textit{method} yang dipakai pada URL /list adalah GET dan akan memanggil \textit{method} list pada kelas Products di controllers.
 
 \begin{figure}[H]
 	\centering
@@ -140,7 +138,7 @@ Konfigurasi \play terdapat pada direktori \textit{conf/}. Dalam direktori \texti
 \end{figure}
 
 \subsubsection{Direktori public}
-Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, JavaScript, dan halaman statis HTML. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_struktur}. Di contoh tersebut, file \textit{images/favicon.png} dapat diakses melalui URL \verb!@routes.Assets.versioned("images/favicon.png")!. 
+Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung tanpa melalui proses terlebih dahulu. Direktori \textit{public} biasanya mengandung file gambar, \textit{stylesheets}, dan JavaScript. Contoh direktori \textit{public} dapat dilihat pada gambar \ref{fig:2_play_struktur}. Di contoh tersebut, file \textit{images/favicon.png} dapat diakses melalui \verb!@routes.Assets.versioned("images/favicon.png")!. 
 %
 %\begin{figure}[H]
 %	\centering
@@ -152,7 +150,7 @@ Direktori \textit{public} mengandung semua sumber daya yang disediakan langsung 
 \subsubsection{Direktori app.}
 Direktori \textit{app} merupakan direktori utama pada aplikasi. Direktori \textit{app} berisi kode aplikasi dan berbagai kebutuhan untuk menyusun aplikasi, seperti kode sumber file Java dan file \textit{template}. Contoh direktori \textit{app} pada saat pertama kali membuat aplikasi Play dapat dilihat pada gambar \ref{fig:2_play_struktur}. 
 
-Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman \textit{view}. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request} berupa view. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. View dapat menerima parameter yang didefinisikan pada template view. Contoh view dengan menerima parameter berupa String dapat dilihat pada kode listing \ref{lst_2_view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view} dengan memberi parameter ``Hello World''. \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada kode listing \ref{lst_2_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima \textit{parameter} berupa ``Hello World''. Pada \cite{playforjava}, hasil Result memiliki tipe \verb!static!, tetapi pada \play 2.4 \verb!static! dihilangkan.
+Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java untuk memuat halaman \textit{view}. \textit{Controller} adalah kelas untuk menerima HTTP \textit{request} dan mengembalikan nilai dari HTTP \textit{request} berupa \textit{view}. Semua konten yang dihasilkan di server dan dikirimkan ke klien seperti halaman HTML disebut \textit{view}. View dapat menerima parameter yang didefinisikan pada template \textit{view}. Contoh \textit{view} dengan menerima parameter berupa String dapat dilihat pada kode listing \ref{lst_2_view}. \textit{Method} pada \textit{Controller} menghasilkan hasil berupa \textit{Result} yang berupa \textit{view} dengan memberi parameter berupa ``Hello World''. \textit{Method} pada \textit{controller} dan \textit{view} dihubungkan melalui pendefinisian pada \textit{routes}. Sebagai contoh pada kode listing \ref{lst_2_controller}, \textit{method ok} membangun HTTP \textit{response} yang mengandung \textit{response body} sebagai hasil dari \textit{template list}. \textit{Method ok} menerima parameter berupa ``Hello World''. Pada \cite{playforjava}, hasil Result memiliki tipe \verb!static!, tetapi pada \play 2.4 tipe \verb!static! dihilangkan.
 
 \begin{lstlisting}[caption=Contoh View (index.scala.html),label = {lst_2_view},language=Java]
 @(title: String)
@@ -179,7 +177,7 @@ Dalam \textit{controller}, terdapat file Application.java yang berisi kode Java 
     }
 \end{lstlisting}
 
-Beberapa alternatif hasil Results \ref{lst_2_controller}, yaitu:
+Beberapa alternatif hasil Results sebagai berikut:
 \begin{enumerate}
 	\item \textbf{\textit{Method} ok()}\\ 
 	Method yang berfungsi untuk mengembalikan Result dengan kode \textit{HTTP Response} 200 atau sukses dalam mengirim HTTP Request.
@@ -196,19 +194,19 @@ Beberapa alternatif hasil Results \ref{lst_2_controller}, yaitu:
 \end{enumerate}
 
 \subsection{Web Service}
-\play menyediakan \textit{library} untuk memanggil layanan HTTP dari luar aplikasi Play yang disebut \textit{library} WS. Library WS memanggil layanan HTTP secara \textit{asynchronous}. Tahap penting yang dilakukan Library WS adalah:
+\play menyediakan \textit{library} untuk memanggil layanan HTTP dari luar aplikasi \play yang disebut \textit{library} WS. Library WS memanggil layanan HTTP secara \textit{asynchronous}. Tahap penting yang dilakukan Library WS adalah:
 \begin{enumerate}
 	\item Melakukan permintaan \textit{web service}, dan
 	\item Memproses respon yang didapat.
 \end{enumerate}
 
-Pertama menentukan hasil respon yang ingin didapat memiliki tipe data apa, seperti String atau JSON. Setelah itu, menentukan URL halaman web yang ingin diproses. Lalu dapat menambahkan query parameter (jika ada). Query parameter menerima dua input, yaitu key dan value. Terakhir menerima respon dengan melakukan pemetaan dari F.Promise menjadi WSResponse. Kelas F merupakan kumpulan fungsi pembantu dalam \play.
+Pertama menentukan tipe data hasil respon yang ingin didapatkan, seperti String atau JSON. Setelah itu, menentukan URL halaman web yang ingin diproses. Lalu dapat menambahkan \textit{query parameter} (jika ada). Query parameter menerima dua input, yaitu \textit{key} dan \textit{value}. Terakhir menerima respon dengan melakukan pemetaan dari F.Promise menjadi WSResponse. Kelas F merupakan kumpulan fungsi pembantu dalam \play.
 
 \subsection{JSON}
-Dalam aplikasi KIRI, data yang disediakan maupun data yang didapat dari Web Service berupa JSON. Play menggunakan Jackson, sebuah library JSON yang mengubah objek ke atau dari JSON.
+Dalam aplikasi KIRI, data yang dikirim maupun data yang didapat dari Web Service berupa JSON. Play Framework menggunakan Jackson, sebuah library JSON yang mengubah objek ke atau dari JSON.
 
 \subsubsection{Menulis JSON}
-Untuk menulis keluaran JSON, Play menggunakan ObjectNode. ObjectNode dapat menulis JSON dengan menerima dua parameter, yaitu \textit{key} dan \textit{value}. Jika ingin memasukkan \textit{value} dengan tipe Object, maka value tersebut harus diubah terlebih dahulu menjadi format JSON yang benar. Contoh dapat dilihat pada kode listing \ref{lst_2_jsonnode_nulis}.
+Untuk menulis hasil dengan format JSON, \play menggunakan kelas ObjectNode. ObjectNode dapat menulis JSON dengan menerima dua parameter, yaitu \textit{key} dan \textit{value}. Jika ingin memasukkan \textit{value} dengan tipe Object, maka value tersebut harus diubah terlebih dahulu menjadi format JSON yang benar. Contoh dapat dilihat pada kode listing \ref{lst_2_jsonnode_nulis}.
 
 \begin{lstlisting}[caption=Contoh menulis JSON menggunakan ObjectNode,label = {lst_2_jsonnode_nulis},language=Java]
 	
@@ -220,7 +218,7 @@ Untuk menulis keluaran JSON, Play menggunakan ObjectNode. ObjectNode dapat menul
 \end{lstlisting}
 
 \subsubsection{Mendapatkan JSON}
-Untuk mendapatkan JSON, pertama menguraikan String menjadi JsonNode, lalu mendapatkan \textit{value} dari \textit{key} dengan memanggil \textit{method} get(index) atau findPath(index) dimana \verb!index! tersebut adalah \textit{key} yang ingin dicari. Contoh dapat dilihat pada kode listing \ref{lst_2_jsonnode_baca}.
+Untuk mendapatkan JSON, pertama menguraikan String menjadi objek JsonNode, lalu mendapatkan \textit{value} dari \textit{key} dengan memanggil \textit{method} \textbf{get(String index)} atau \textbf{findPath(String index)} dimana \verb!index! tersebut adalah \textit{key} yang ingin dicari. Contoh kode dapat dilihat pada kode listing \ref{lst_2_jsonnode_baca}.
 
 \begin{lstlisting}[caption=Contoh mendapatkan JSON menggunakan JsonNode,label = {lst_2_jsonnode_baca},language=Java]
 	
@@ -258,7 +256,7 @@ Pengguna aplikasi mungkin berasal dari beda negara dan bahasa, juga punya format
 	\item Internationalization dapat dilakukan proses lokalisasi dengan cepat.
 \end{itemize}
 
-Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan. Pesan ini dimuat dalam file messages.LANG dimana LANG merupakan bahasa yang dipakai. Messages.LANG disimpan dalam direktori conf. Sebagai contoh, terdapat dua bahasa yang dipakai pada aplikasi, yaitu Bahasa Inggris dan Bahasa Indonesia seperti pada kode listing \ref{lst_2_i18n_en} dan \ref{lst_2_i18n_id}
+Untuk mendukung beberapa bahasa dalam \play, membuat kunci pesan yang dipetakan pesan sesungguhnya pada file pesan. Pesan ini dimuat dalam file messages.LANG dimana LANG merupakan bahasa yang dipakai. Messages.LANG disimpan dalam direktori \textit{conf/}. Sebagai contoh, terdapat dua bahasa yang dipakai pada aplikasi, yaitu Bahasa Inggris dan Bahasa Indonesia seperti pada kode listing \ref{lst_2_i18n_en} dan \ref{lst_2_i18n_id}
 
 \begin{lstlisting}[caption=Contoh messages.en untuk i18n,label = {lst_2_i18n_en},language=Java]
 	from = From:
@@ -276,7 +274,7 @@ Untuk mendukung beberapa bahasa dalam Play, membuat kunci pesan yang dipetakan p
 	to = Ke:
 \end{lstlisting}
 
-Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file messages.LANG. Untuk itu, daftarkan bahasa pada application.conf seperti pada kode listing \ref{lst_2_conf_i18n}. Pada \cite{playforjava}, konfigurasi bahasa dalam satu String. Tetapi pada \play 2.4 konfigurasi bahasa dalam bentuk array of String.
+\play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file messages.LANG. Untuk itu, daftarkan bahasa pada \textit{application.conf} seperti pada kode listing \ref{lst_2_conf_i18n}. Pada \cite{playforjava}, konfigurasi bahasa dalam satu String. Tetapi pada \play 2.4 konfigurasi bahasa dalam bentuk array of String.
 
 \begin{lstlisting}[caption=Konfigurasi Bahasa i18n,label = {lst_2_conf_i18n},language=Java]
 	...
@@ -287,7 +285,7 @@ Play harus mengetahui bahasa apa saja yang ada pada aplikasi sesuai dengan file 
 \end{lstlisting}
 
 \subsection{Logging}
-Logging dapat membantu dalam pengerjaan aplikasi KIRI. Kita dapat memonitor, melihat kesalahan program, dan memperbaiki program. Play menyediakan API untuk logging yang dapat diakses melalui objek Logger. Contoh logging dapat dilihat pada kode listing \ref{lst_2_logging}.
+Logging dapat membantu pengembang dalam pengerjaan aplikasi KIRI. Pengembang dapat memonitor, melihat kesalahan program, dan memperbaiki program. Play Framework menyediakan API untuk logging yang dapat diakses melalui objek Logger. Contoh logging dapat dilihat pada kode listing \ref{lst_2_logging}.
 
 \begin{lstlisting}[caption=Contoh logging menggunakan objek Logger,label = {lst_2_logging}]
 	 Logger.debug("mode search json : " + json_output.toString());
@@ -299,10 +297,10 @@ OpenLayers \cite{openlayersbook} merupakan \textit{library} yang memiliki perfor
 
 \begin{itemize}
 \item \textit{Tiled Layers}\\
-			OpenLayers dapat menggunakan banyak \textit{map provider}, seperti OSM, Bing, MapBox, Stamen, MapQuest, dan berbagai sumber lain yang dapat ditemukan. Dengan menggunakan OpenLayers, tidak perlu menulis ulang kode yang sudah ada dan dapat mengganti kapanpun sumber \textit{map provider} yang ingin digunakan.
+			OpenLayers dapat menggunakan banyak \textit{map provider}, seperti OSM, Bing, MapBox, Stamen, MapQuest, dan berbagai sumber lain yang dapat ditemukan. Dengan menggunakan OpenLayers, tidak perlu menulis ulang kode yang sudah ada dan dapat mengganti kapanpun sumber peta yang ingin digunakan.
 	\item \textit{Vector Layers}\\
 			OpenLayers dapat mengubah data vektor dari berbagai tipe sumber, seperti GeoJSON, TopoJSON, KML, dan GML.
-	\item Cepat dan Siap untuk Perangkat \textit{Mobile}\\
+	\item Cepat dan siap untuk perangkat \textit{mobile}\\
 			OpenLayers mendukung perangkat \textit{mobile}. OpenLayers dapat membangun profil kustom yang berisi komponen yang dibutuhkan saja.
 	\item Mudah menyesuaikan peta dan \textit{cutting edge}\\
 			OpenLayers menyesuaikan peta WebGL, Canvas 2D, dan semua kelebihan dari HTML 5. Atur tampilan peta dengan mengubah langsung CSS.
@@ -310,7 +308,7 @@ OpenLayers \cite{openlayersbook} merupakan \textit{library} yang memiliki perfor
 
 Modul OpenLayers yang dipakai dalam penelitian ini adalah:
 \begin{itemize}
-	\item 	Bing Maps untuk menampilkan peta menggunakan Bing. KIRI menggunakan \textit{map provider} Bing Maps sebagai peta pada halaman utama KIRI. 
+	\item 	Bing Maps untuk menampilkan peta menggunakan Bing. KIRI menggunakan sumber peta Bing Maps sebagai peta pada halaman utama KIRI. 
 	\item Draw untuk menggambar poin pada peta. Saat peta KIRI menangkap \textit{event mouseclick}, muncul poin yang berupa kustom gambar pada peta KIRI sebagai asal tempat dan tujuan. 
 \end{itemize}
 
@@ -329,46 +327,39 @@ var mapLayer = new ol.layer.Tile(
 \end{lstlisting}
 
 \subsection{Draw Poin}
-Pada peta KIRI, pengguna dapat memilih tempat awal dan tujuan dengan memasukkan nama tempat atau memilih tempat pada peta. Pada Openlayers, disediakan fitur untuk menangani kursor klik pengguna. Pertama menentukan gambar yang akan ditampilkan pada peta seperti pada kode listing \ref{lst_2_ol_image}. Setelah itu, menggambar pada peta seperti pada figur \ref{lst_2_ol_map}.
+Pengguna dapat memilih tempat awal dan tujuan dengan memasukkan nama tempat atau memilih tempat pada peta. Jika melakukan klik pada peta, maka akan menampilkan gambar yang menunjukkan lokasi awal dan akhir. Kode dapat dilihat pada \ref{lst_2_ol_image}. 
 
+\begin{lstlisting}[caption=Menambahkan klik pada peta,label = {lst_2_ol_image},language=Java]
 
-\begin{lstlisting}[caption=Menentukan gambar yang akan dipakai pada peta,label = {lst_2_ol_image},language=Java]
-
-	
-	var markers = {start: null, finish: null};
-	
-	var inputVectorSource = new ol.source.Vector();
-
-	markers['start'] = new ol.Feature(
-	{
-		geometry: new ol.geom.Point(event.coordinate)
-	})
-	
-	markers['start'].setStyle(new ol.style.Style(
-	{
-		image: new ol.style.Icon({
-			src: '/assets/images/start.png',
-			anchor: [1.0, 1.0]
+map.on('click', function(event) {
+    	if ($('#startInput').val() === '') {
+		markers['start'] = new ol.Feature({
+			geometry: new ol.geom.Point(event.coordinate)
 		})
-	}));
-	
-	inputVectorSource.addFeature(markers['start']);
-	
-	
-\end{lstlisting}
-
-
-\begin{lstlisting}[caption=Menambahkan vektor pada peta,label = {lst_2_ol_map},language=Java]
-	
-var map = new ol.Map({
-    target: 'map',
-    layers : [ mapLayer, new ol.layer.Vector({source: inputVectorSource}), new ol.layer.Vector({source: resultVectorSource}) ],
-    view: new ol.View({
-        center: ol.proj.fromLonLat([107.60981,-6.91474]),
-        zoom: 12
-    })
+		markers['start'].setStyle(new ol.style.Style({
+			image: new ol.style.Icon({
+				src: 'images/start.png',
+				anchor: [1.0, 1.0]
+			})
+		}));
+		inputVectorSource.addFeature(markers['start']);
+    		$('#startInput').val(latLngToString(ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326')));
+    	} else if ($('#finishInput').val() === '') {
+		markers['finish'] = new ol.Feature({
+			geometry: new ol.geom.Point(event.coordinate)
+		})
+		markers['finish'].setStyle(new ol.style.Style({
+			image: new ol.style.Icon({
+				src: 'images/finish.png',
+				anchor: [0.0, 1.0]
+			})
+		}));
+		inputVectorSource.addFeature(markers['finish']);
+    		$('#finishInput').val(latLngToString(ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326')));
+    	}
 });
-		
+
+
 \end{lstlisting}
 
 \section{Zurb Foundation}
@@ -395,7 +386,7 @@ Setiap sel merupakan area konten yang dapat digabung dengan sel lain yang berseb
 	\label{fig:2_zurb_grid}
 \end{figure}
 
-Komponen Foundation adalah kode CSS  yang membantu untuk desain dan merepresentasikan konten halaman \textit{web}. Dengan menggunakan komponen Foundation, tidak perlu desain sendiri dari awal. CSS pada Foundation juga dapat dikustomisasi sesuai dengan kebutuhan. Jika ingin menggunakan komponen Foundation, kita hanya perlu menggunakan tag class pada elemen yang diinginkan. Contoh penggunaaan komponen Foundation dapat dilihat pada figur \ref{lst_2_zurb_contoh}.
+Komponen Foundation adalah kode CSS  yang membantu untuk desain dan merepresentasikan konten halaman web. Dengan menggunakan komponen Foundation, tidak perlu desain sendiri dari awal. CSS pada Foundation juga dapat dikustomisasi sesuai dengan kebutuhan. Jika ingin menggunakan komponen Foundation, kita hanya perlu menggunakan \textit{tag} \verb!class! pada elemen yang diinginkan. Contoh penggunaaan komponen Foundation dapat dilihat pada figur \ref{lst_2_zurb_contoh}.
 
 \begin{lstlisting}[caption=Menggunakan kelas yang sudah disediakan dari Foundation,label = {lst_2_zurb_contoh}]
 	<img class="show-for-small" src="./images/little.png"/>
@@ -426,7 +417,7 @@ Panel Elements dapat memperlihatkan struktur halaman web dalam bentuk \textit{Do
 \end{figure}
 
 \subsection{Network}
-Panel Network memberikan informasi tentang sumber daya yang diminta dan sumber daya yang diunduh melalui jaringan secara \textit{real-time}. Panel Network juga memperlihatkan waktu yang dibutuhkan untuk permintaan sumber daya. Sebagai contoh pada gambar \ref{fig:2_devtools_network}, saat melakukan pencarian rute, panel Network memperlihatkan apa saja sumber daya yang diperlukan serta waktu yang dibutuhkan pada proses tersebut. Tiap sumber daya pada panel Network terdapat kolom:
+Panel Network memberikan informasi tentang sumber daya yang dimuat dan sumber daya yang diunduh melalui jaringan secara \textit{real-time}. Panel Network juga memperlihatkan waktu yang dibutuhkan untuk memuat sumber daya. Sebagai contoh pada gambar \ref{fig:2_devtools_network}, saat melakukan pencarian rute, panel Network memperlihatkan apa saja sumber daya yang diperlukan serta waktu yang dibutuhkan pada proses tersebut. Tiap sumber daya pada panel Network terdapat kolom:
 
 \begin{itemize}
 	\item \textbf{Name}, nama sumber daya.
@@ -434,7 +425,7 @@ Panel Network memberikan informasi tentang sumber daya yang diminta dan sumber d
 	\item \textbf{Type}, tipe sumber daya.
 	\item \textbf{Initiator}, asal dari sumber daya yang diminta.
 	\item \textbf{Size}, ukuran sumber daya.
-	\item \textbf{Time}, waktu yang dibutuhkan dalam permintaan sumber daya.
+	\item \textbf{Time}, waktu yang dibutuhkan dalam memuat sumber daya.
 \end{itemize}
 
 \begin{figure}[H]
@@ -460,14 +451,14 @@ Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya te
 			\begin{figure}[H]
 				\centering
 				\includegraphics[scale=0.3]{Gambar/devtools-network-preview-a}
-				\caption{Contoh peninjauan sumber daya tersedia} 
+				\caption{Contoh peninjauan tersedianya sumber daya} 
 				\label{fig:2_devtools_network_preview_a}
 			\end{figure}
 			
 			\begin{figure}[H]
 				\centering
 				\includegraphics[scale=0.3]{Gambar/devtools-network-preview-b}
-				\caption{Contoh peninjauan sumber daya tidak tersedia} 
+				\caption{Contoh peninjauan  tidak tersedianya sumber daya} 
 				\label{fig:2_devtools_network_preview_b}
 			\end{figure}
 			
@@ -490,9 +481,8 @@ Ketika sumber daya diklik, maka akan muncul bagian baru disamping sumber daya te
 				\item \textbf{Path}, URL \textit{cookie}.
 				\item \textbf{Expires / Max-Age}, batas habis \textit{cookie}.
 				\item \textbf{Size}, ukuran \textit{cookie}.
-				\item \textbf{HTTP}
-				\item \textbf{Secure}
-				\item \textbf{First-Party}
+				\item \textbf{HTTP}, menunjukkan bahwa \textit{cookie} harus ditetapkan oleh \textit{browser} dalam permintaan HTTP, dan tidak dapat diakses dengan JavaScript.
+				\item \textbf{Secure}, menunjukkan bahwa \textit{cookie} harus dikirim melalui koneksi yang aman.
 			\end{itemize}					 
 			
 			\begin{figure}[H]
