@@ -1,6 +1,26 @@
 \chapter{Analisis}
 \label{chap:analisis}
 
+\section{Alur Aplikasi}
+Alur aplikasi KIRI dapat dijelaskan sebagai berikut:
+\begin{enumerate}
+	\item Pengguna melakukan akses halaman KIRI.
+	\item Halaman KIRI mengirimkan \textit{request} ke \textit{server}. \textit{Server} KIRI terdapat dua, yaitu \textit{server} dalam bahasa PHP atau \textit{server} dalam bahasa Java.
+	\item Server KIRI melakukan akses ke server NewMenjangan. Server NewMenjangan adalah server yang menyediakan layanan web untuk data koordinat rute yang ditempuk dari tempat asal ke tempat tujuan. Contoh layanan web NewMenjangan dapat dilihat pada gambar \ref{fig:3_menjanganservice}. 
+\end{enumerate}
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.2]{Gambar/analisis.jpg}
+	\caption{Alur Aplikasi}
+	\label{fig:1_kiritravel}
+\end{figure}
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.5]{Gambar/newmenjanganreq.png}
+	\caption{Contoh Layanan Web dari NewMenjangan}
+	\label{fig:3_menjanganservice}
+\end{figure}
+
 \section{Analisis Sistem Kini}
 \label{sec:analisiskini}
 Pada halaman utama KIRI (dapat dilihat pada gambar \ref{fig:3_KIRI_main}), terdapat beberapa bagian yaitu:
@@ -728,6 +748,7 @@ Tujuan dari fungsi ini adalah merubah lokasi dalam bentuk \textit{point} menjadi
 	\item Melakukan pengecekan pada tabel \textit{cache} ada atau tidak dengan \textit{key} \verb!cache_geocoding! dan bernilai sesuai dengan parameter \verb!location! atau tidak dan dimasukkan ke data \verb!cached_geocode!. Jika ada nilainya, langsung mengembalikan nilai tersebut.
 	\item Jika tidak ada, maka akan menambahkan \textit{query} parameter ``?key=\$gmaps\_server\_key\&latlng=\$location\&sensor=false'' pada \textit{URL} \url{https://maps.googleapis.com/maps/api/geocode/json} dimana \verb!gmaps_server_key! adalah \textit{key} untuk API Google dan \verb!latlng! adalah garis lintang dan garis bujur. Jika berhasil akses dan mendapatkan \verb!status! sama dengan \verb!`OK'!, maka akan menambahkan lokasi sugesti pada pengguna. Jika \verb!status! tidak sama dengan \verb!`OK'!, maka akan menampilkan pesan kesalahan. 
 \end{itemize}
+
 \section{Analisis Sistem Usulan}
 \label{sec:perubahan}
 
@@ -989,7 +1010,7 @@ Terdapat empat \textit{use case}, yaitu:
 \end{enumerate}
 
 
-\section{Analisis Activity Diagram}
+\section{Analisis Diagram Aktivitas}
 \label{sec:activitydiagram}
 Diagram aktivitas KIRI dapat dilihat pada \ref{fig:3_activitydiagram}.
 
@@ -1023,7 +1044,7 @@ Aktivitas-aktivitas yang ada pada KIRI dapat dijelaskan sebagai berikut:
 
 \section{Analisis Kelas}
 \label{sec:kelasdiagram}
-Diagram kelas analisis KIRI dapat dilihat pada \ref{fig:3_classdiagram}.
+Analisis Diagram kelas KIRI dapat dilihat pada \ref{fig:3_classdiagram}.
 
 \begin{figure}[H]
 	\centering

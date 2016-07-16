@@ -17,7 +17,13 @@ Implementasi perangkat lunak ini dilakukan di komputer dengan spesifikasi sebaga
 \end{enumerate}
 
 \subsection{Hasil Implementasi}
-Hasil implementasi berupa aplikasi berbasis web yang menggunakan Play Framework. Aplikasi dapat diakses pada jaringan lokal dengan URL \url{http://localhost:9000}. Aplikasi KIRI terdiri dari satu halaman utama. Halaman utama KIRI, pengguna dapat melakukan pencarian rute KIRI dengan masukan nama tempat atau masukan berupa klik pada peta yang disediakan pada halaman utama KIRI. Setelah memberikan masukan untuk pencarian rute, muncul hasil pencarian rute dan/atau hasil alternatif rute yang ditampilkan pada halaman utama KIRI serta menggambarkan hasil rute pada peta.
+Hasil implementasi berupa aplikasi berbasis web yang menggunakan Play Framework. Aplikasi dapat diakses pada jaringan lokal dengan URL \url{http://localhost:9000}. Aplikasi KIRI terdiri dari satu halaman utama. Halaman utama KIRI, pengguna dapat melakukan pencarian rute KIRI dengan masukan nama tempat atau masukan berupa klik pada peta yang disediakan pada halaman utama KIRI (Gambar \ref{fig:5_KIRI_main}).
+\begin{itemize}
+	\item Pencarian rute dan alternatif pencarian rute\\
+	Setelah memberikan masukan untuk pencarian rute, jika terdapat pencarian rute, maka hasil rute dan/atau hasil alternatif rute akan ditampilkan pada halaman utama KIRI serta menggambarkan hasil rute pada peta. Hasil pencarian rute dapat dilihat pada gambar \ref{fig:5_KIRI_find}, sedangkan hasil pencarian rute alternatif dapat dilihat pada gambar \ref{fig:5_KIRI_find_alternate}.
+	\item Tidak ada rute\\
+	Setelah memberikan masukan untuk pencarian rute, jika tidak terdapat pencarian rute, maka akan menampilkan pesan pada pengguna (Gambar \ref{fig:5_KIRI_not_found}).
+\end{itemize}
 
 \begin{figure}[H]
 	\centering
@@ -41,6 +47,13 @@ Hasil implementasi berupa aplikasi berbasis web yang menggunakan Play Framework.
 	\label{fig:5_KIRI_find_alternate}
 \end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{Gambar/KIRI-notfound}
+	\caption{Menampilkan pesan tidak ada rute pada pengguna} 
+	\label{fig:5_KIRI_not_found}
+\end{figure}
+
 \section{Pengujian}
 \subsection{Pengujian Fungsional}
 
@@ -57,7 +70,7 @@ Pengujian fungsional dilakukan untuk mengetahui kesesuaian reaksi perangkat luna
 4 & Pengguna melakukan klik pada peta & \textit{Marker} muncul dari titik yang diklik oleh pengguna dan titik koordinat muncul pada \textit{textfield} tempat asal dan/atau tujuan & Sesuai \\ \hline
 5 & Pengguna memilih tombol Swap & Masukan pengguna pada \textit{textfield} tempat awal dan tujuan ditukar & Sesuai \\ \hline
 6 & Pengguna memilih tombol Reset & Memperbarui halaman utama menjadi semula & Sesuai \\ \hline
-7 & Pengguna memilih tombol Find & Hasil pencarian rute muncul beserta alternatifnya (jika ada) & Sesuai, namun JSON yang dihasilkan mempunyai urutan yang berbeda. Hal ini tidak mengubah arti pesan yang dikirim. \\ \hline
+7 & Pengguna memilih tombol Find & Hasil pencarian rute muncul beserta alternatifnya (jika ada) & Sesuai, namun JSON yang dihasilkan mempunyai urutan \textit{key} yang berbeda. Hal ini tidak mengubah arti pesan yang dikirim karena JSON dapat diakses dengan mengirimkan \textit{parameter key}. \\ \hline
 8 & Pengguna memasukkan nama tempat pada \textit{textfield} tempat asal dan/atau tujuan & Sugesti nama tempat muncul pada masing-masing \textit{textfield} dan menampilkan hasil pencarian beserta alternatifnya (jika ada) & Sesuai \\ \hline
 9 & Pengguna memilih hasil pencarian rute alternatif & Hasil pencarian rute alternatif muncul dan memperbarui peta dengan hasil pencarian rute alternatif & Sesuai \\ \hline
 		
@@ -68,7 +81,7 @@ Pengujian fungsional dilakukan untuk mengetahui kesesuaian reaksi perangkat luna
 
 \subsection{Pengujian Eksperimental}
 
-Pengujian eksperimental dilakukan untuk membandingkan perbedaan waktu eksekusi dari aplikasi KIRI (PHP) dengan aplikasi KIRI (Play Framework). Pengujian eksperimental mengambil tiga tes kasus dan masing-masing kasus diambil empat kali pengujian. Pengujian ini dilakukan pada sistem MacOS. Hasil pengujian dapat dilihat pada tabel  \ref{table:hasilEksperimental} dan grafik \ref{fig:5_grafik_eksperimental}.
+Pengujian eksperimental dilakukan untuk membandingkan perbedaan waktu eksekusi dari aplikasi KIRI (PHP) dengan aplikasi KIRI (Play Framework). Pengujian eksperimental mengambil lima tes kasus dan masing-masing kasus diambil empat kali pengujian. Kelima kasus tersebut menggunakan parameter tempat asal dan tujuan yang sama, menggunakan koneksi internet yang sama, dan menggunakan \textit{web browser} yang sama. Waktu diambil menggunakan Chrome DevTools dan menghitung waktu eksekusi dalam memuat halaman web untuk setiap kasus. Pengujian ini dilakukan pada sistem MacOS. Hasil pengujian dapat dilihat pada tabel  \ref{table:hasilEksperimental} dan grafik \ref{fig:5_grafik_eksperimental}.
 			
 \begin{table}[H]
 	\centering
@@ -77,11 +90,11 @@ Pengujian eksperimental dilakukan untuk membandingkan perbedaan waktu eksekusi d
 		\begin{tabular}{|l|l|c|c|c|c|c|}
 \hline
 No. & \multicolumn{1}{c|}{Aksi} & \multicolumn{5}{c|}{PHP} \\ \hline
-\multicolumn{2}{|l|}{} & \begin{tabular}[c]{@{}c@{}}Waktu \\ eksekusi \\ pertama\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ kedua\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ ketiga\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ keempat\end{tabular} & \begin{tabular}[c]{@{}c@{}}Rata-\\ rata\end{tabular} \\ \hline
+\multicolumn{2}{|l|}{} & \begin{tabular}[c]{@{}c@{}}Waktu \\ eksekusi \\ pertama\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ kedua\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ ketiga\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ keempat\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Rata-\\ rata\\(detik)\end{tabular} \\ \hline
 1. & Pengguna akses halaman utama KIRI & 1.00 & 0.89 & 0.87 & 1.57 & 1.08 \\ \hline
 2. & Pengguna mencari rute dengan memasukkan nama tempat & 4.12 & 3.97 & 3.55 & 2.54 & 3.55 \\ \hline
 3. & Pengguna mencari rute dengan klik pada peta & 3.69 & 3.16 & 4.04 & 5.78 & 4.17 \\ \hline
-4. & Pengguna mengirimkan request dengan mode! sama dengan `findroute' & 1.17 & 2.92 & 3.22 & 3.36 & 2.67 \\ \hline
+4. & Pengguna mengirimkan request dengan mode sama dengan `findroute' & 1.17 & 2.92 & 3.22 & 3.36 & 2.67 \\ \hline
 5. & Pengguna mengirimkan request dengan mode sama dengan `searchplace' & 1.14 & 0.78 & 0.52 & 1.16 & 0.90 \\ \hline
 \end{tabular}
 }
@@ -94,7 +107,7 @@ No. & \multicolumn{1}{c|}{Aksi} & \multicolumn{5}{c|}{PHP} \\ \hline
 		\begin{tabular}{|l|l|c|c|c|c|c|}
 \hline
 No. & \multicolumn{1}{c|}{Aksi} & \multicolumn{5}{c|}{Play Framework} \\ \hline
-\multicolumn{2}{|l|}{} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ pertama\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ kedua\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ ketiga\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ keempat\end{tabular} & \begin{tabular}[c]{@{}c@{}}Rata-\\ rata\end{tabular} \\ \hline
+\multicolumn{2}{|l|}{} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ pertama\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ kedua\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ ketiga\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Waktu\\ eksekusi\\ keempat\\(detik)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Rata-\\ rata\\(detik)\end{tabular} \\ \hline
 1. & Pengguna akses halaman utama KIRI & 1.51 & 1.58 & 1.67 & 1.59 & 1.59 \\ \hline
 2. & Pengguna mencari rute dengan memasukkan nama tempat & 2.08 & 1.15 & 2.54 & 2.74 & 2.13 \\ \hline
 3. & Pengguna mencari rute dengan klik pada peta & 1.98 & 4.24 & 3.22 & 2.76 & 3.05 \\ \hline
